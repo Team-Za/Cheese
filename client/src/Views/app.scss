@@ -1,9 +1,254 @@
+$dark-background: rgb(19, 41, 59);
+$lighter-background: rgb(24, 51, 73);
+$light-blue: rgb(43, 123, 158);
+$lighter-blue: rgb(51, 152, 212);
+$font-color: rgb(231, 241, 241);
+$new-font: 'Concert One', cursive;
+$round-corners: 6px;
+
 .app {
   background-color: azure;
+}
+
+body {
+  background-color: rgb(19, 41, 59);
+}
+
+.row {
+  padding: 15px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus {
+  color: inherit;
+  text-decoration: none;
 }
 
 .nav-bar {
   font-family: 'Reem Kufi', sans-serif;
   color: rgb(69, 160, 202);
   font-size: 30px;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  font-size: 20px;
+  color: rgb(231, 241, 241);
+}
+
+.top-menu {
+  position: relative;
+  display: inline-block;
+  margin-left: 65%;
+}
+
+.top-menu-item {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 20px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 6px;
+  transition: .3s;
+}
+
+.top-menu-item:hover {
+  background-color: rgb(24, 51, 73);
+  border-radius: 6px;
+}
+
+// Landing Page 
+.landing-nav {
+  color: rgb(231, 241, 241);
+  position: relative;
+  font-family: 'Concert One', cursive;
+  text-transform: uppercase;
+}
+
+.dow {
+  font-family: 'Concert One', cursive;
+  font-size: 30px;
+  background-color: rgb(24, 51, 73);
+  color: #e7f1f1;
+  padding: 8% 10% 8% 10%;
+  border-radius: 6px;
+}
+
+.sp500 {
+  font-family: 'Concert One', cursive;
+  font-size: 30px;
+  background-color: rgb(24, 51, 73);
+  color: #e7f1f1;
+  padding: 8% 10% 8% 10%;
+  border-radius: 6px;
+  margin-top: 40px;
+}
+
+.landing-page-body {
+  margin-top: 30px;
+  position: relative;
+  width: inherit;
+  display: flex;
+}
+
+.sign-up {
+  margin-left: auto;
+}
+
+// Dashboard Page
+.user-stocks {
+  background-color: $lighter-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
+}
+
+.panel-heading {
+  font-size: 20px;
+}
+
+.stock-info {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+}
+
+.stock-panel-child {
+  background-color: $dark-background;
+  padding: 10px;
+  margin: 10px 0px 10px 0px;
+}
+
+// User Chart
+.user-chart {
+  background-color: $lighter-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  font-size: 15px;
+  border-radius: $round-corners;
+}
+
+// Down Arrow Animation
+.bounce-down {
+	-moz-animation: bounce-down 3s infinite;
+	-webkit-animation: bounce-down 3s infinite;
+  animation: bounce-down 3s infinite;
+  color: rgb(226, 5, 5);
+  display: inline-flex;
+}
+
+@-moz-keyframes bounce-down {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+@-webkit-keyframes bounce-down{
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+@keyframes bounce-down {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+
+// Up Arrow Animation
+.bounce-up {
+	-moz-animation: bounce-up 3s infinite;
+	-webkit-animation: bounce-up 3s infinite;
+  animation: bounce-up 3s infinite;
+  color: rgb(29, 158, 12);
+  display: inline-flex;
+}
+
+@-moz-keyframes bounce-up {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+@-webkit-keyframes bounce-up{
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+@keyframes bounce-up {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
 }
