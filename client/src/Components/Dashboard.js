@@ -10,29 +10,76 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'r
 class Dashboard extends React.Component {
     state = {
         result: [],
-        loading: true
+        loading: true,
+        data: [],
+        activeStock: ""
     };
+
+    
+
 
 
     componentDidMount() {
         this.getUserChartData("/stock/aapl/chart/1d");
+        this.getUsersStocks("/stock/aapl/chart/1d");
+    }
+
+    plotData = (stockName) => {
+        API.chartData(stockName)
+            .then(res => {
+                console.log("chart", res.data); this.setState({
+                    data: this.getData(res.data),
+                    loading: false
+                }), console.log(this.state.result[0].minute)
+            })
+            .catch(err => console.log(err));
+    }
+
+    getUsersStocks = query => {
+        API.getUserData(query)
+            .then(res => {
+                console.log("chart", res.data); this.setState({
+                    result: res.data,
+                    data: this.getData(res.data),
+                    loading: false
+                }), console.log(this.state.result[0].minute)
+            })
+            .catch(err => console.log(err));
+    }
+
+    getData = stockData => {
+        const dataArray = [];
+        for (let i = 0; i < stockData.length; i++) {
+            dataArray.push({
+                name: stockData[i].label,
+                // High: stockData[i].marketHigh, 
+                // Low: stockData[i].marketLow, 
+                Price: stockData[i].marketAverage
+            })
+            i = i + 4;
+        }
+
+        return dataArray;
+    }
+
+    stockName = stock => {
+        this.setState({
+            activeStock: stock
+        }, this.plotData(this.state.activeStock)), console.log(this.state.activeStock)
     }
 
     getUserChartData = query => {
         API.getUserData(query)
-            .then(res => { console.log("chart", res.data); this.setState({ result: res.data, loading: false }), console.log(this.state.result[0].minute) })
+            .then(res => {
+                console.log("chart", res.data); this.setState({
+                    stocks: [],
+                    loading: false
+                }), console.log(this.state.result[0].minute)
+            })
             .catch(err => console.log(err));
     };
 
     render() {
-            const data = [
-                { name: this.state.result[0].minute, High: 4000, Low: 2400, Average: 1500, amt: 2400 },
-                { name: 'Page B', High: 3000, Low: 1398, Average: 1500, amt: 2210 },
-                { name: 'Page C', High: 2000, Low: 9800, Average: 1500, amt: 2290 },
-                { name: 'Page D', High: 2780, Low: 3908, Average: 1500, amt: 2000 },
-                { name: 'Page E', High: 1890, Low: 4800, Average: 1500, amt: 2181 },
-                { name: 'Page G', High: 3490, Low: 4300, Average: 1500, amt: 2100 }
-            ]
         return (
             <div className="container">
                 <div className="col-md-5">
@@ -40,42 +87,45 @@ class Dashboard extends React.Component {
                         <div className="panel-heading">
                             Your Stocks
                     </div>
+                        {this.state.loading ?
+                            <div className="loading">Loading...</div>
+                            :
+                            <div className="stock-panel">
+                                <div className="stock-panel-child" value="spy" onClick={() => this.stockName("spy")}>
+                                    <div className="stock-info">Apple</div>
+                                    <div className="stock-info">Apple Inc.</div>
+                                    <div className="stock-info">Current Price</div>
+                                    <div className="stock-info">Extra</div>
+                                </div>
 
-                        <div className="stock-panel">
-                            <div className="stock-panel-child">
-                                <div className="stock-info">Image</div>
-                                <div className="stock-info">Stock Name</div>
-                                <div className="stock-info">Current Price</div>
-                                <div className="stock-info">Extra</div>
+                                <div className="stock-panel-child">
+                                    <div className="stock-info">Image</div>
+                                    <div className="stock-info">Stock Name</div>
+                                    <div className="stock-info">Current Price</div>
+                                    <div className="stock-info">Extra</div>
+                                </div>
                             </div>
-
-                            <div className="stock-panel-child">
-                                <div className="stock-info">Image</div>
-                                <div className="stock-info">Stock Name</div>
-                                <div className="stock-info">Current Price</div>
-                                <div className="stock-info">Extra</div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
 
                 {this.state.loading ?
                     <div className="loading">Loading...</div>
                     :
-                    <div className="col-md-6 col-md-offset-1 user-chart panel">
+                    <div className="col-md-7 user-chart panel">
                         <div className="panel-heading">
-                            AAPL
+                            {this.state.activeStock}
                 </div>
-                        <LineChart width={500} height={300} data={data}
+                        <LineChart width={600} height={300} data={this.state.data}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                             <XAxis dataKey="name" />
-                            <YAxis />
+                            <YAxis type="number" domain={['dataMin - 2', 'dataMax + 2']} />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="High" stroke="#8884d8" activeDot={{ r: 8 }} />
-                            <Line type="monotone" dataKey="Low" stroke="#82ca9d" />
-                            <Line type="monotone" dataKey="Average" stroke="#fff" />
+                            <Line type="monotone" isAnimationActive={false} dataKey="Price" stroke="#8884d8" strokeWidth={2} dot={{ r: 0 }} activeDot={{ r: 5 }} />
+                            {/* <Line type="monotone" dataKey="Low" stroke="#82ca9d" />
+                            <Line type="monotone" dataKey="Average" stroke="#fff" /> */}
                         </LineChart>
                     </div>
                 }

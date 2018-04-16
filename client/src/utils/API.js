@@ -18,5 +18,9 @@ export default {
 
   getUserData: function(query) {
     return axios.get(BASEURL + query);
+  },
+
+  chartData: function(query) {
+    return axios.get(BASEURL + "/stock/" + query + "/chart/1d");
   }
 };
