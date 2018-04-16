@@ -10,6 +10,7 @@ const portApi = {
     getAll: () => axios.get('/api/portfolio').then(results => results.data),
     getById: id => axios.get(`/api/portfolio/${id}`).then(results => results.data),
     getPortfolioAndStocks: id => axios.get(`/api/portfolio/port/${id}`).then(results => results.data),
+    getPortfolioAndStocksbyUserId: UserId => axios.get(`/api/portfolio/port/${UserId}`).then(results => results.data),
     create: port => axios.post('/api/portfolio', port).then(results => results.data),
     update: port => axios.put(`/api/portfolio/${port.id}`, port),
     delete: id => axios.delete(`/api/portfolio/${id}`)

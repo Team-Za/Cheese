@@ -24,11 +24,14 @@ const controller = {
         }
       })
       .catch(err => res.status(422).json(err));
-  },
+  }, 
   create: (req, res) => {
     db.Stock.create({
       name: req.body.name,
       quantity: req.body.quantity,
+      symbol: req.body.symbol,
+      imageLink: req.body.imageLink,
+      price: req.body.price,
       PortfolioId: req.body.PortfolioId
     })
       .then(dbModel => res.json(dbModel))
@@ -36,9 +39,12 @@ const controller = {
   },
   update: (req, res) => {
     db.Stock.update({
-        name: req.body.name,
-        quantity: req.body.quantity,
-        PortfolioId: req.body.PortfolioId
+      name: req.body.name,
+      quantity: req.body.quantity,
+      symbol: req.body.symbol,
+      imageLink: req.body.imageLink,
+      price: req.body.price,
+      PortfolioId: req.body.PortfolioId
     }, {
         where: {
           id: req.params.id,
