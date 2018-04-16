@@ -44,7 +44,7 @@ class OrganizationList extends Component {
       this.setState({
         loading: false
       })
-    }
+    } 
   };
   render() {
     return (
