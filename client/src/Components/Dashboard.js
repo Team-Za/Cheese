@@ -15,10 +15,6 @@ class Dashboard extends React.Component {
         activeStock: ""
     };
 
-    
-
-
-
     componentDidMount() {
         this.getUserChartData("/stock/aapl/chart/1d");
         this.getUsersStocks("/stock/aapl/chart/1d");
@@ -29,7 +25,8 @@ class Dashboard extends React.Component {
             .then(res => {
                 console.log("chart", res.data); this.setState({
                     data: this.getData(res.data),
-                    loading: false
+                    loading: false,
+                    activeStock: stockName
                 }), console.log(this.state.result[0].minute)
             })
             .catch(err => console.log(err));
@@ -54,18 +51,12 @@ class Dashboard extends React.Component {
                 name: stockData[i].label,
                 // High: stockData[i].marketHigh, 
                 // Low: stockData[i].marketLow, 
-                Price: stockData[i].marketAverage
+                Price: stockData[i].average
             })
             i = i + 4;
         }
 
         return dataArray;
-    }
-
-    stockName = stock => {
-        this.setState({
-            activeStock: stock
-        }, this.plotData(this.state.activeStock)), console.log(this.state.activeStock)
     }
 
     getUserChartData = query => {
@@ -91,7 +82,7 @@ class Dashboard extends React.Component {
                             <div className="loading">Loading...</div>
                             :
                             <div className="stock-panel">
-                                <div className="stock-panel-child" value="spy" onClick={() => this.stockName("spy")}>
+                                <div className="stock-panel-child" value="spy" onClick={() => this.plotData("spy")}>
                                     <div className="stock-info">Apple</div>
                                     <div className="stock-info">Apple Inc.</div>
                                     <div className="stock-info">Current Price</div>
@@ -117,13 +108,13 @@ class Dashboard extends React.Component {
                             {this.state.activeStock}
                 </div>
                         <LineChart width={600} height={300} data={this.state.data}
-                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                            <XAxis dataKey="name" />
-                            <YAxis type="number" domain={['dataMin - 2', 'dataMax + 2']} />
+                            margin={{ top: 10, right: 30, left: 20, bottom: 40 }}>
+                            <XAxis dataKey="name" stroke="#e7f1f1"/>
+                            <YAxis type="number" stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" isAnimationActive={false} dataKey="Price" stroke="#8884d8" strokeWidth={2} dot={{ r: 0 }} activeDot={{ r: 5 }} />
+                            <Line type="monotone" isAnimationActive={false} dataKey="Price" stroke="#8884d8" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 5 }} />
                             {/* <Line type="monotone" dataKey="Low" stroke="#82ca9d" />
                             <Line type="monotone" dataKey="Average" stroke="#fff" /> */}
                         </LineChart>
