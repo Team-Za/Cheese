@@ -15,6 +15,7 @@ export default path => {
   app.use("/api/organization", routers.organization);
   app.use("/api/portfolio", routers.portfolio);
   app.use("/api/stock", routers.stock);
+  app.use("/api/user", routers.user);
 
   // Any non API GET routes will be directed to our React App and handled by React Router
   app.get("*", (req, res) => {
