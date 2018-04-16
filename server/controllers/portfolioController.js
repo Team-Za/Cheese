@@ -31,8 +31,8 @@ const controller = {
         id: req.params.id,
       },
       include: [{
-        model: Stock,
-        where: { PortfolioId: Sequelize.col("Portfolio.id") }
+        model: db.Stock,
+        //where: { PortfolioId: "Portfolio.id" }
       }]
     })
       .then(dbModel => res.json(dbModel))
