@@ -32,7 +32,7 @@ class LandingPage extends React.Component {
           <Navbar />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/market" component={Market} />
-          <DowChart />
+          <Route exact path="/" component={DowChart} />
         </div>
       </Router>
     );
