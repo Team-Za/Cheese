@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import API from "../utils/API";
 import '../Views/app.scss';
+import { portApi, stockApi, userApi } from "../utils/serverAPI";
 // import Navbar from "./Navbar";
 // import DowChart from './DowChart';
 // import Sp500 from './Sp500Data';
@@ -12,18 +13,39 @@ class Dashboard extends React.Component {
         result: [],
         loading: true,
         data: [],
-        activeStock: ""
+        activeStock: "",
+        userPortfolioData: []
     };
 
     componentDidMount() {
-        this.getUserChartData("/stock/aapl/chart/1d");
-        this.getUsersStocks("/stock/aapl/chart/1d");
+
+        Promise.all([this.getUsersStocks("/stock/aapl/chart/1d"), this.searchPortfolios(1)]).then(values => {
+            console.log(values);
+            this.setState({
+                data: values[0],
+                userPortfolioData: values[1],
+                loading: false
+            });
+          });
+        // this.getUserData("/stock/aapl/chart/1d");
+        // this.getUsersStocks("/stock/aapl/chart/1d");
+        // this.searchPortfolios(1);
     }
+
+    searchPortfolios = id => {
+        var data = portApi.getPortfolioAndStocks(id)
+            .then(res => { 
+                console.log("User Portfolio Data", res); 
+                return res.Stocks;
+            })
+            .catch(err => console.log(err));
+        return data;
+    };
 
     plotData = (stockName) => {
         API.chartData(stockName)
             .then(res => {
-                console.log("chart", res.data); this.setState({
+                this.setState({
                     data: this.getData(res.data),
                     loading: false,
                     activeStock: stockName
@@ -33,16 +55,25 @@ class Dashboard extends React.Component {
     }
 
     getUsersStocks = query => {
-        API.getUserData(query)
+        var data = API.getUserData(query)
             .then(res => {
-                console.log("chart", res.data); this.setState({
-                    result: res.data,
-                    data: this.getData(res.data),
-                    loading: false
-                }), console.log(this.state.result[0].minute)
+                return this.getData(res.data);
             })
             .catch(err => console.log(err));
+
+            return data;
     }
+
+    // getUsersStocks = query => {
+    //     API.getUserData(query)
+    //         .then(res => {
+    //             this.setState({
+    //                 result: res.data,
+    //                 data: this.getData(res.data)
+    //             }), console.log(this.state.result[0].minute)
+    //         })
+    //         .catch(err => console.log(err));
+    // }
 
     getData = stockData => {
         const dataArray = [];
@@ -59,12 +90,11 @@ class Dashboard extends React.Component {
         return dataArray;
     }
 
-    getUserChartData = query => {
+    getUserData = query => {
         API.getUserData(query)
             .then(res => {
                 console.log("chart", res.data); this.setState({
-                    stocks: [],
-                    loading: false
+                    stocks: []
                 }), console.log(this.state.result[0].minute)
             })
             .catch(err => console.log(err));
@@ -82,12 +112,14 @@ class Dashboard extends React.Component {
                             <div className="loading">Loading...</div>
                             :
                             <div className="stock-panel">
-                                <div className="stock-panel-child" value="spy" onClick={() => this.plotData("spy")}>
-                                    <div className="stock-info">Apple</div>
-                                    <div className="stock-info">Apple Inc.</div>
-                                    <div className="stock-info">Current Price</div>
-                                    <div className="stock-info">Extra</div>
-                                </div>
+                                {this.state.userPortfolioData.map(data => (
+                                    <div className="stock-panel-child" value="spy" onClick={() => this.plotData("spy")}>
+                                        <div className="stock-info">nada</div>
+                                        <div className="stock-info">{data.name}</div>
+                                        <div className="stock-info">{data.quantity}</div>
+                                        <div className="stock-info">Extra</div>
+                                    </div>
+                                ))}
 
                                 <div className="stock-panel-child">
                                     <div className="stock-info">Image</div>
@@ -106,10 +138,10 @@ class Dashboard extends React.Component {
                     <div className="col-md-7 user-chart panel">
                         <div className="panel-heading">
                             {this.state.activeStock}
-                </div>
+                        </div>
                         <LineChart width={600} height={300} data={this.state.data}
                             margin={{ top: 10, right: 30, left: 20, bottom: 40 }}>
-                            <XAxis dataKey="name" stroke="#e7f1f1"/>
+                            <XAxis dataKey="name" stroke="#e7f1f1" />
                             <YAxis type="number" stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />

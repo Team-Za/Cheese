@@ -25,7 +25,6 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div className="container">
-        <Navbar />
       </div>
     );
   }
