@@ -22,7 +22,7 @@ class LandingPage extends React.Component {
 
   searchSymbols = query => {
     API.allSymbols(query)
-      .then(res => { console.log(res.data); this.setState({ result: res.data }) })
+      .then(res => {this.setState({ result: res.data }) })
       .catch(err => console.log(err));
   };
 
