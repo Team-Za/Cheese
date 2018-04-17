@@ -18,28 +18,30 @@ class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-
-        Promise.all([this.getUsersStocks("/stock/aapl/chart/1d"), this.searchPortfolios(1)]).then(values => {
+        console.log("YOOO",this.searchPortfolios(1))
+        Promise.all([this.searchPortfolios(1), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
             console.log(values);
             this.setState({
-                data: values[0],
-                userPortfolioData: values[1],
+                data: values[1],
+                userPortfolioData: values[0],
                 loading: false
             });
-          });
+        });
         // this.getUserData("/stock/aapl/chart/1d");
         // this.getUsersStocks("/stock/aapl/chart/1d");
         // this.searchPortfolios(1);
     }
 
     searchPortfolios = id => {
-        var data = portApi.getPortfolioAndStocks(id)
-            .then(res => { 
-                console.log("User Portfolio Data", res); 
-                return res.Stocks;
-            })
-            .catch(err => console.log(err));
-        return data;
+        return new Promise((res, rej) => {
+            var data = portApi.getPortfolioAndStocks(id)
+                .then(res => {
+                    console.log("User Portfolio Data", res);
+                    return res.Stocks;
+                })
+                .catch(err => console.log(err));
+            res(data);
+        })
     };
 
     plotData = (stockName) => {
@@ -47,7 +49,6 @@ class Dashboard extends React.Component {
             .then(res => {
                 this.setState({
                     data: this.getData(res.data),
-                    loading: false,
                     activeStock: stockName
                 }), console.log(this.state.result[0].minute)
             })
@@ -61,7 +62,7 @@ class Dashboard extends React.Component {
             })
             .catch(err => console.log(err));
 
-            return data;
+        return data;
     }
 
     // getUsersStocks = query => {
@@ -90,15 +91,15 @@ class Dashboard extends React.Component {
         return dataArray;
     }
 
-    getUserData = query => {
-        API.getUserData(query)
-            .then(res => {
-                console.log("chart", res.data); this.setState({
-                    stocks: []
-                }), console.log(this.state.result[0].minute)
-            })
-            .catch(err => console.log(err));
-    };
+    // getUserData = query => {
+    //     API.getUserData(query)
+    //         .then(res => {
+    //             console.log("chart", res.data); this.setState({
+    //                 stocks: []
+    //             }), console.log(this.state.result[0].minute)
+    //         })
+    //         .catch(err => console.log(err));
+    // };
 
     render() {
         return (

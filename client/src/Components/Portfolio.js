@@ -11,7 +11,7 @@ class Portfolio extends React.Component {
 
     async componentDidMount() {
         await this.searchPortfolios(1);
-        console.log("It went here")
+        // console.log("It went here")
     }
 
     //   searchSymbols = query => {
