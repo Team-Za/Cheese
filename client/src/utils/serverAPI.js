@@ -10,19 +10,28 @@ const portApi = {
     getAll: () => axios.get('/api/portfolio').then(results => results.data),
     getById: id => axios.get(`/api/portfolio/${id}`).then(results => results.data),
     getPortfolioAndStocks: id => axios.get(`/api/portfolio/port/${id}`).then(results => results.data),
-    create: org => axios.post('/api/portfolio', org).then(results => results.data),
-    update: org => axios.put(`/api/portfolio/${org.id}`, org),
+    getPortfolioAndStocksbyUserId: UserId => axios.get(`/api/portfolio/port/${UserId}`).then(results => results.data),
+    create: port => axios.post('/api/portfolio', port).then(results => results.data),
+    update: port => axios.put(`/api/portfolio/${port.id}`, port),
     delete: id => axios.delete(`/api/portfolio/${id}`)
 };
 const stockApi = {
     getAll: () => axios.get('/api/stock').then(results => results.data),
     getById: id => axios.get(`/api/stock/${id}`).then(results => results.data),
-    create: org => axios.post('/api/stock', org).then(results => results.data),
-    update: org => axios.put(`/api/stock/${org.id}`, org),
+    create: stock => axios.post('/api/stock', stock).then(results => results.data),
+    update: stock => axios.put(`/api/stock/${stock.id}`, stock),
     delete: id => axios.delete(`/api/stock/${id}`)
+};
+const userApi = {
+    getAll: () => axios.get('/api/user').then(results => results.data),
+    getById: id => axios.get(`/api/user/${id}`).then(results => results.data),
+    create: user => axios.post('/api/user', user).then(results => results.data),
+    update: user => axios.put(`/api/user/${user.id}`, user),
+    delete: id => axios.delete(`/api/user/${id}`)
 };
 export {
     orgApi,
     portApi,
-    stockApi 
+    stockApi,
+    userApi 
 };

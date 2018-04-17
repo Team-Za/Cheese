@@ -1,17 +1,20 @@
-$dark-background: rgb(19, 41, 59);
+$dark-background: rgb(49, 49, 51);
 $lighter-background: rgb(24, 51, 73);
 $light-blue: rgb(43, 123, 158);
 $lighter-blue: rgb(51, 152, 212);
-$font-color: rgb(231, 241, 241);
+$font-color: #4d4d4d;
+$hover-font-color: #67c186;
 $new-font: 'Concert One', cursive;
 $round-corners: 6px;
+$gradient-blue: linear-gradient(to right,#6e80bf, #4cc2f0);
+$gradient-red: linear-gradient(to right, #f07089, #f5918d);
 
 .app {
   background-color: azure;
 }
 
 body {
-  background-color: rgb(19, 41, 59);
+  background-color: $dark-background;
 }
 
 .row {
@@ -38,17 +41,16 @@ a:focus {
   text-decoration: none;
 }
 
-.nav-bar {
-  font-family: 'Reem Kufi', sans-serif;
-  color: rgb(69, 160, 202);
-  font-size: 30px;
-}
-
 .logo {
   position: relative;
   display: inline-block;
   font-size: 20px;
-  color: rgb(231, 241, 241);
+  color: $font-color;
+  transition: .3s;
+}
+
+.logo:hover {
+  color: $hover-font-color;
 }
 
 .top-menu {
@@ -68,7 +70,7 @@ a:focus {
 }
 
 .top-menu-item:hover {
-  background-color: rgb(24, 51, 73);
+  background-color: $hover-font-color;
   border-radius: 6px;
 }
 
@@ -83,16 +85,17 @@ a:focus {
 .dow {
   font-family: 'Concert One', cursive;
   font-size: 30px;
-  background-color: rgb(24, 51, 73);
+  background: $gradient-blue;
   color: #e7f1f1;
   padding: 8% 10% 8% 10%;
   border-radius: 6px;
+  box-shadow: 6px 6px 9px 2px rgba(20, 20, 20, 0.4);
 }
 
 .sp500 {
   font-family: 'Concert One', cursive;
   font-size: 30px;
-  background-color: rgb(24, 51, 73);
+  background: $gradient-red;
   color: #e7f1f1;
   padding: 8% 10% 8% 10%;
   border-radius: 6px;

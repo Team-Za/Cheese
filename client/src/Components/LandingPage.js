@@ -7,6 +7,7 @@ import DowChart from './DowChart';
 import Sp500 from './Sp500Data';
 import Dashboard from './Dashboard';
 import Market from './Market';
+import Portfolio from "./Portfolio";
 
 class LandingPage extends React.Component {
   state = {
@@ -32,7 +33,8 @@ class LandingPage extends React.Component {
           <Navbar />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/market" component={Market} />
-          <DowChart />
+          <Route exact path="/portfolio" component={Portfolio} />
+          <Route exact path="/" component={DowChart} />
         </div>
       </Router>
     );
