@@ -19,7 +19,7 @@ class Portfolio extends React.Component {
     //       .catch(err => console.log(err));
     //   };
     searchPortfolios = id => {
-        portApi.getPortfolioAndStocks(id)
+        portApi.getPortfolioAndStocksbyUserId(id)
             .then(res => { console.log(res); this.setState({ result: res }) })
             .catch(err => console.log(err));
     };

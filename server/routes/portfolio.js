@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/", port.findAll);
 router.get("/:id", port.findById);
 router.get("/port/:id",port.getPortfolioAndStocks);
+router.get("/user/:id",port.getPortfolioAndStocksbyUserId);
 router.post("/", port.create);
 router.put("/:id", port.update);
 router.delete("/:id", port.remove);
