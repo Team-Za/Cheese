@@ -38,14 +38,14 @@ module.exports = function (sequelize, Sequelize) {
       type: Sequelize.TEXT,
       allowNull: false,
       validate: {
-        len: [1, 50]
+        len: [1]
       }
     },
     price:{
       type: Sequelize.DECIMAL(10,2),
       allowNull: false,
       validate: {
-        gt:-1
+        min:0
       }
     }
   },

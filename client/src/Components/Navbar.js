@@ -21,6 +21,12 @@ const Navbar = props => (
           <i class="fas fa-chart-line"></i> Market
           </div>
       </Link>
+
+      <Link to="/portfolio">
+        <div className="top-menu-item" id="portfolio">
+          <i class="fas fa-chart-line"></i> Portfolio
+          </div>
+      </Link>
     </div>
   </div>
 );
