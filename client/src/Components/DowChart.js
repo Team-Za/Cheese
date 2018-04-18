@@ -14,9 +14,26 @@ class DowChart extends React.Component {
 
     getChartData = query => {
         API.getDow(query)
-            .then(res => { console.log("Dow Data", res.data[res.data.length - 1]); this.setState({ result: res.data, loading: false }) })
+            .then(res => { console.log("Dow Data", res.data[res.data.length - 1]); 
+            this.setState({ 
+                result: res.data, loading: false 
+            }) })
             .catch(err => console.log(err));
     };
+
+    checkDowPrice = price => {
+        if(price === -1) {
+            for(let i=this.state.result[this.state.result.length - 1]; i > -1; i--) {
+                if(this.state.result[i].marketHigh !== -1) {
+                    return this.state.result[i].marketHigh;
+                }
+            }
+        } else if (price === "undefined") {
+            return "No data available";
+        } else {
+            return price;
+        }
+    }
 
     render() {
         console.log("hello", this.state.result[this.state.result.length - 1]);
@@ -28,7 +45,7 @@ class DowChart extends React.Component {
                             Dow loading...
                         </div> :
                         <div className="dow col-md-12">
-                            Dow {this.state.result[this.state.result.length - 1].marketHigh} <i class="fas fa-arrow-down bounce-down"></i><br/>
+                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i class="fas fa-arrow-down bounce-down"></i><br/>
                             <span className="lp-symbol">(DJI)</span>
                         </div>}
 
