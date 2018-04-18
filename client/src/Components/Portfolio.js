@@ -63,12 +63,12 @@ class Portfolio extends React.Component {
                     console.log(res.data, new Date());
                     price = res.data.latestPrice;
                     API.allSymbols(`/stock/${symbol}/logo`)
-                        .then(res => {
-                            console.log(res.data, new Date());
-                            imageLink = res.data.url;
+                        .then(res1 => {
+                            console.log(res1.data, new Date());
+                            imageLink = res1.data.url;
                             console.log(symbol, price, imageLink, new Date())
                         })
-                        .then(res => {
+                        .then(res2 => {
                             const tempStock = {
                                 name: this.state.stockName,
                                 quantity: this.state.quantity,
@@ -78,7 +78,7 @@ class Portfolio extends React.Component {
                                 PortfolioId: this.state.portId
                             }
                             stockApi.create(tempStock)
-                                .then(res => this.searchPortfolios(this.state.userId))
+                                .then(res3 => this.searchPortfolios(this.state.userId))
                                 .catch(err => console.log(err, new Date(), tempStock));
                         })
                         .catch(err => console.log(err));
