@@ -11,6 +11,7 @@ class Portfolio extends React.Component {
 
     async componentDidMount() {
         await this.searchPortfolios(1);
+        // console.log("It went here")
     }
 
     //   searchSymbols = query => {
@@ -19,8 +20,8 @@ class Portfolio extends React.Component {
     //       .catch(err => console.log(err));
     //   };
     searchPortfolios = id => {
-        portApi.getPortfolioAndStocksbyUserId(id)
-            .then(res => { console.log(res); this.setState({ result: res }) })
+        portApi.getPortfolioAndStocks(id)
+            .then(res => { console.log("USER", res); this.setState({ result: res }) })
             .catch(err => console.log(err));
     };
     render() {
