@@ -38,6 +38,19 @@ const controller = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
+  getPortfolioAndStocksbyUserId: (req, res) => {
+    db.Portfolio.findOne({
+      where: {
+        UserId: req.params.UserId,
+      },
+      include: [{
+        model: db.Stock,
+        //where: { PortfolioId: "Portfolio.id" }
+      }]
+    })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   create: (req, res) => {
     db.Portfolio.create({
       userName: req.body.userName,

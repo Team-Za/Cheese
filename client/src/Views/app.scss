@@ -1,5 +1,5 @@
-$dark-background: rgb(52, 60, 69);
-$lighter-background: rgb(69, 78, 88);
+$dark-background: #2e323a;
+$lighter-background: #3e434d;
 $light-blue: rgb(43, 123, 158);
 $lighter-blue: rgb(51, 152, 212);
 $font-color: #ffffff;
@@ -7,7 +7,7 @@ $hover-font-color: #67c186;
 $new-font: 'Concert One', cursive;
 $round-corners: 6px;
 $gradient-gray: linear-gradient(to bottom right,#454e58, #65737f);
-$gradient-blue: linear-gradient(to right,#6e80bf, #4cc2f0);
+$gradient-blue: linear-gradient(to right,rgba(110, 128, 191, .6), rgba(76, 194, 240, .6));
 $gradient-red: linear-gradient(to right, #f07089, #f5918d);
 $shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
 
@@ -136,24 +136,103 @@ a:focus {
   margin-left: 15px;
   margin-right: 15px;
   font-size: 15px;
+  width: 18%
+}
+
+.stock-info-quantity {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 10%
 }
 
 .stock-panel-child {
-  background: $gradient-blue;
-  padding: 10px;
-  margin: 10px 0px 10px 0px;
-  transform: scale(.95);
+  border-top: .2pt solid rgba(255, 255, 255, .2);
+  padding: 15px 10px 15px 10px;
+  // margin: 10px 0px 10px 0px;
+  // transform: scale(.95);
   transition: .3s;
 }
 
 .stock-panel-child:hover {
-  transform: scale(1);
+  background: $gradient-blue;
+  // transform: scale(1);
   cursor: pointer;
   box-shadow: $shadow;
 }
 
+.stock-panel-child:active {
+  background: $gradient-blue;
+  // transform: scale(1);
+  cursor: pointer;
+  box-shadow: $shadow;
+}
+
+.stock-panel-child-headers {
+  border-top: .2pt solid rgba(255, 255, 255, .2);
+  padding: 15px 10px 15px 10px;
+  // margin: 10px 0px 10px 0px;
+  // transform: scale(.95);
+  transition: .3s;
+}
+
+.stock-info-header {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 18%;
+}
+
+.stock-image {
+  width: 40px;
+}
+
 // User Chart
 .user-chart {
+  background-color: $lighter-background;
+  padding: 0px 20px 20px 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  font-size: 15px;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+}
+
+.switch-chart {
+  position: relative;
+  display: inline-block;
+}
+
+.chart-tabs {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  top: -3px;
+}
+
+.chart-tabs:hover {
+  background-color: $dark-background;
+  cursor: pointer;
+}
+
+.chart-tabs:visited {
+  background-color: blue;
+}
+
+// Pop up box chart 
+.recharts-tooltip-wrapper {
+  color: red;
+}
+
+// Bar Chart
+.bar-chart {
   background-color: $lighter-background;
   padding: 20px;
   color: $font-color;

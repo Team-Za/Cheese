@@ -29,7 +29,7 @@ class LandingPage extends React.Component {
   render() {
     return (
       <Router>
-        <div className="container">
+        <div className="container-fluid">
           <Navbar />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/market" component={Market} />

@@ -25,17 +25,26 @@ module.exports = function (sequelize, Sequelize) {
             type: Sequelize.ENUM('active', 'inactive'),
             defaultValue: 'active'
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW
-        },
-        updatedAt: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW
-        },
+        'createdAt': {
+            type: Sequelize.DATE(3),
+            allowNull: false,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP(3)')
+          },
+          'updatedAt': {
+            type: Sequelize.DATE(3),
+            allowNull: false,
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP(3)')
+          }
     },
         {
             timestamps: true,
         });
+        User.associate = function(models){
+            User.hasOne(models.Portfolio,{
+                foreignKey: {
+                    allowNull: false
+                  }
+            }); 
+        };
     return User;
 }
