@@ -6,13 +6,20 @@ const Portview = props => (
     <h1>{props.userName}</h1>
     <div>
       {props.Stocks.map(stock=>(<Stock
-          id={stock.id}
-          key={stock.id}
+          key={stock.name}
           name={stock.name}
-          imageLink={stock.imageLink} 
-          quantity={stock.quantity}
+          // quantity={stock.quantity}
+          args={stock.args}
           symbol={stock.symbol}
-          price={stock.price}
+          imageLink={stock.imageLink} 
+          // price={stock.price}
+          PortfolioId={stock.PortfolioId}
+          handleDelete={props.handleDelete}
+          handleEdit={props.handleEdit}
+          handleAdd={props.handleAdd}
+          handleEditSubmit={props.handleEditSubmit}
+          handleInputChange={props.handleInputChange}
+          stateQuant={props.stateQuant}
       />))}
     </div>
   </div>

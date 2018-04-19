@@ -23,7 +23,7 @@ class DowChart extends React.Component {
 
     checkDowPrice = price => {
         if(price === -1) {
-            for(let i=this.state.result[this.state.result.length - 1]; i > -1; i--) {
+            for(let i=(this.state.result.length - 1); i > -1; i--) {
                 if(this.state.result[i].marketHigh !== -1) {
                     return this.state.result[i].marketHigh;
                 }

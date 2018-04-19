@@ -6,7 +6,7 @@ import { portApi, stockApi, userApi } from "../utils/serverAPI";
 // import Navbar from "./Navbar";
 // import DowChart from './DowChart';
 // import Sp500 from './Sp500Data';
-import { BarChart, Bar, ReferenceLine, PieChart, Pie, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 class Dashboard extends React.Component {
     state = {
@@ -14,8 +14,18 @@ class Dashboard extends React.Component {
         loading: true,
         data: [],
         activeStock: "Apple (aapl)",
+        activeStockSymbol: "aapl",
         userPortfolioData: [],
-        whichChart: "area"
+        whichChart: "area",
+        pieChartData: {
+            totalPortfolioPrice: 0,
+            eachStockPercentage: [],
+        },
+        eachStockPrice: [],
+        testData: [{ name: 'Alcoa Corporation', value: 594 }, { name: 'Apple', value: 1778.4 },
+            { name: 'Fidelity Value Factor', value: 328.1 }, { name: 'Fidelity Value Factor', value: 500 }, 
+            { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }],
+        colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398']
     };
 
     componentDidMount() {
@@ -27,12 +37,9 @@ class Dashboard extends React.Component {
                 data: values[1],
                 userPortfolioData: values[0],
                 // activeStock: values[0][0].name,
-                loading: false
             });
+            this.getPieChartData();
         });
-        // this.getUserData("/stock/aapl/chart/1d");
-        // this.getUsersStocks("/stock/aapl/chart/1d");
-        // this.searchPortfolios(1);
     }
 
     searchPortfolios = id => {
@@ -52,8 +59,9 @@ class Dashboard extends React.Component {
             .then(res => {
                 this.setState({
                     data: this.getData(res.data),
-                    activeStock: stockName + " " + "(" + stockSymbol + ")"
-                }), console.log(this.state.result[0].minute)
+                    activeStock: stockName + " " + "(" + stockSymbol + ")",
+                    activeStockSymbol: stockSymbol
+                })
             })
             .catch(err => console.log(err));
     }
@@ -115,15 +123,99 @@ class Dashboard extends React.Component {
         })
     }
 
-    // getUserData = query => {
-    //     API.getUserData(query)
-    //         .then(res => {
-    //             console.log("chart", res.data); this.setState({
-    //                 stocks: []
-    //             }), console.log(this.state.result[0].minute)
-    //         })
-    //         .catch(err => console.log(err));
-    // };
+    switchDate = date => {
+        API.changeDate(this.state.activeStockSymbol, date)
+            .then(res => {
+                this.setState({
+                    data: this.getDataByDate(res.data)
+                })
+            })
+    }
+
+    getDataByDate = stockData => {
+        const dataArray = [];
+        let latestNumber;
+        for (let i = 0; i < stockData.length; i++) {
+            if (stockData[i].high !== -1) {
+                latestNumber = stockData[i].high;
+            }
+
+            if (stockData[i].high === -1) {
+                dataArray.push({
+                    name: stockData[i].label,
+                    // High: stockData[i].marketHigh, 
+                    // Low: stockData[i].marketLow, 
+                    Price: latestNumber
+                })
+            } else {
+                dataArray.push({
+                    name: stockData[i].label,
+                    // High: stockData[i].marketHigh, 
+                    // Low: stockData[i].marketLow, 
+                    Price: stockData[i].high
+                })
+            }
+        }
+
+        return dataArray;
+    }
+
+    getPieChartData = () => {
+        return new Promise((resolve, reject) => {
+            let totalPortPrice = 0;
+            let allStockPrices = [];
+            for (let i = 0; i < this.state.userPortfolioData.length; i++) {
+                API.pieChartData(this.state.userPortfolioData[i].symbol)
+                    .then(res => {
+                        let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
+                        let stockName = this.state.userPortfolioData[i].name;
+                        let stock = {
+                            name: stockName,
+                            value: stockPrice
+                        }
+                        allStockPrices.push(stock);
+                        totalPortPrice += stockPrice;
+                        console.log("Price Here:", this.state.userPortfolioData[i].quantity);
+                        console.log("Result:", res.data)
+                    })
+            }
+            var neededPieChartInfo = {
+                totalPortPrice,
+                allStockPrices
+            }
+            resolve(neededPieChartInfo);
+
+        }).then(values => {
+            console.log("PIE CHART", values)
+            this.setState({
+                pieChartData: {
+                    totalPortfolioPrice: values.totalPortPrice
+                },
+                eachStockPrice: values.allStockPrices,
+                testData: values.allStockPrices,
+                loading: false
+            })
+            
+        })
+
+        
+    }
+
+    renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+        const RADIAN = Math.PI / 180;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+            
+        );
+    }
+
+
 
     render() {
         return (
@@ -132,11 +224,11 @@ class Dashboard extends React.Component {
                     <div className="loading">Loading...</div>
                     :
                     <div className="row">
-                        <div className="col-md-5 col-md-offset-1 user-chart panel">
+                        <div className="col-md-6 user-chart panel">
                             <div className="switch-chart">
-                                <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i class="fas fa-chart-area"></i><br/>Area Chart</div></a>
-                                <div className="chart-tabs" onClick={() => this.switchChart("line")}><i class="fas fa-chart-line"></i><br/>Line Chart</div>
-                                <div className="chart-tabs"><i class="fas fa-chart-bar"></i><br/>Bar Chart</div>
+                                <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i class="fas fa-chart-area"></i><br />Area Chart</div></a>
+                                <div className="chart-tabs" onClick={() => this.switchChart("line")}><i class="fas fa-chart-line"></i><br />Line Chart</div>
+                                <div className="chart-tabs"><i class="fas fa-chart-bar"></i><br />Bar Chart</div>
                             </div>
                             {this.state.whichChart === "line" ?
                                 <div>
@@ -178,9 +270,41 @@ class Dashboard extends React.Component {
                                     </div>
                                     : <div>test</div>
                             }
+                            <div className="switch-date">
+                                <div className="date-tabs" onClick={() => this.switchDate("1d")}>1 Day</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("1m")}>1 Month</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("3m")}>3 Months</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("6m")}>6 Months</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("1y")}>1 Year</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("2y")}>2 Years</div>
+                                <div className="date-tabs" onClick={() => this.switchDate("5y")}>5 Years</div>
+                            </div>
+
                         </div>
+
+                        {/* Pie Chart Data */}
                         <div className="col-md-5 col-md-offset-1 bar-chart">
-                            <BarChart width={600} height={300} data={this.state.data}
+                            <div onClick={() => this.getPieChartData()}>Click Me</div>
+
+                            <PieChart width={400} height={400} onMouseEnter={this.onPieEnter}>
+                                <Pie
+
+                                    data={this.state.eachStockPrice}
+                                    dataKey="value"
+                                    cx={200}
+                                    cy={200}
+                                    labelLine={true}
+                                    label={this.renderCustomizedLabel}
+                                    outerRadius={120}
+                                    fill="#8884d8"
+                                >
+                                    {
+                                        this.state.eachStockPrice.map((entry, index) => <Cell fill={this.state.colors[index % this.state.colors.length]} />)
+                                    }
+                                </Pie>
+                            </PieChart>
+
+                            {/* <BarChart width={600} height={300} data={this.state.data}
                                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
@@ -190,13 +314,13 @@ class Dashboard extends React.Component {
                                 <ReferenceLine y={0} stroke='#000' />
                                 <Bar dataKey="Price" fill="#8884d8" />
                                 <Bar dataKey="Price" fill="#82ca9d" />
-                            </BarChart>
+                            </BarChart> */}
                         </div>
                     </div>
                 }
                 <div className="row">
 
-                    <div className="col-md-5 col-md-offset-1 panel user-stocks">
+                    <div className="col-md-7 panel user-stocks">
                         <div className="panel-heading">
                             Your Stocks
                     </div>
