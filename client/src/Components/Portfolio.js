@@ -15,8 +15,8 @@ class Portfolio extends React.Component {
         quantity: 0,
         userId: 1,
         portId: -1,
-        editing: false,
-        currentStock: {},
+        // editing: false,
+        //currentStock: {},
         Stocks: []
     };
     async componentDidMount() {
@@ -65,7 +65,7 @@ class Portfolio extends React.Component {
                     alert("Please enter a number");
                 }
                 else if (userQuant * price > this.state.result.balance) {
-                    alert(``)
+                    alert(`The quantity of stock you purchased ${userQuant} has a total price of $${userQuant*price} which is greater than your Current Balance: ${this.state.result.balance}`)
                 }
                 else {
                     let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -165,43 +165,43 @@ class Portfolio extends React.Component {
                 }
             })
     }
-    handleEdit = async (id, name, quantity, symbol, imageLink, price, PortfolioId) => {
-        const temp = {
-            id: id,
-            name: name,
-            quantity: quantity,
-            symbol: symbol,
-            imageLink: imageLink,
-            price: price,
-            PortfolioId: PortfolioId
-        }
-        console.log(temp, "editing");
-        await this.setState({
-            currentStock: temp,
-            quantity: quantity,
-            stockName: name,
-            editing: true
-        });
-        return console.log(this.state.currentStock, this.state);
-    }
-    handleEditSubmit = event => {
-        //console.log(this.state.currentStock)
-        event.preventDefault();
-        let tempStock = this.state.currentStock;
-        tempStock.quantity = this.state.quantity;
-        stockApi.update(tempStock)
-            .then(res => {
-                console.log(res);
-                this.setState({
-                    editing: false,
-                    currentStock: {},
-                    stockName: "",
-                    quantity: 0
-                });
-                this.searchPortfolios(this.state.userId);
-            })
-            .catch(err => console.log(err));
-    }
+    // handleEdit = async (id, name, quantity, symbol, imageLink, price, PortfolioId) => {
+    //     const temp = {
+    //         id: id,
+    //         name: name,
+    //         quantity: quantity,
+    //         symbol: symbol,
+    //         imageLink: imageLink,
+    //         price: price,
+    //         PortfolioId: PortfolioId
+    //     }
+    //     console.log(temp, "editing");
+    //     await this.setState({
+    //         currentStock: temp,
+    //         quantity: quantity,
+    //         stockName: name,
+    //         editing: true
+    //     });
+    //     return console.log(this.state.currentStock, this.state);
+    // }
+    // handleEditSubmit = event => {
+    //     //console.log(this.state.currentStock)
+    //     event.preventDefault();
+    //     let tempStock = this.state.currentStock;
+    //     tempStock.quantity = this.state.quantity;
+    //     stockApi.update(tempStock)
+    //         .then(res => {
+    //             console.log(res);
+    //             this.setState({
+    //                 editing: false,
+    //                 currentStock: {},
+    //                 stockName: "",
+    //                 quantity: 0
+    //             });
+    //             this.searchPortfolios(this.state.userId);
+    //         })
+    //         .catch(err => console.log(err));
+    // }
     handleDelete = (id, name, quantity, price) => {
         //const stocks = this.state.stocks.filter(stock => stock.id !== id);
         console.log(id);
@@ -372,7 +372,7 @@ class Portfolio extends React.Component {
                             />))}
                         </div>)}
                 </div>
-                {!this.state.editing ? (
+                
                     <form>
                         Stock Name:
                     <input
@@ -392,6 +392,7 @@ class Portfolio extends React.Component {
                             submit
                     </button>
                     </form>
+                    {/* {!this.state.editing ? (
                 ) : (
                         <form>
                             Quantity:
@@ -407,11 +408,9 @@ class Portfolio extends React.Component {
                         </form>
                         // <div/>
                     )
-                }
-
+                } */}
             </div>
         );
     }
 }
-
 export default Portfolio;
