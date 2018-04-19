@@ -20,7 +20,15 @@ export default {
     return axios.get(BASEURL + query);
   },
 
+  pieChartData: function(symbol) {
+    return axios.get(BASEURL + "/stock/" + symbol + "/price");
+  },
+
   chartData: function(query) {
     return axios.get(BASEURL + "/stock/" + query + "/chart/1d");
+  },
+
+  changeDate: function(stockSymbol, date) {
+    return axios.get(BASEURL + "/stock/" + stockSymbol + "/chart/" + date);
   }
 };

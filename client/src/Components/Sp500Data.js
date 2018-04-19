@@ -19,7 +19,7 @@ class Sp500 extends React.Component {
 
     checkSpPrice = price => {
         if(price === -1) {
-            for(let i=this.state.sp500[this.state.sp500.length - 1]; i > -1; i--) {
+            for(let i=(this.state.sp500.length - 1); i > -1; i--) {
                 if(this.state.sp500[i].marketHigh !== -1) {
                     return this.state.sp500[i].marketHigh;
                 }

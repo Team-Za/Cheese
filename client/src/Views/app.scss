@@ -7,7 +7,7 @@ $hover-font-color: #67c186;
 $new-font: 'Concert One', cursive;
 $round-corners: 6px;
 $gradient-gray: linear-gradient(to bottom right,#454e58, #65737f);
-$gradient-blue: linear-gradient(to right,rgba(110, 128, 191, .6), rgba(76, 194, 240, .6));
+$gradient-blue: linear-gradient(to right,rgba(110, 128, 191, 0.6), rgba(76, 194, 240, .6));
 $gradient-red: linear-gradient(to right, #f07089, #f5918d);
 $shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
 
@@ -128,6 +128,7 @@ a:focus {
 
 .panel-heading {
   font-size: 20px;
+  text-align: left;
 }
 
 .stock-info {
@@ -201,6 +202,7 @@ a:focus {
   font-size: 15px;
   border-radius: $round-corners;
   box-shadow: $shadow;
+  text-align: center;
 }
 
 .switch-chart {
@@ -224,6 +226,26 @@ a:focus {
 
 .chart-tabs:visited {
   background-color: blue;
+}
+
+.switch-date {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.date-tabs {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  bottom: -21px;
+}
+
+.date-tabs:hover {
+  background-color: $dark-background;
+  cursor: pointer;
 }
 
 // Pop up box chart 
