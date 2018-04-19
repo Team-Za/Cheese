@@ -21,6 +21,14 @@ module.exports = function (sequelize, Sequelize) {
       type: Sequelize.DATE(3),
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP(3)')
+    },
+    balance:{
+      type: Sequelize.DECIMAL(10,2),
+      allowNull: false,
+      defaultValue: 10000,
+      validate: {
+        min:0
+      }
     }
   },
     {
