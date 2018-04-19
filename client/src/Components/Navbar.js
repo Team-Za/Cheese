@@ -12,19 +12,19 @@ const Navbar = props => (
     <div className="top-menu">
       <Link to="/dashboard">
         <div className="top-menu-item" id="dashboard">
-          <i class="fas fa-th-large"></i> Dashboard
+          <i className="fas fa-th-large"></i> Dashboard
           </div>
       </Link>
 
       <Link to="/market">
         <div className="top-menu-item" id="market">
-          <i class="fas fa-chart-line"></i> Market
+          <i className="fas fa-chart-line"></i> Market
           </div>
       </Link>
 
       <Link to="/portfolio">
         <div className="top-menu-item" id="portfolio">
-          <i class="fas fa-chart-line"></i> Portfolio
+          <i className="fas fa-chart-line"></i> Portfolio
           </div>
       </Link>
     </div>

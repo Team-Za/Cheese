@@ -22,14 +22,14 @@ class LandingPage extends React.Component {
 
   searchSymbols = query => {
     API.allSymbols(query)
-      .then(res => { console.log(res.data); this.setState({ result: res.data }) })
+      .then(res => {this.setState({ result: res.data }) })
       .catch(err => console.log(err));
   };
 
   render() {
     return (
       <Router>
-        <div className="container">
+        <div className="container-fluid">
           <Navbar />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/market" component={Market} />

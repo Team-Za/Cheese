@@ -54,6 +54,7 @@ const controller = {
   create: (req, res) => {
     db.Portfolio.create({
       userName: req.body.userName,
+      balance:req.body.balance,
       UserId: req.body.UserId
     })
       .then(dbModel => res.json(dbModel))
@@ -62,13 +63,16 @@ const controller = {
   update: (req, res) => {
     db.Portfolio.update({
       userName: req.body.userName,
+      balance:req.body.balance,
       UserId: req.body.UserId
     }, {
         where: {
           id: req.params.id,
         }
       })
-      .then(dbModel => res.json(dbModel))
+      .then(dbModel => {
+        console.log("update",dbModel);
+        res.json(dbModel)})
       .catch(err => res.status(422).json(err));
   },
   remove: (req, res) => {
