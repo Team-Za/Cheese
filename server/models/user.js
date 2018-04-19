@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 module.exports = function (sequelize, Sequelize) {
 
     var User = sequelize.define('User', {
@@ -38,6 +39,27 @@ module.exports = function (sequelize, Sequelize) {
     },
         {
             timestamps: true,
+            hooks: { beforeSave: (user, options) => {
+                
+
+
+                return new Promise((resolve, reject) => {
+                    bcrypt.genSalt((saltError, salt) => {
+                        if (saltError) { resolve(saltError); }
+                    
+                        return bcrypt.hash(user.password, salt, (hashError, hash) => {
+                          if (hashError) { resolve(hashError); }
+                    
+                          // replace a password string with hash value
+                          user.set("password", hash);
+                    
+                          resolve();
+                        });
+                      });
+                }) 
+            }
+
+            }
         });
         User.associate = function(models){
             User.hasOne(models.Portfolio,{
@@ -46,5 +68,8 @@ module.exports = function (sequelize, Sequelize) {
                   }
             }); 
         };
+        User.prototype.comparePassword = function comparePassword(password, callback) {
+            bcrypt.compare(password, this.password, callback);
+          };
     return User;
 }
