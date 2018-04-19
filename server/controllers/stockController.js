@@ -39,6 +39,7 @@ const controller = {
   },
   update: (req, res) => {
     db.Stock.update({
+      id:req.body.id,
       name: req.body.name,
       quantity: req.body.quantity,
       symbol: req.body.symbol,
@@ -54,8 +55,7 @@ const controller = {
       .catch(err => res.status(422).json(err));
   },
   remove: (req, res) => {
-    db.Stock.destroy({
-    }, {
+    db.Stock.destroy( {
         where: {
           id: req.params.id
         }
