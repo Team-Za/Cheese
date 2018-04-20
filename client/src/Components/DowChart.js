@@ -3,8 +3,6 @@ import API from "../utils/API";
 import Sp500 from './Sp500Data';
 import { browserHistory, Router } from 'react-router';
 import routes from '../Views/routes.js';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class DowChart extends React.Component {
     state = {
