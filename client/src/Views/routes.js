@@ -38,7 +38,7 @@ const routes = {
         Auth.deauthenticateUser();
 
         // change the current URL to /
-        replace('/');
+        replace('/landingpage');
       }
     }
 
