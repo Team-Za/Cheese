@@ -94,6 +94,7 @@ const SignUpForm = ({
       <i class="fas fa-envelope icons"></i><input
           className="sign-up-inputs"
           placeholder="email"
+          name="email"
           errorText={errors.email}
           onChange={onChange}
           value={user.email}
