@@ -41,7 +41,7 @@ class Sp500 extends React.Component {
                     SP 500 loading...
                 </span>:
                 <span>
-                    S&amp;P 500  {this.checkSpPrice(this.state.sp500[this.state.sp500.length - 1].average)}<i class="fas fa-arrow-up bounce-up"></i><br/>
+                    S&amp;P 500  {this.checkSpPrice(this.state.sp500[this.state.sp500.length - 1].average)}<i className="fas fa-arrow-up bounce-up"></i><br/>
                     <span className="lp-symbol">(SPY)</span>
                 </span>}
             </div>

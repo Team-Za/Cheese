@@ -1,16 +1,16 @@
 import React from 'react';
-import { Card, CardTitle, CardText } from 'material-ui/Card';
+
 
 
 const Dashboard = ({ secretData }) => (
-  <Card className="container">
-    <CardTitle
+  <div className="container">
+    <div
       title="Dashboard"
       subtitle="You should get access to this page only after authentication."
     />
 
-    {secretData && <CardText style={{ fontSize: '16px', color: 'green' }}>{secretData}</CardText>}
-  </Card>
+    {/* {secretData && <div style={{ fontSize: '16px', color: 'green' }}>{secretData}</div>} */}
+  </div>
 );
 
 
