@@ -8,6 +8,7 @@ import Sp500 from './Sp500Data';
 import Dashboard from './Dashboard';
 import Market from './Market';
 import Portfolio from "./Portfolio";
+import SignUpForm from './SignUpForm';
 
 class LandingPage extends React.Component {
   state = {

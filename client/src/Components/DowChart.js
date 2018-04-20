@@ -1,6 +1,10 @@
 import React from "react";
 import API from "../utils/API";
 import Sp500 from './Sp500Data';
+import { browserHistory, Router } from 'react-router';
+import routes from '../Views/routes.js';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class DowChart extends React.Component {
     state = {
@@ -14,17 +18,19 @@ class DowChart extends React.Component {
 
     getChartData = query => {
         API.getDow(query)
-            .then(res => { console.log("Dow Data", res.data[res.data.length - 1]); 
-            this.setState({ 
-                result: res.data, loading: false 
-            }) })
+            .then(res => {
+                console.log("Dow Data", res.data[res.data.length - 1]);
+                this.setState({
+                    result: res.data, loading: false
+                })
+            })
             .catch(err => console.log(err));
     };
 
     checkDowPrice = price => {
-        if(price === -1) {
-            for(let i=(this.state.result.length - 1); i > -1; i--) {
-                if(this.state.result[i].marketHigh !== -1) {
+        if (price === -1) {
+            for (let i = (this.state.result.length - 1); i > -1; i--) {
+                if (this.state.result[i].marketHigh !== -1) {
                     return this.state.result[i].marketHigh;
                 }
             }
@@ -45,7 +51,7 @@ class DowChart extends React.Component {
                             Dow loading...
                         </div> :
                         <div className="dow col-md-12">
-                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i class="fas fa-arrow-down bounce-down"></i><br/>
+                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i class="fas fa-arrow-down bounce-down"></i><br />
                             <span className="lp-symbol">(DJI)</span>
                         </div>}
 
@@ -53,7 +59,7 @@ class DowChart extends React.Component {
                 </div>
 
                 <div className="sign-up">
-                    Sign up form here
+
                 </div>
             </div>
         );
