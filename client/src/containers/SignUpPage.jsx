@@ -57,7 +57,7 @@ class SignUpPage extends React.Component {
         localStorage.setItem('successMessage', xhr.response.message);
 
         // make a redirect
-        this.context.router.replace('/');
+        this.props.router.replace('/login');
       } else {
         // failure
 
