@@ -17,7 +17,7 @@ const routes = {
         if (Auth.isUserAuthenticated()) {
           callback(null, DashboardPage);
         } else {
-          callback(null, LandingPage);
+          callback(null, LoginPage);
         }
       }
     },
