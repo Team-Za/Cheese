@@ -2,7 +2,6 @@ import React from "react";
 import API from "../utils/API";
 import Sp500 from './Sp500Data';
 import { browserHistory, Router } from 'react-router';
-import routes from '../Views/routes.js';
 
 class DowChart extends React.Component {
     state = {
@@ -49,7 +48,7 @@ class DowChart extends React.Component {
                             Dow loading...
                         </div> :
                         <div className="dow col-md-12">
-                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i class="fas fa-arrow-down bounce-down"></i><br />
+                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i className="fas fa-arrow-down bounce-down"></i><br />
                             <span className="lp-symbol">(DJI)</span>
                         </div>}
 

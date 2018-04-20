@@ -59,18 +59,21 @@ function validateLoginForm(payload) {
   let isFormValid = true;
   let message = '';
 
-  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
+  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length === 0) {
     isFormValid = false;
-    errors.email = 'Please provide your email address.';
+    errors.username = 'Please provide your username.';
+    console.log("Test 1");
   }
 
   if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
     isFormValid = false;
     errors.password = 'Please provide your password.';
+    console.log("Test 2");
   }
 
   if (!isFormValid) {
     message = 'Check the form for errors.';
+    console.log("Monkey");
   }
 
   return {

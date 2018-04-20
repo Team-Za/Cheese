@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import API from '../utils/API';
 import '../Views/app.scss';
@@ -9,6 +9,9 @@ import Dashboard from './Dashboard';
 import Market from './Market';
 import Portfolio from "./Portfolio";
 import SignUpForm from './SignUpForm';
+import Auth from '../modules/Auth';
+import LoginPage from '../containers/LoginPage.jsx';
+import SignUpPage from '../containers/SignUpPage.jsx';
 
 class LandingPage extends React.Component {
   state = {
@@ -35,7 +38,16 @@ class LandingPage extends React.Component {
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/market" component={Market} />
           <Route exact path="/portfolio" component={Portfolio} />
-          <Route exact path="/" component={DowChart} />
+          <Route exact path="/signup" component={SignUpPage} />
+          <Route exact path="/" render={() => (
+            <Fragment>
+              <DowChart />
+              {!Auth.isUserAuthenticated() && 
+                <LoginPage />
+              }
+            </Fragment>
+          )
+          } />
         </div>
       </Router>
     );
