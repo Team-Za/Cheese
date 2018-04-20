@@ -2,6 +2,7 @@ $dark-background: #2e323a;
 $lighter-background: #3e434d;
 $light-blue: rgb(43, 123, 158);
 $lighter-blue: rgb(51, 152, 212);
+$cool-green: #67c186;
 $font-color: #ffffff;
 $hover-font-color: #67c186;
 $new-font: 'Concert One', cursive;
@@ -21,6 +22,10 @@ body {
 
 .row {
   padding: 15px;
+}
+
+input:focus {
+  outline: none;
 }
 
 a {
@@ -113,6 +118,103 @@ a:focus {
 
 .sign-up {
   margin-left: auto;
+}
+
+.form-container {
+  font-family: 'Concert One', cursive !important;
+  background-color: $lighter-background;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.form-body {
+  padding: 5% 10%;
+}
+
+.field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+}
+
+.button-line {
+  text-align: right;
+  font-family: 'Concert One', cursive !important;
+  border-radius: $round-corners;
+}
+
+.sign-up-inputs {
+  border-radius: 3px;
+  width: 90%;
+  border: none;
+  color: $cool-green;
+}
+
+.sign-up-button {
+  border-radius: 3px;
+  padding: 1.5% 10% 1.5% 10%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+}
+
+.sign-up-button:hover {
+  transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.form-bar {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.log-in {
+  position: relative;
+  display: inline-block;
+  width: 40%;
+  padding: 3% 0;
+  background-color: $dark-background;
+}
+
+.sign-up {
+  position: relative;
+  display: inline-block;
+  background-color: $dark-background;
+  width: 60%;
+  padding: 3% 0;
+  border-top-right-radius: 6px;
+}
+
+.active-tab {
+  background-color: $lighter-background;
+}
+
+.icons {
+  color: black;
+  margin-right: 10px;
+}
+
+.accounts {
+  color: white;
+  margin-top: 15px;
+  text-align: right;
+}
+
+.error-message {
+  color: rgb(255, 37, 37);
 }
 
 // Dashboard Page
@@ -250,7 +352,7 @@ a:focus {
 
 // Pop up box chart 
 .recharts-tooltip-wrapper {
-  color: red;
+  color: $cool-green;
 }
 
 // Bar Chart
@@ -322,7 +424,7 @@ a:focus {
 	-moz-animation: bounce-up 3s infinite;
 	-webkit-animation: bounce-up 3s infinite;
   animation: bounce-up 3s infinite;
-  color: rgb(29, 158, 12);
+  color: $cool-green;
   display: inline-flex;
 }
 
