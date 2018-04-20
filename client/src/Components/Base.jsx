@@ -1,27 +1,29 @@
 import React  from 'react';
-import { Link, IndexLink } from 'react-router';
+import { NavLink, Link, IndexLink } from 'react-router';
 import Auth from '../modules/Auth';
+
+var divStyle = {
+  width: '100%'
+}
 
 
 const Base = ({ children }) => (
-  <div>
-    <div className="top-bar">
-      <div className="top-bar-left">
-        <IndexLink to="/">React App</IndexLink>
-      </div>
-
+  <div style={divStyle}>
       {Auth.isUserAuthenticated() ? (
         <div className="top-bar-right">
           <Link to="/logout">Log out</Link>
         </div>
       ) : (
-        <div className="top-bar-right">
-          <Link to="/login">Log in</Link>
-          <Link to="/signup">Sign up</Link>
+        <div className="form-bar">
+          <Link className="log-in" activeClassName='active-tab' to="/login">
+          Log in
+          </Link>
+
+          <Link className="sign-up" activeClassName='active-tab' to="/signup">
+          Sign up
+          </Link>
         </div>
       )}
-
-    </div>
 
     { /* child component will be rendered here */ }
     {children}

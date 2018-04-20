@@ -36,9 +36,10 @@ class Dashboard extends React.Component {
             this.setState({
                 data: values[1],
                 userPortfolioData: values[0],
+                loading: false
                 // activeStock: values[0][0].name,
             });
-            this.getPieChartData();
+            // this.getPieChartData();
         });
     }
 
@@ -160,46 +161,46 @@ class Dashboard extends React.Component {
         return dataArray;
     }
 
-    getPieChartData = () => {
-        return new Promise((resolve, reject) => {
-            let totalPortPrice = 0;
-            let allStockPrices = [];
-            for (let i = 0; i < this.state.userPortfolioData.length; i++) {
-                API.pieChartData(this.state.userPortfolioData[i].symbol)
-                    .then(res => {
-                        let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
-                        let stockName = this.state.userPortfolioData[i].name;
-                        let stock = {
-                            name: stockName,
-                            value: stockPrice
-                        }
-                        allStockPrices.push(stock);
-                        totalPortPrice += stockPrice;
-                        console.log("Price Here:", this.state.userPortfolioData[i].quantity);
-                        console.log("Result:", res.data)
-                    })
-            }
-            var neededPieChartInfo = {
-                totalPortPrice,
-                allStockPrices
-            }
-            resolve(neededPieChartInfo);
+    // getPieChartData = () => {
+    //     return new Promise((resolve, reject) => {
+    //         let totalPortPrice = 0;
+    //         let allStockPrices = [];
+    //         for (let i = 0; i < this.state.userPortfolioData.length; i++) {
+    //             API.pieChartData(this.state.userPortfolioData[i].symbol)
+    //                 .then(res => {
+    //                     let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
+    //                     let stockName = this.state.userPortfolioData[i].name;
+    //                     let stock = {
+    //                         name: stockName,
+    //                         value: stockPrice
+    //                     }
+    //                     allStockPrices.push(stock);
+    //                     totalPortPrice += stockPrice;
+    //                     console.log("Price Here:", this.state.userPortfolioData[i].quantity);
+    //                     console.log("Result:", res.data)
+    //                 })
+    //         }
+    //         var neededPieChartInfo = {
+    //             totalPortPrice,
+    //             allStockPrices
+    //         }
+    //         resolve(neededPieChartInfo);
 
-        }).then(values => {
-            console.log("PIE CHART", values)
-            this.setState({
-                pieChartData: {
-                    totalPortfolioPrice: values.totalPortPrice
-                },
-                eachStockPrice: values.allStockPrices,
-                testData: values.allStockPrices,
-                loading: false
-            })
+    //     }).then(values => {
+    //         console.log("PIE CHART", values)
+    //         this.setState({
+    //             pieChartData: {
+    //                 totalPortfolioPrice: values.totalPortPrice
+    //             },
+    //             eachStockPrice: values.allStockPrices,
+    //             testData: values.allStockPrices,
+    //             loading: false
+    //         })
             
-        })
+    //     })
 
         
-    }
+    // }
 
     renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
         const RADIAN = Math.PI / 180;
