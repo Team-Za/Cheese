@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import Auth from '../modules/Auth';
 import LoginForm from '../Components/LoginForm.jsx';
 
@@ -24,7 +25,7 @@ class LoginPage extends React.Component {
       errors: {},
       successMessage,
       user: {
-        email: '',
+        username: '',
         password: ''
       }
     };
@@ -43,9 +44,9 @@ class LoginPage extends React.Component {
     event.preventDefault();
 
     // create a string for an HTTP body message
-    const email = encodeURIComponent(this.state.user.email);
+    const username = encodeURIComponent(this.state.user.username);
     const password = encodeURIComponent(this.state.user.password);
-    const formData = `email=${email}&password=${password}`;
+    const formData = `username=${username}&password=${password}`;
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();
@@ -66,7 +67,7 @@ class LoginPage extends React.Component {
 
 
         // change the current URL to /
-        this.context.router.replace('/');
+        this.props.history.push('/');
       } else {
         // failure
 
@@ -116,4 +117,4 @@ class LoginPage extends React.Component {
 
 
 
-export default LoginPage;
+export default withRouter(LoginPage);
