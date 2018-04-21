@@ -1,5 +1,5 @@
 import React  from 'react';
-import { NavLink, Link, IndexLink } from 'react-router';
+import { NavLink, Link, IndexLink } from 'react-router-dom';
 import Auth from '../modules/Auth';
 
 var divStyle = {
