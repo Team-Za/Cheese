@@ -64,7 +64,7 @@
 
 
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Base from './Base';
 
 const SignUpForm = ({
@@ -94,6 +94,7 @@ const SignUpForm = ({
       <i class="fas fa-envelope icons"></i><input
           className="sign-up-inputs"
           placeholder="email"
+          name="email"
           errorText={errors.email}
           onChange={onChange}
           value={user.email}

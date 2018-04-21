@@ -3,9 +3,6 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 import API from "../utils/API";
 import '../Views/app.scss';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
-// import Navbar from "./Navbar";
-// import DowChart from './DowChart';
-// import Sp500 from './Sp500Data';
 import { BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 class Dashboard extends React.Component {

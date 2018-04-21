@@ -10,13 +10,10 @@ class Stock extends React.Component {
         return (
             <div className="stock">
                 <div>
-                    Stock: {this.props.name}
-                    Symbol: {this.props.symbol}
-                    Image: <img src={this.props.imageLink} />
+                    Stock: {this.props.name} Symbol: {this.props.symbol} Image: <img src={this.props.imageLink} />
                     {this.props.args.map(element => (
                         <div key={element.id}>
-                            Quantity:{element.quantity}
-                            Price:{element.price}
+                            Quantity:{element.quantity} Price:{element.price}
                             <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
                                 Sell All
                             </button>
