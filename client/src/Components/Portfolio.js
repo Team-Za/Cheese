@@ -6,7 +6,9 @@ import '../Views/app.scss';
 import Navbar from "./Navbar";
 import Stock from "./Stock";
 import { Promise } from 'core-js';
-
+const formColor ={
+    color:"white"
+}
 class Portfolio extends React.Component {
     state = {
         result: [],
@@ -18,12 +20,14 @@ class Portfolio extends React.Component {
         sidebarArgs: [],
         sidebarState: "add",
         companies: [],
-        Stocks: []
+        Stocks: [],
+        //prompting: false,
+        //message: ""
     };
     async componentDidMount() {
         await this.loadSymbols();
         await this.searchPortfolios(this.state.userId)
-    }
+    };
     searchPortfolios = async id => {
         const temp = await portApi.getPortfolioAndStocksbyUserId(id)
             .then(res => { console.log(res, new Date()); this.setState({ result: res, portId: res.id }) })
@@ -38,7 +42,7 @@ class Portfolio extends React.Component {
         const temp = await API.allSymbols("/ref-data/symbols")
             .then(res => {
                 console.log(res.data, "Symbols loaded", new Date()); res.data.map(stock => (
-                    sessionStorage.setItem(stock.name, stock.symbol)))
+                    localStorage.setItem(stock.name, stock.symbol)))
             })
             .catch(err => console.log(err));
         return temp;
@@ -46,18 +50,18 @@ class Portfolio extends React.Component {
     filterInput() {
         let comps = [];
         const prom1 = new Promise((resolve) => {
-            for (let i = 0; i < sessionStorage.length; i++) {
-                let tempCompName = sessionStorage.key(i);
+            for (let i = 0; i < localStorage.length; i++) {
+                let tempCompName = localStorage.key(i);
                 const filter = this.state.stockName.toUpperCase();
                 if (tempCompName.toUpperCase().indexOf(filter) > -1) {
                     comps.push(tempCompName);
                 }
             }
         }).then(this.setState({ companies: comps }))
-    }
+    };
     handleInputChange = event => {
         const { name, value } = event.target;
-        if (typeof value == "string" && value.length > 3) {
+        if (typeof value === "string" && value.length > 3) {
             this.filterInput();
             console.log(this.state.companies);
         }
@@ -67,24 +71,24 @@ class Portfolio extends React.Component {
     };
     makeStock(stock) {
         return stockApi.create(stock);
-    }
+    };
     getPrice(symbol) {
         return API.allSymbols(`/stock/${symbol}/quote`);
-    }
+    };
     getLogo(symbol) {
         return API.allSymbols(`/stock/${symbol}/logo`);
-    }
+    };
     updatePortfolio(portfolio) {
-        return (portApi.update(portfolio).catch(err=>console.log(err)));
-    }
+        return (portApi.update(portfolio).catch(err => console.log(err)));
+    };
     updateStock(stock) {
-        return (stockApi.update(stock).catch(err=>console.log(err)));
-    }
+        return (stockApi.update(stock).catch(err => console.log(err)));
+    };
     deleteStock(id) {
-        return (stockApi.delete(id).catch(err=>console.log(err)));
-    }
+        return (stockApi.delete(id).catch(err => console.log(err)));
+    };
     makeTempStock(name, quantity, symbol, imageLink, price, id) {
-        if (id == undefined) {
+        if (id === undefined) {
             return {
                 name: name,
                 quantity: quantity,
@@ -105,7 +109,7 @@ class Portfolio extends React.Component {
                 PortfolioId: this.state.portId
             }
         }
-    }
+    };
     makeTempPortfolio(balance) {
         return {
             id: this.state.portId,
@@ -113,7 +117,7 @@ class Portfolio extends React.Component {
             balance: balance,
             UserId: this.state.userId
         }
-    }
+    };
     handleAdd = async (name, symbol, imageLink, PortfolioId) => {
         const quoteData = await this.getPrice(symbol);
         console.log(quoteData.data, new Date());
@@ -143,7 +147,7 @@ class Portfolio extends React.Component {
                 alert("Ok then...")
             }
         }
-    }
+    };
     handleSell = async (id, name, quantity, symbol, imageLink, originalPrice, PortfolioId) => {
         const quoteData = await this.getPrice(symbol);
         console.log(quoteData.data, new Date());
@@ -181,7 +185,7 @@ class Portfolio extends React.Component {
                 alert("Ok then...")
             }
         }
-    }
+    };
     handleDelete = async (id, name, quantity, price) => {
         console.log(id);
         let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -196,7 +200,7 @@ class Portfolio extends React.Component {
         else {
             alert("Ok, fine.");
         }
-    }
+    };
     handleFormSubmit = async event => {
         event.preventDefault();
         this.setState({
@@ -204,11 +208,11 @@ class Portfolio extends React.Component {
         });
         if (this.state.stockName !== "" && (this.state.quantity > 0)) {
             let symbol = "";
-            if (sessionStorage.getItem(this.state.stockName) === null) {
+            if (localStorage.getItem(this.state.stockName) === null) {
                 alert("Stock name not found");
             }
             else {
-                symbol = sessionStorage.getItem(this.state.stockName);
+                symbol = localStorage.getItem(this.state.stockName);
             }
             const quoteData = await this.getPrice(symbol);
             console.log(quoteData.data, new Date());
@@ -245,7 +249,7 @@ class Portfolio extends React.Component {
             let stock = stocks[i];
             if (indices.has(stock.name)) {
                 const index = indices.get(stock.name);
-                console.log(stock, index)
+                //console.log(stock, index)
                 choices[index].args.push({
                     id: stock.id,
                     quantity: stock.quantity,
@@ -265,20 +269,20 @@ class Portfolio extends React.Component {
                     PortfolioId: stock.PortfolioId
                 }
                 choices.push(tempStock);
-                console.log(i)
-                indices.set(stock.name, choices.length-1);
+                // console.log(i)
+                indices.set(stock.name, choices.length - 1);
             }
         }
         choices.sort((name1, name2) => {
             return name1.name.localeCompare(name2.name);
         });
-        console.log(choices, indices);
+        //console.log(choices, indices);
         this.setState({
             Stocks: choices,
             loading: false
         });
         return choices;
-    }
+    };
     render() {
         return (
             <div className="container">
@@ -293,7 +297,6 @@ class Portfolio extends React.Component {
                                 args={stock.args}
                                 symbol={stock.symbol}
                                 imageLink={stock.imageLink}
-                                PortfolioId={stock.PortfolioId}
                                 handleDelete={this.handleDelete}
                                 handleAdd={this.handleAdd}
                                 stateQuant={this.state.quantity}
@@ -302,51 +305,60 @@ class Portfolio extends React.Component {
                         </div>)}
                 </div>
                 {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
-                <form>
-                    Stock Name:
-                    <input
-                        value={this.state.stockName}
-                        onChange={this.handleInputChange}
-                        name="stockName"
-                        placeholder="Name of stock (required)"
-                    />
-                    Quantity:
-                    <input
-                        value={this.state.quantity}
-                        onChange={this.handleInputChange}
-                        name="quantity"
-                        placeholder="Quantity (required)"
-                    />
-                    <button onClick={this.handleFormSubmit}>
-                        submit
-                    </button>
-                </form>
+                {/* {!this.state.prompting ? ( */}
                 <div>
-                    <ul>
-                        {this.state.companies.map(company => (
-                            <li onClick={() => this.setState({ stockName: company })}>{company}</li>
-                        ))}
-                    </ul>
-                </div>
-                {/* {!this.state.editing ? (
-                ) : (
-                        <form>
+                    <form>
+                        <fieldset>
+                            <legend style={formColor}>Add new stocks here</legend>
+                            Stock Name:
+                            <input
+                                value={this.state.stockName}
+                                onChange={this.handleInputChange}
+                                name="stockName"
+                                placeholder="Name of stock (required)"
+                            />
                             Quantity:
-                    <input
+                            <input
                                 value={this.state.quantity}
                                 onChange={this.handleInputChange}
                                 name="quantity"
-                                placeholder={this.state.quantity}
+                                placeholder="Quantity (required)"
                             />
-                            <button onClick={this.handleEditSubmit}>
+                            <button onClick={this.handleFormSubmit}>
                                 submit
-                        </button>
-                        </form>
-                        // <div/>
+                            </button>
+                        </fieldset>
+                    </form>
+                    <div>
+                        <ul>
+                            {this.state.companies.map(company => (
+                                <li onClick={() => this.setState({ stockName: company })}>{company}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                {/* ) : (
+                    //     <form>
+                    //         Quantity:
+                    // <input
+                    //             value={this.state.quantity}
+                    //             onChange={this.handleInputChange}
+                    //             name="quantity"
+                    //             placeholder={this.state.quantity}
+                    //         />
+                    //         <button onClick={this.handleEditSubmit}>
+                    //             submit
+                    //     </button>
+                    //     </form>
+                    <div>
+                        {this.state.message}
+                        <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
+                    </div>
+                       //<div/>
                     )
                 } */}
             </div>
         );
-    }
+    };
 }
 export default Portfolio;
