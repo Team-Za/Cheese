@@ -25,6 +25,23 @@ const controller = {
             })
             .catch(err => res.status(422).json(err));
     },
+    findByUsername: (req, res) => {
+        db.User.findOne({
+            where: {
+                username: req.params.username,
+            }
+        })
+            .then(dbModel => {
+                if (dbModel) {
+                    res.json(dbModel);
+                } else {
+                    res.status(404).json({
+                        message: 'Id not found.'
+                    });
+                }
+            })
+            .catch(err => res.status(422).json(err));
+    },
     create: (req, res) => {
         db.User.create({
             username: req.body.username,
