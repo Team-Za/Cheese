@@ -1,7 +1,7 @@
 import React from 'react';
 import SignUpForm from '../Components/SignUpForm.jsx';
-
-
+import { portApi, stockApi, userApi } from "../utils/serverAPI";
+import { resolve } from 'path';
 class SignUpPage extends React.Component {
 
   /**
@@ -71,7 +71,23 @@ class SignUpPage extends React.Component {
     });
     xhr.send(formData);
   }
-
+  setDefaults() {
+    const prom1 = new Promise((resolve) => {
+      this.processForm()
+    }).then((res) => {
+      userApi.getByUsername(this.state.user.username)
+        .then(res2 => {
+          const tempPort = {
+            userName: res2.username,
+            balance: 10000,
+            UserId: res2.id
+          }
+          sessionStorage.setItem("UserId",res2.id);
+          portApi.create(tempPort);
+        })
+    });
+    return prom1;
+  }
   /**
    * Change the user object.
    *
