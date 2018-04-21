@@ -18,7 +18,9 @@ class Portfolio extends React.Component {
         sidebarArgs: [],
         sidebarState: "add",
         companies: [],
-        Stocks: []
+        Stocks: [],
+        //prompting: false,
+        //message: ""
     };
     async componentDidMount() {
         await this.loadSymbols();
@@ -57,7 +59,7 @@ class Portfolio extends React.Component {
     }
     handleInputChange = event => {
         const { name, value } = event.target;
-        if (typeof value == "string" && value.length > 3) {
+        if (typeof value === "string" && value.length > 3) {
             this.filterInput();
             console.log(this.state.companies);
         }
@@ -75,16 +77,16 @@ class Portfolio extends React.Component {
         return API.allSymbols(`/stock/${symbol}/logo`);
     }
     updatePortfolio(portfolio) {
-        return (portApi.update(portfolio).catch(err=>console.log(err)));
+        return (portApi.update(portfolio).catch(err => console.log(err)));
     }
     updateStock(stock) {
-        return (stockApi.update(stock).catch(err=>console.log(err)));
+        return (stockApi.update(stock).catch(err => console.log(err)));
     }
     deleteStock(id) {
-        return (stockApi.delete(id).catch(err=>console.log(err)));
+        return (stockApi.delete(id).catch(err => console.log(err)));
     }
     makeTempStock(name, quantity, symbol, imageLink, price, id) {
-        if (id == undefined) {
+        if (id === undefined) {
             return {
                 name: name,
                 quantity: quantity,
@@ -245,7 +247,7 @@ class Portfolio extends React.Component {
             let stock = stocks[i];
             if (indices.has(stock.name)) {
                 const index = indices.get(stock.name);
-                console.log(stock, index)
+                //console.log(stock, index)
                 choices[index].args.push({
                     id: stock.id,
                     quantity: stock.quantity,
@@ -265,14 +267,14 @@ class Portfolio extends React.Component {
                     PortfolioId: stock.PortfolioId
                 }
                 choices.push(tempStock);
-                console.log(i)
-                indices.set(stock.name, choices.length-1);
+                // console.log(i)
+                indices.set(stock.name, choices.length - 1);
             }
         }
         choices.sort((name1, name2) => {
             return name1.name.localeCompare(name2.name);
         });
-        console.log(choices, indices);
+        //console.log(choices, indices);
         this.setState({
             Stocks: choices,
             loading: false
@@ -293,7 +295,6 @@ class Portfolio extends React.Component {
                                 args={stock.args}
                                 symbol={stock.symbol}
                                 imageLink={stock.imageLink}
-                                PortfolioId={stock.PortfolioId}
                                 handleDelete={this.handleDelete}
                                 handleAdd={this.handleAdd}
                                 stateQuant={this.state.quantity}
@@ -302,47 +303,54 @@ class Portfolio extends React.Component {
                         </div>)}
                 </div>
                 {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
-                <form>
-                    Stock Name:
-                    <input
-                        value={this.state.stockName}
-                        onChange={this.handleInputChange}
-                        name="stockName"
-                        placeholder="Name of stock (required)"
-                    />
-                    Quantity:
-                    <input
-                        value={this.state.quantity}
-                        onChange={this.handleInputChange}
-                        name="quantity"
-                        placeholder="Quantity (required)"
-                    />
-                    <button onClick={this.handleFormSubmit}>
-                        submit
-                    </button>
-                </form>
+                {/* {!this.state.prompting ? ( */}
                 <div>
-                    <ul>
-                        {this.state.companies.map(company => (
-                            <li onClick={() => this.setState({ stockName: company })}>{company}</li>
-                        ))}
-                    </ul>
+                    <form>
+                        <h2>Add new stocks here</h2>
+                        Stock Name:
+                            <input
+                            value={this.state.stockName}
+                            onChange={this.handleInputChange}
+                            name="stockName"
+                            placeholder="Name of stock (required)"
+                        />
+                        Quantity:
+                            <input
+                            value={this.state.quantity}
+                            onChange={this.handleInputChange}
+                            name="quantity"
+                            placeholder="Quantity (required)"
+                        />
+                        <button onClick={this.handleFormSubmit}>
+                            submit
+                            </button>
+                    </form>
+                    <div>
+                        <ul>
+                            {this.state.companies.map(company => (
+                                <li onClick={() => this.setState({ stockName: company })}>{company}</li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
-                {/* {!this.state.editing ? (
-                ) : (
-                        <form>
-                            Quantity:
-                    <input
-                                value={this.state.quantity}
-                                onChange={this.handleInputChange}
-                                name="quantity"
-                                placeholder={this.state.quantity}
-                            />
-                            <button onClick={this.handleEditSubmit}>
-                                submit
-                        </button>
-                        </form>
-                        // <div/>
+                {/* ) : (
+                    //     <form>
+                    //         Quantity:
+                    // <input
+                    //             value={this.state.quantity}
+                    //             onChange={this.handleInputChange}
+                    //             name="quantity"
+                    //             placeholder={this.state.quantity}
+                    //         />
+                    //         <button onClick={this.handleEditSubmit}>
+                    //             submit
+                    //     </button>
+                    //     </form>
+                    <div>
+                        {this.state.message}
+                        <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
+                    </div>
+                       //<div/>
                     )
                 } */}
             </div>
