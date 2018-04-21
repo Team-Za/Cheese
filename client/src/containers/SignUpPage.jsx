@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
 
 
@@ -56,8 +57,8 @@ class SignUpPage extends React.Component {
         // set a message
         localStorage.setItem('successMessage', xhr.response.message);
 
-        // make a redirect
-        this.props.router.replace('/login');
+        // reload the page
+        window.location.reload();
       } else {
         // failure
 
@@ -105,4 +106,4 @@ class SignUpPage extends React.Component {
 
 
 
-export default SignUpPage;
+export default withRouter(SignUpPage);
