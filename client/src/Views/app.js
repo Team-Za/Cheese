@@ -25,7 +25,7 @@ const muiTheme = getMuiTheme({
 });
 
 const App = () => <div>
-  {console.log(browserHistory)}<LandingPage />
+ <LandingPage />
   <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
     <Router history= {browserHistory} routes={routes}/>
   </MuiThemeProvider>

@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 class Stock extends React.Component {
-    componentDidMount() {
-        this.show = false;
-        this.quantity = 0;
-    }
+    // componentDidMount() {
+    //     //this.show = false;
+    //     //this.quantity = 0;
+    // }
     render() {
         return (
             <div className="stock">
