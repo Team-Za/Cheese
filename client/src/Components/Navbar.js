@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import Auth from '../modules/Auth';
+import LoginPage from '../containers/LoginPage.jsx';
 
 const Navbar = ({ children, ...props }) => (
   <div className="row landing-nav">
@@ -29,6 +30,7 @@ const Navbar = ({ children, ...props }) => (
             <div className="top-menu-item" id="portfolio">
               <i className="fas fa-chart-line"></i> Portfolio
             </div>
+
           </Link>
             <div className="top-menu-item" id="dashboard" onClick={() => {
               Auth.deauthenticateUser();
@@ -65,6 +67,10 @@ const Navbar = ({ children, ...props }) => (
                 </div>
             </Link>
           </div>
+          <div>            
+            {!Auth.isUserAuthenticated() && 
+                <LoginPage />
+              }</div>
         </div>
       )}
 

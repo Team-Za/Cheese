@@ -26,9 +26,13 @@ class LoginPage extends React.Component {
       successMessage,
       user: {
         username: '',
-        password: ''
+        password: '',
+        id: ''
       }
+
     };
+   
+
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
@@ -46,7 +50,9 @@ class LoginPage extends React.Component {
     // create a string for an HTTP body message
     const username = encodeURIComponent(this.state.user.username);
     const password = encodeURIComponent(this.state.user.password);
-    const formData = `username=${username}&password=${password}`;
+    const id = encodeURIComponent(this.state.user.id)
+    const formData = `username=${username}&password=${password}&id=${id}`;
+    sessionStorage.setItem("id", this.state.user.username);
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();

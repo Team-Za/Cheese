@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 import API from "../utils/API";
 import '../Views/app.scss';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
-import { BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { Brush, BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 class Dashboard extends React.Component {
     state = {
@@ -13,6 +13,7 @@ class Dashboard extends React.Component {
         activeStock: "Apple (aapl)",
         activeStockSymbol: "aapl",
         userPortfolioData: [],
+        userId: sessionStorage.getItem('id') || 1,
         whichChart: "area",
         pieChartData: {
             totalPortfolioPrice: 0,
@@ -20,16 +21,16 @@ class Dashboard extends React.Component {
         },
         eachStockPrice: [],
         testData: [{ name: 'Alcoa Corporation', value: 594 }, { name: 'Apple', value: 1778.4 },
-            { name: 'Fidelity Value Factor', value: 328.1 }, { name: 'Fidelity Value Factor', value: 500 }, 
-            { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }],
+        { name: 'Fidelity Value Factor', value: 328.1 }, { name: 'Fidelity Value Factor', value: 500 },
+        { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }],
         colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398']
     };
 
     componentDidMount() {
-        console.log("YOOO", this.searchPortfolios(1))
+        console.log("YOOO", this.searchPortfolios(this.state.userId))
         Promise.all([this.searchPortfolios(1), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
             console.log(values);
-            // console.log("Ello",values[0][0]);
+            
             this.setState({
                 data: values[1],
                 userPortfolioData: values[0],
@@ -193,10 +194,10 @@ class Dashboard extends React.Component {
     //             testData: values.allStockPrices,
     //             loading: false
     //         })
-            
+
     //     })
 
-        
+
     // }
 
     renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
@@ -209,7 +210,7 @@ class Dashboard extends React.Component {
             <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
                 {`${(percent * 100).toFixed(0)}%`}
             </text>
-            
+
         );
     }
 
@@ -224,9 +225,9 @@ class Dashboard extends React.Component {
                     <div className="row">
                         <div className="col-md-6 user-chart panel">
                             <div className="switch-chart">
-                                <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i class="fas fa-chart-area"></i><br />Area Chart</div></a>
-                                <div className="chart-tabs" onClick={() => this.switchChart("line")}><i class="fas fa-chart-line"></i><br />Line Chart</div>
-                                <div className="chart-tabs"><i class="fas fa-chart-bar"></i><br />Bar Chart</div>
+                                <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i className="fas fa-chart-area"></i><br />Area Chart</div></a>
+                                <div className="chart-tabs" onClick={() => this.switchChart("line")}><i className="fas fa-chart-line"></i><br />Line Chart</div>
+                                <div className="chart-tabs" onClick={() => this.switchChart("bar")}><i className="fas fa-chart-bar"></i><br />Bar Chart</div>
                             </div>
                             {this.state.whichChart === "line" ?
                                 <div>
@@ -266,7 +267,30 @@ class Dashboard extends React.Component {
                                             <Area type='monotone' dataKey='Price' stroke='#6e80bf' strokeWidth={2} dot={{ r: 0 }} activeDot={{ r: 5 }} fill="url(#test)" />
                                         </AreaChart>
                                     </div>
-                                    : <div>test</div>
+                                    : this.state.whichChart === "bar" ?
+                                        <div>
+                                        <div className="panel-heading">
+                                            {this.state.activeStock}
+                                        </div>
+                                        <BarChart width={600} height={300} data={this.state.data}
+                                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
+                                            <ReferenceLine y={0} stroke='#000' />
+                                            <Brush dataKey='name' height={30} stroke="#8884d8" />
+                                            <defs>
+                                                <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
+                                                    <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
+                                                </linearGradient>
+                                            </defs>
+                                            <Bar dataKey="Price" fill="#8884d8" />
+                                        </BarChart>
+                                        </div>
+                                        : <div>test</div>
                             }
                             <div className="switch-date">
                                 <div className="date-tabs" onClick={() => this.switchDate("1d")}>1 Day</div>

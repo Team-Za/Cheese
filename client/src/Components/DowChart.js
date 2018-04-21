@@ -1,12 +1,19 @@
-import React from "react";
+import React, { Fragment } from "react";
 import API from "../utils/API";
 import Sp500 from './Sp500Data';
 import { browserHistory, Router } from 'react-router';
+import Auth from '../modules/Auth';
+import LoginPage from '../containers/LoginPage.jsx';
+import SignUpPage from '../containers/SignUpPage.jsx';
+import { NavLink, Link, IndexLink } from 'react-router-dom';
 
 class DowChart extends React.Component {
     state = {
         result: [],
-        loading: true
+        loading: true,
+        formChange: "login",
+        activeLogin: "active-tab",
+        activeSignup: ""
     };
 
     componentDidMount() {
@@ -38,6 +45,26 @@ class DowChart extends React.Component {
         }
     }
 
+    changeForm = formName => {
+        this.setState({
+            formChange: formName
+        })
+    }
+
+    changeActiveClasses = whichButton => {
+        if (whichButton === "login") {
+            this.setState({
+                activeLogin: "active-tab",
+                activeSignup: ""
+            })
+        } else {
+            this.setState({
+                activeLogin: "",
+                activeSignup: "active-tab"
+            })
+        }
+    }
+
     render() {
         console.log("hello", this.state.result[this.state.result.length - 1]);
         return (
@@ -56,7 +83,22 @@ class DowChart extends React.Component {
                 </div>
 
                 <div className="sign-up">
+                    {!Auth.isUserAuthenticated() &&
+                        <Fragment>
+                            <div className="form-bar col-md-12">
+                                <div className={`tab-login-btn ${this.state.activeLogin}`} onClick={() => {this.changeForm("login"); this.changeActiveClasses("login")}}>Log in</div>
 
+                                <div className={`tab-signup-btn ${this.state.activeSignup}`} onClick={() => {this.changeForm("signup"); this.changeActiveClasses("signup")}}>Sign up</div>
+                            </div>
+                            {this.state.formChange === "login" ?
+                                <LoginPage />
+
+                            : this.state.formChange === "signup" ?
+                                <SignUpPage />
+                            : <div> No Form</div>
+                            }
+                        </Fragment>
+                    }
                 </div>
             </div>
         );

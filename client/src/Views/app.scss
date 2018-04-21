@@ -123,7 +123,7 @@ a:focus {
 .form-container {
   font-family: 'Concert One', cursive !important;
   background-color: $lighter-background;
-  border-radius: $round-corners;
+  border-radius: 0 0 6px 6px;
   box-shadow: $shadow;
   padding-left: 0px;
   padding-right: 0px;
@@ -179,7 +179,30 @@ a:focus {
   color: white;
   font-size: 18px;
   text-transform: uppercase;
+  font-family: $new-font;
+  z-index: 10;
 }
+
+.tab-login-btn {
+  position: relative;
+  display: inline-block;
+  width: 40%;
+  padding: 3% 0;
+  background-color: $dark-background;
+  border-top-left-radius: 6px;
+  cursor: pointer;
+}
+
+.tab-signup-btn {
+  position: relative;
+  display: inline-block;
+  width: 60%;
+  padding: 3% 0;
+  background-color: $dark-background;
+  border-top-right-radius: 6px;
+  cursor: pointer;
+}
+
 
 .log-in {
   position: relative;
@@ -195,7 +218,6 @@ a:focus {
   display: inline-block;
   background-color: $dark-background;
   width: 60%;
-  padding: 3% 0;
   border-top-right-radius: 6px;
 }
 
