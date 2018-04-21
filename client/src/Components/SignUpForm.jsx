@@ -73,9 +73,8 @@ const SignUpForm = ({
   errors,
   user,
 }) => (
-  <div className="col-md-4">
+  <div className="col-md-12">
     <div className="form-container">
-  <Base/>
     <div className="form-body">
     <form action="/" onSubmit={onSubmit}>
       {errors.summary && <p className="error-message">{errors.summary}</p>}
