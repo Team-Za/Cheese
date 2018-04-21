@@ -1,5 +1,5 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
 
 
@@ -41,36 +41,38 @@ class SignUpPage extends React.Component {
     const formData = `username=${username}&email=${email}&password=${password}`;
 
     // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/signup');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
+    return new Promise(function (resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('post', '/auth/signup');
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.responseType = 'json';
+      xhr.addEventListener('load', () => {
+        if (xhr.status === 200) {
+          // success
 
-        // change the component-container state
-        this.setState({
-          errors: {}
-        });
+          // change the component-container state
+          this.setState({
+            errors: {}
+          });
 
-        // set a message
-        localStorage.setItem('successMessage', xhr.response.message);
+          // set a message
+          localStorage.setItem('successMessage', xhr.response.message);
 
-        // reload the page
-        window.location.reload();
-      } else {
-        // failure
+          // reload the page
+          window.location.reload();
+        } else {
+          // failure
 
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
+          const errors = xhr.response.errors ? xhr.response.errors : {};
+          errors.summary = xhr.response.message;
 
-        this.setState({
-          errors
-        });
-      }
-    });
-    xhr.send(formData);
+          this.setState({
+            errors
+          });
+        }
+      });
+      xhr.send(formData);
+    })
   }
 
   /**
@@ -88,13 +90,18 @@ class SignUpPage extends React.Component {
     });
   }
 
+
+  getUserId() {
+
+  }
+
   /**
    * Render the component.
    */
   render() {
     return (
       <SignUpForm
-        onSubmit={this.processForm}
+        onSubmit={this.processForm.then = () => { getUserId }}
         onChange={this.changeUser}
         errors={this.state.errors}
         user={this.state.user}
