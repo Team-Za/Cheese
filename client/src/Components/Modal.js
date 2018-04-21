@@ -4,10 +4,10 @@ class Modal extends React.Component {
     state = {
         displayName: 'Modal'
     };
-    backdrop=()=> {
+    backdrop(){
       return <div className='modal-backdrop in'/>;
     };
-    modal=()=> {
+    modal(){
       var style = {display: 'block'};
       return (
         <div
@@ -26,7 +26,7 @@ class Modal extends React.Component {
         </div>
       );
     };
-    render=()=> {
+    render(){
       return (
         <div>
           {this.backdrop()}
