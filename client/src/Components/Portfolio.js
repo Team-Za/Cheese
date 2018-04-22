@@ -17,50 +17,28 @@ class Portfolio extends React.Component {
         loading: true,
         stockName: "",
         quantity: 0,
-        userId: 1,
+        userId: sessionStorage.getItem("UserId") || 1,
         portId: -1,
         sidebarArgs: [],
         sidebarState: "add",
         companies: [],
         Stocks: [],
-        noStocks: false,
-        buyingFirst: false
         //prompting: false,
         //message: ""
     };
     componentDidMount = async () => {
-        // this.setState({
-        //     userId: sessionStorage.getItem("UserId") || 1
-        // });
-        console.log(this.state);
         await this.loadSymbols();
         await this.searchPortfolios(this.state.userId)
     };
     searchPortfolios = async id => {
+        console.log(id);
         const temp = await portApi.getPortfolioAndStocksbyUserId(id)
-            .then(res => {
-                if (res == null) {
-                    console.log("noStocks");
-                    this.setState({ noStocks: true, loading: false });
-                    // return (this.theNoStockOption(id)
-                    //     .then(res3 => {
-                    //         console.log(res3, new Date(), id);
-                    //         this.setState({ noStocks: true, portId: res3.id, result: res3, loading: false });
-                    //     })
-                    //     .catch(err => console.log(err)))
-                }
-                else {
-                    console.log(res, this.state.userId, new Date());
-                    this.setState({ result: res, portId: res.id });
-                }
-            })
+            .then(res => { console.log(res, new Date()); this.setState({ result: res, portId: res.id }) })
             .then(res2 => {
-                if (!this.state.noStocks) {
-                    console.log(res2, new Date());
-                    this.formatStocks(this.state.result.Stocks);
-                }
+                console.log(res2, new Date());
+                this.formatStocks(this.state.result.Stocks);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err, id));
         return temp;
     };
     loadSymbols = async () => {
@@ -94,9 +72,6 @@ class Portfolio extends React.Component {
             [name]: value
         });
     };
-    theNoStockOption = (id) => {
-        return (portApi.getPortfoliobyUserId(id).catch(err => console.log(err)));
-    }
     makeStock = stock => {
         return (stockApi.create(stock).catch(err => console.log(err)));
     };
@@ -308,85 +283,85 @@ class Portfolio extends React.Component {
         });
         return choices;
     };
-    reget = (event) => {
-        event.preventDefault();
-        this.theNoStockOption(sessionStorage.getItem('UserId'))
-            .then(res3 => {
-                console.log(res3, new Date(), sessionStorage.getItem('UserId'));
-                sessionStorage.setItem("here","here");
-                this.setState({ noStocks: true, portId: res3.id, result: res3, loading: false, buyingFirst:false });
+    setPortfolio() {
+        userApi.getByUsername(sessionStorage.getItem("username"))
+            .then(res2 => {
+                const tempPort = {
+                    userName: res2.username,
+                    balance: 10000,
+                    UserId: res2.id
+                }
+                sessionStorage.setItem("UserId", res2.id);
+                portApi.create(tempPort)
+                    .then(() => {
+                        console.log("Step 2 complete");
+                    })
             })
             .catch(err => console.log(err))
-    }
+    };
     render = () => {
         return (
             <div className="container">
-                {this.state.loading ?
-                    <div>loading...</div> :
-                    <div>
-                        <div className="portfolio">
+                <div className="portfolio">
+                    {this.state.loading ? (<div>loading...</div>) :
+                        (<div>
+                            <h1>{this.state.result.userName}</h1>
+                            <h2>Current Balance: ${this.state.result.balance}</h2>
+                            {this.state.Stocks.length==0 ? (
                             <div>
-                                {this.state.noStocks ?
-                                    <div>
-                                        You have no stocks. Why don't you buy some.
-                                    </div> :
-                                    <div>
-                                        <h1>{this.state.result.userName}</h1>
-                                        <h2>Current Balance: {this.state.result.balance}</h2>
-                                        {this.state.Stocks.map(stock => (<Stock
-                                            key={stock.name}
-                                            name={stock.name}
-                                            args={stock.args}
-                                            symbol={stock.symbol}
-                                            imageLink={stock.imageLink}
-                                            handleDelete={this.handleDelete}
-                                            handleAdd={this.handleAdd}
-                                            stateQuant={this.state.quantity}
-                                            handleSell={this.handleSell}
-                                        />))}
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
-                        {/* {!this.state.prompting ? ( */}
-                        {this.state.buyingFirst ?
-                            <div>
-                                <form>
-                                    <fieldset>
-                                        <legend style={formColor}>Add new stocks here</legend>
-                                        Stock Name:
-                                    <input
-                                            value={this.state.stockName}
-                                            onChange={this.handleInputChange}
-                                            name="stockName"
-                                            placeholder="Name of stock (required)"
-                                        />
-                                        Quantity:
-                                    <input
-                                            value={this.state.quantity}
-                                            onChange={this.handleInputChange}
-                                            name="quantity"
-                                            placeholder="Quantity (required)"
-                                        />
-                                        <button onClick={this.handleFormSubmit}>
-                                            submit
-                                    </button>
-                                    </fieldset>
-                                </form>
+                                <h2>
+                                Looks like you don't have any stocks. Why don't you buy some?
+                                </h2>
+                            </div>) : (
                                 <div>
-                                    <ul>
-                                        {this.state.companies.map(company => (
-                                            <li onClick={() => this.setState({ stockName: company })}>{company}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div> :
-                            <div>
-                                <button onClick={this.reget}>test</button>
-                            </div>
-                        }
-                        {/* ) : (
+                                    {this.state.Stocks.map(stock => (<Stock
+                                        key={stock.name}
+                                        name={stock.name}
+                                        args={stock.args}
+                                        symbol={stock.symbol}
+                                        imageLink={stock.imageLink}
+                                        handleDelete={this.handleDelete}
+                                        handleAdd={this.handleAdd}
+                                        stateQuant={this.state.quantity}
+                                        handleSell={this.handleSell}
+                                    />))}
+                                </div>)}
+                        </div>)}
+                </div>
+                {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
+                {/* {!this.state.prompting ? ( */}
+                <div>
+                    <form>
+                        <fieldset>
+                            <legend style={formColor}>Add new stocks here</legend>
+                            Stock Name:
+                            <input
+                                value={this.state.stockName}
+                                onChange={this.handleInputChange}
+                                name="stockName"
+                                placeholder="Name of stock (required)"
+                            />
+                            Quantity:
+                            <input
+                                value={this.state.quantity}
+                                onChange={this.handleInputChange}
+                                name="quantity"
+                                placeholder="Quantity (required)"
+                            />
+                            <button onClick={this.handleFormSubmit}>
+                                submit
+                            </button>
+                        </fieldset>
+                    </form>
+                    <div>
+                        <ul>
+                            {this.state.companies.map(company => (
+                                <li onClick={() => this.setState({ stockName: company })}>{company}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                {/* ) : (
                     //     <form>
                     //         Quantity:
                     // <input
@@ -406,7 +381,6 @@ class Portfolio extends React.Component {
                        //<div/>
                     )
                 } */}
-                    </div>}
             </div>
         );
     };
