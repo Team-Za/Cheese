@@ -8,7 +8,7 @@ const config = require('../../config');
  * Return the Passport Local Strategy object.
  */
 module.exports = new PassportLocalStrategy({
-  usernameField: 'username',
+  usernameField: 'email',
   passwordField: 'password',
   session: false,
   passReqToCallback: true

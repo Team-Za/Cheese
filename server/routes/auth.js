@@ -31,7 +31,7 @@ function validateSignupForm(payload) {
 
   if (!payload || typeof payload.username !== 'string' || payload.username.trim().length === 0) {
     isFormValid = false;
-    errors.username = 'Please provide your name.';
+    errors.username = 'Please provide your username.';
     console.log("third")
   }
 

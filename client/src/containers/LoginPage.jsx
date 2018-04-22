@@ -29,7 +29,10 @@ class LoginPage extends React.Component {
         password: '',
         id: ''
       }
+
     };
+   
+
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
