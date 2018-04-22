@@ -52,7 +52,7 @@ class LoginPage extends React.Component {
     const password = encodeURIComponent(this.state.user.password);
     const id = encodeURIComponent(this.state.user.id)
     const formData = `username=${username}&password=${password}&id=${id}`;
-    sessionStorage.setItem("id", this.state.user.username);
+    sessionStorage.setItem("Username", this.state.user.username);
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();
@@ -73,7 +73,7 @@ class LoginPage extends React.Component {
 
 
         // change the current URL to /
-        this.props.history.push('/');
+        window.location.reload();
       } else {
         // failure
 

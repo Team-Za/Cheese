@@ -79,6 +79,7 @@ a:focus {
 .top-menu-item:hover {
   background-color: $hover-font-color;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 // Landing Page 
@@ -234,6 +235,11 @@ a:focus {
   color: white;
   margin-top: 15px;
   text-align: right;
+}
+
+.success-message {
+  color: $cool-green;
+  font-size: 15px;
 }
 
 .error-message {

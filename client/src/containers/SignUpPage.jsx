@@ -1,6 +1,7 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
-import {withRouter} from 'react-router-dom';
+import { portApi, stockApi, userApi } from "../utils/serverAPI";
 
 
 class SignUpPage extends React.Component {
@@ -41,36 +42,36 @@ class SignUpPage extends React.Component {
     const formData = `username=${username}&email=${email}&password=${password}`;
 
     // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/signup');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
+const xhr = new XMLHttpRequest();
+      xhr.open('post', '/auth/signup');
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.responseType = 'json';
+      xhr.addEventListener('load', () => {
+        if (xhr.status === 200) {
+          // success
 
-        // change the component-container state
-        this.setState({
-          errors: {}
-        });
+          // change the component-container state
+          this.setState({
+            errors: {}
+          });
 
-        // set a message
-        localStorage.setItem('successMessage', xhr.response.message);
+          // set a message
+          localStorage.setItem('successMessage', xhr.response.message);
 
-        // make a redirect
-        window.location.reload();
-      } else {
-        // failure
+          // reload the page
+          window.location.reload();
+        } else {
+          // failure
 
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
+          const errors = xhr.response.errors ? xhr.response.errors : {};
+          errors.summary = xhr.response.message;
 
-        this.setState({
-          errors
-        });
-      }
-    });
-    xhr.send(formData);
+          this.setState({
+            errors
+          });
+        }
+      });
+      xhr.send(formData);
   }
 
   /**
@@ -87,6 +88,7 @@ class SignUpPage extends React.Component {
       user
     });
   }
+
 
   /**
    * Render the component.
