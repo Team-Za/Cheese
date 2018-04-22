@@ -19,6 +19,7 @@ export default path => {
   app.use("/api/portfolio", routers.portfolio);
   app.use("/api/stock", routers.stock);
   app.use("/api/user", routers.user);
+  //app.disable('etag');
 
   // load passport strategies
 const localSignupStrategy = require('./passport/local-signup');

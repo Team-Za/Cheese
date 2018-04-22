@@ -6,7 +6,7 @@ class Stock extends React.Component {
     //     //this.show = false;
     //     //this.quantity = 0;
     // }
-    render() {
+    render = () => {
         return (
             <div className="stock">
                 <div>
