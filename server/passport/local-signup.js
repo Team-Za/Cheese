@@ -17,13 +17,23 @@ module.exports = new PassportLocalStrategy({
     username: req.body.username.trim()
   };
   console.log(userData)
+  return User.findOne({ 
+    where: {username: userData.username }}).then( (user) => {
+      if (user) {
+        //this return needs to be changed to what we need todo:
+        return done(null, false, {
+            message: 'That username is already taken'
+        });
+      }
 
-  User.create(userData).then( ()=> {
+    else {
+      User.create(userData).then( ()=> {
     return done(null);
   },(err) => {
     console.log(err)
     return done(err);
   })
-
+}
+})
   
 });

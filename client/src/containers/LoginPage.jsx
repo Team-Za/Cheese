@@ -30,7 +30,10 @@ class LoginPage extends React.Component {
         password: '',
         id: ''
       }
+
     };
+   
+
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
@@ -92,6 +95,7 @@ class LoginPage extends React.Component {
       // create an AJAX request
       xhr.send(formData);
     
+
 
 
   }
