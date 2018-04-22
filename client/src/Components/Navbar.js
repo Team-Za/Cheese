@@ -67,10 +67,7 @@ const Navbar = ({ children, ...props }) => (
                 </div>
             </Link>
           </div>
-          <div>            
-            {!Auth.isUserAuthenticated() && 
-                <LoginPage />
-              }</div>
+
         </div>
       )}
 

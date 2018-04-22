@@ -42,9 +42,7 @@ class LandingPage extends React.Component {
           <Route exact path="/" render={() => (
             <Fragment>
               <DowChart />
-              {!Auth.isUserAuthenticated() && 
-                <LoginPage />
-              }
+            
             </Fragment>
           )
           } />

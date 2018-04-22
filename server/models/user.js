@@ -10,7 +10,8 @@ module.exports = function (sequelize, Sequelize) {
         },
         username: {
             type: Sequelize.TEXT,
-            allowNull: false
+            allowNull: false,
+            isUnique: true
         },
         email: {
             type: Sequelize.TEXT,
