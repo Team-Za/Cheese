@@ -13,22 +13,21 @@ class Dashboard extends React.Component {
         activeStock: "Apple (aapl)",
         activeStockSymbol: "aapl",
         userPortfolioData: [],
-        userId: sessionStorage.getItem('UserId') || 1,
+        userId: sessionStorage.getItem('id') || 1,
         whichChart: "area",
         pieChartData: {
             totalPortfolioPrice: 0,
             eachStockPercentage: [],
         },
         eachStockPrice: [],
-        testData: [{ name: 'Alcoa Corporation', value: 594 }, { name: 'Apple', value: 1778.4 },
-        { name: 'Fidelity Value Factor', value: 328.1 }, { name: 'Fidelity Value Factor', value: 500 },
-        { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }, { name: 'Fidelity Value Factor', value: 500 }],
+        testData: [{ name: 'Netflix Inc.', symbol: 'NFLX', imageLink: "https://storage.googleapis.com/iex/api/logos/NFLX.png", price: 327.77, quantity: "20" }, { name: 'Apple', symbol: 'AAPL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAPL.png", price: 165.72, quantity: "30" },
+        { name: 'Manchester United Ltd. Class A', symbol: 'MANU', imageLink: "https://storage.googleapis.com/iex/api/logos/MANU.png", price: 18.5, quantity: "50" }, { name: 'American Airlines Group Inc.', symbol: 'AAL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAL.png", price: 46.78, quantity: "15" }],
         colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398']
     };
 
     componentDidMount() {
         console.log("YOOO", this.searchPortfolios(this.state.userId))
-        Promise.all([this.searchPortfolios(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
+        Promise.all([this.searchPortfolios(1), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
             console.log(values);
             
             this.setState({
@@ -43,7 +42,7 @@ class Dashboard extends React.Component {
 
     searchPortfolios = id => {
         return new Promise((res, rej) => {
-            var data = portApi.getPortfolioAndStocksbyUserId(id)
+            var data = portApi.getPortfolioAndStocks(id)
                 .then(res => {
                     console.log("User Portfolio Data", res);
                     return res.Stocks;
@@ -74,17 +73,6 @@ class Dashboard extends React.Component {
 
         return data;
     }
-
-    // getUsersStocks = query => {
-    //     API.getUserData(query)
-    //         .then(res => {
-    //             this.setState({
-    //                 result: res.data,
-    //                 data: this.getData(res.data)
-    //             }), console.log(this.state.result[0].minute)
-    //         })
-    //         .catch(err => console.log(err));
-    // }
 
     getData = stockData => {
         const dataArray = [];
@@ -142,15 +130,11 @@ class Dashboard extends React.Component {
             if (stockData[i].high === -1) {
                 dataArray.push({
                     name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
                     Price: latestNumber
                 })
             } else {
                 dataArray.push({
                     name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
                     Price: stockData[i].high
                 })
             }
@@ -159,46 +143,6 @@ class Dashboard extends React.Component {
         return dataArray;
     }
 
-    // getPieChartData = () => {
-    //     return new Promise((resolve, reject) => {
-    //         let totalPortPrice = 0;
-    //         let allStockPrices = [];
-    //         for (let i = 0; i < this.state.userPortfolioData.length; i++) {
-    //             API.pieChartData(this.state.userPortfolioData[i].symbol)
-    //                 .then(res => {
-    //                     let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
-    //                     let stockName = this.state.userPortfolioData[i].name;
-    //                     let stock = {
-    //                         name: stockName,
-    //                         value: stockPrice
-    //                     }
-    //                     allStockPrices.push(stock);
-    //                     totalPortPrice += stockPrice;
-    //                     console.log("Price Here:", this.state.userPortfolioData[i].quantity);
-    //                     console.log("Result:", res.data)
-    //                 })
-    //         }
-    //         var neededPieChartInfo = {
-    //             totalPortPrice,
-    //             allStockPrices
-    //         }
-    //         resolve(neededPieChartInfo);
-
-    //     }).then(values => {
-    //         console.log("PIE CHART", values)
-    //         this.setState({
-    //             pieChartData: {
-    //                 totalPortfolioPrice: values.totalPortPrice
-    //             },
-    //             eachStockPrice: values.allStockPrices,
-    //             testData: values.allStockPrices,
-    //             loading: false
-    //         })
-
-    //     })
-
-
-    // }
 
     renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
         const RADIAN = Math.PI / 180;
@@ -325,18 +269,6 @@ class Dashboard extends React.Component {
                                     }
                                 </Pie>
                             </PieChart>
-
-                            {/* <BarChart width={600} height={300} data={this.state.data}
-                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis domain={['dataMin - 2', 'dataMax + 2']} />
-                                <Tooltip />
-                                <Legend />
-                                <ReferenceLine y={0} stroke='#000' />
-                                <Bar dataKey="Price" fill="#8884d8" />
-                                <Bar dataKey="Price" fill="#82ca9d" />
-                            </BarChart> */}
                         </div>
                     </div>
                 }
@@ -344,7 +276,7 @@ class Dashboard extends React.Component {
 
                     <div className="col-md-7 panel user-stocks">
                         <div className="panel-heading">
-                            Your Stocks
+                            Sample Stocks
                     </div>
                         {this.state.loading ?
                             <div className="loading">Loading...</div>
@@ -356,7 +288,7 @@ class Dashboard extends React.Component {
                                     <div className="stock-info-header">Price</div>
                                     <div className="stock-info-header">Quantity</div>
                                 </div>
-                                {this.state.userPortfolioData.map(data => (
+                                {this.state.testData.map(data => (
                                     <div className="stock-panel-child" value={data.symbol} onClick={() => this.plotData(data.symbol, data.name)}>
                                         <div className="stock-info"><img className="stock-image" src={data.imageLink} /></div>
                                         <div className="stock-info">{data.name}</div>

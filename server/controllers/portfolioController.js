@@ -48,13 +48,39 @@ const controller = {
         //where: { PortfolioId: "Portfolio.id" }
       }]
     })
-      .then(dbModel => res.json(dbModel))
+      .then(dbModel => {
+        if (dbModel) {
+          res.json(dbModel);
+        } else {
+          console.log(req.params,req.body)
+          res.status(404).json({
+            message: 'Id not found.'
+          });
+        }
+      })
+      .catch(err => res.status(422).json(err));
+  },
+  getPortfoliobyUserId: (req, res) => {
+    db.Portfolio.findOne({
+      where: {
+        UserId: req.params.UserId,
+      }
+    })
+      .then(dbModel => {
+        if (dbModel) {
+          res.json(dbModel);
+        } else {
+          res.status(404).json({
+            message: 'Id not found.'
+          });
+        }
+      })
       .catch(err => res.status(422).json(err));
   },
   create: (req, res) => {
     db.Portfolio.create({
       userName: req.body.userName,
-      balance:req.body.balance,
+      balance: req.body.balance,
       UserId: req.body.UserId
     })
       .then(dbModel => res.json(dbModel))
@@ -63,7 +89,7 @@ const controller = {
   update: (req, res) => {
     db.Portfolio.update({
       userName: req.body.userName,
-      balance:req.body.balance,
+      balance: req.body.balance,
       UserId: req.body.UserId
     }, {
         where: {
@@ -71,8 +97,9 @@ const controller = {
         }
       })
       .then(dbModel => {
-        console.log("update",dbModel);
-        res.json(dbModel)})
+        console.log("update", dbModel);
+        res.json(dbModel)
+      })
       .catch(err => res.status(422).json(err));
   },
   remove: (req, res) => {

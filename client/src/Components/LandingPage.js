@@ -6,6 +6,8 @@ import Navbar from './Navbar';
 import DowChart from './DowChart';
 import Sp500 from './Sp500Data';
 import Dashboard from './Dashboard';
+import DashboardSample from './DashboardSample';
+import Success from './Success';
 import Market from './Market';
 import Portfolio from "./Portfolio";
 import SignUpForm from './SignUpForm';
@@ -21,9 +23,8 @@ class LandingPage extends React.Component {
 
 
   componentDidMount() {
-    this.searchSymbols("/ref-data/symbols");
+    //this.searchSymbols("/ref-data/symbols");
   }
-
   searchSymbols = query => {
     API.allSymbols(query)
       .then(res => {this.setState({ result: res.data }) })
@@ -35,7 +36,11 @@ class LandingPage extends React.Component {
       <Router>
         <div className="container-fluid">
           <Navbar />
+          {Auth.isUserAuthenticated() ? (
           <Route exact path="/dashboard" component={Dashboard} />
+           ):(
+           <Route exact path="/dashboard" component={DashboardSample} />
+          )}
           <Route exact path="/market" component={Market} />
           <Route exact path="/portfolio" component={Portfolio} />
           <Route exact path="/signup" component={SignUpPage} />
