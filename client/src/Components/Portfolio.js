@@ -234,6 +234,10 @@ class Portfolio extends React.Component {
                     const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
                     console.log(tempPort)
                     await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                    this.setState({
+                        quantity:0,
+                        stockName:""
+                    })
                     this.searchPortfolios(this.state.userId)
                 }
             }
