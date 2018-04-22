@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
         activeStock: "Apple (aapl)",
         activeStockSymbol: "aapl",
         userPortfolioData: [],
-        userId: sessionStorage.getItem('id') || 1,
+        userId: sessionStorage.getItem('UserId') || 1,
         whichChart: "area",
         pieChartData: {
             totalPortfolioPrice: 0,
@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         console.log("YOOO", this.searchPortfolios(this.state.userId))
-        Promise.all([this.searchPortfolios(1), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
+        Promise.all([this.searchPortfolios(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
             console.log(values);
             
             this.setState({
@@ -43,7 +43,7 @@ class Dashboard extends React.Component {
 
     searchPortfolios = id => {
         return new Promise((res, rej) => {
-            var data = portApi.getPortfolioAndStocks(id)
+            var data = portApi.getPortfolioAndStocksbyUserId(id)
                 .then(res => {
                     console.log("User Portfolio Data", res);
                     return res.Stocks;

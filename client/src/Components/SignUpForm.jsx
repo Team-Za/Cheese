@@ -80,7 +80,7 @@ const SignUpForm = ({
       {errors.summary && <p className="error-message">{errors.summary}</p>}
 
       <div className="field-line">
-      {<i class="fas fa-user icons"></i>}<input
+      {<i className="fas fa-user icons"></i>}<input
           className="sign-up-inputs"
           placeholder="username"
           name="username"
@@ -90,7 +90,7 @@ const SignUpForm = ({
         />
       </div>
       <div className="field-line">
-      <i class="fas fa-envelope icons"></i><input
+      <i className="fas fa-envelope icons"></i><input
           className="sign-up-inputs"
           placeholder="email"
           name="email"
@@ -100,7 +100,7 @@ const SignUpForm = ({
         />
       </div>
       <div className="field-line">
-      <i class="fas fa-lock icons"></i><input
+      <i className="fas fa-lock icons"></i><input
           className="sign-up-inputs"
           placeholder="password"
           type="password"

@@ -51,6 +51,15 @@ const controller = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
+  getPortfoliobyUserId: (req, res) => {
+    db.Portfolio.findOne({
+      where: {
+        UserId: req.params.UserId,
+      }
+    })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   create: (req, res) => {
     db.Portfolio.create({
       userName: req.body.userName,

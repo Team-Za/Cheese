@@ -21,9 +21,8 @@ class LandingPage extends React.Component {
 
 
   componentDidMount() {
-    this.searchSymbols("/ref-data/symbols");
+    //this.searchSymbols("/ref-data/symbols");
   }
-
   searchSymbols = query => {
     API.allSymbols(query)
       .then(res => {this.setState({ result: res.data }) })

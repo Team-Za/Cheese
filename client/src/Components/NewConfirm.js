@@ -22,7 +22,7 @@ class Confirm extends React.Component {
   }
 
   componentDidMount() {
-    this.promise = new $.Deferred();
+    this.promise = new Promise();
     return React.findDOMNode(this.refs.confirm).focus();
   }
 
