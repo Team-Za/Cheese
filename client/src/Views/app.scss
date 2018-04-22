@@ -236,6 +236,11 @@ a:focus {
   text-align: right;
 }
 
+.success-message {
+  color: $cool-green;
+  font-size: 15px;
+}
+
 .error-message {
   color: rgb(255, 37, 37);
 }

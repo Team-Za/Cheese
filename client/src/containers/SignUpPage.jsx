@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
+import { portApi, stockApi, userApi } from "../utils/serverAPI";
 
 
 class SignUpPage extends React.Component {
@@ -41,7 +42,6 @@ class SignUpPage extends React.Component {
     const formData = `username=${username}&email=${email}&password=${password}`;
 
     // create an AJAX request
-    return new Promise(function (resolve, reject) {
       const xhr = new XMLHttpRequest();
       xhr.open('post', '/auth/signup');
       xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -72,7 +72,6 @@ class SignUpPage extends React.Component {
         }
       });
       xhr.send(formData);
-    })
   }
 
   /**
@@ -91,17 +90,13 @@ class SignUpPage extends React.Component {
   }
 
 
-  getUserId() {
-
-  }
-
   /**
    * Render the component.
    */
   render() {
     return (
       <SignUpForm
-        onSubmit={this.processForm.then = () => { getUserId }}
+        onSubmit={this.processForm}
         onChange={this.changeUser}
         errors={this.state.errors}
         user={this.state.user}
