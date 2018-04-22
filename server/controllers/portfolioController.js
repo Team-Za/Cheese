@@ -28,7 +28,7 @@ const controller = {
   getPortfolioAndStocks: (req, res) => {
     db.Portfolio.findOne({
       where: {
-        id: req.params.UserId,
+        id: req.params.id,
       },
       include: [{
         model: db.Stock,
