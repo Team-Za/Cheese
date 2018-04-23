@@ -34,6 +34,8 @@ const Navbar = ({ children, ...props }) => (
           </Link>
             <div className="top-menu-item" id="dashboard" onClick={() => {
               Auth.deauthenticateUser();
+              sessionStorage.removeItem("UserId");
+              sessionStorage.removeItem("username");
               props.history.push('/');
             }}>
                Log out

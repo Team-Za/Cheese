@@ -100,7 +100,7 @@ const controller = {
         console.log("update", dbModel);
         res.json(dbModel)
       })
-      .catch(err => res.status(422).json(err));
+      .catch(err => {res.status(422).json(err); console.log(req.params,err)});
   },
   remove: (req, res) => {
     db.Portfolio.destroy({

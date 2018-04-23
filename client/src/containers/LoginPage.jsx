@@ -32,7 +32,7 @@ class LoginPage extends React.Component {
       }
 
     };
-   
+
 
 
     this.processForm = this.processForm.bind(this);
@@ -54,47 +54,46 @@ class LoginPage extends React.Component {
     const id = encodeURIComponent(this.state.user.id)
     const formData = `username=${username}&password=${password}&id=${id}`;
     sessionStorage.setItem("username", this.state.user.username);
-    
-      const xhr = new XMLHttpRequest();
-      xhr.open('post', '/auth/login');
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhr.responseType = 'json';
-      xhr.addEventListener('load', () => {
-        if (xhr.status === 200) {
-          // success
-          
-            // change the component-container state
-            this.setState({
-              errors: {}
-            });
+    const xhr = new XMLHttpRequest();
+    xhr.open('post', '/auth/login');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.responseType = 'json';
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        // success
 
-            // save the token
-            Auth.authenticateUser(xhr.response.token);
+        // change the component-container state
+        this.setState({
+          errors: {}
+        });
 
-            console.log("I'm in")
-            userApi.getByUsername(this.state.user.username)
-              .then(res=>{
-                sessionStorage.setItem("UserId", res.id)
-                window.location.reload();
-              })
-            // change the current URL to /
-          
-        } else {
-          // failure
-          
-            // change the component state
-            const errors = xhr.response.errors ? xhr.response.errors : {};
-            errors.summary = xhr.response.message;
+        // save the token
+        Auth.authenticateUser(xhr.response.token);
 
-            this.setState({
-              errors
-            });
-          
-        }
-      });
-      // create an AJAX request
-      xhr.send(formData);
-    
+        console.log("I'm in")
+        userApi.getByUsername(this.state.user.username)
+          .then(res => {
+            sessionStorage.setItem("UserId", res.id)
+            window.location.reload();
+          })
+        // change the current URL to /
+
+      } else {
+        // failure
+
+        // change the component state
+        const errors = xhr.response.errors ? xhr.response.errors : {};
+        errors.summary = xhr.response.message;
+
+        this.setState({
+          errors
+        });
+
+      }
+    });
+    // create an AJAX request
+    xhr.send(formData);
+
 
 
 

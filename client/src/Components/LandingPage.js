@@ -15,7 +15,6 @@ import SignUpForm from './SignUpForm';
 import Auth from '../modules/Auth';
 import LoginPage from '../containers/LoginPage.jsx';
 import SignUpPage from '../containers/SignUpPage.jsx';
-import Popup from 'react-popup';
 
 class LandingPage extends React.Component {
   state = {
@@ -37,7 +36,6 @@ class LandingPage extends React.Component {
     return (
       <Router>
         <div className="container-fluid">
-        <Popup />
       {document.getElementById('popupContainer')}
           <Navbar />
           {Auth.isUserAuthenticated() ? (

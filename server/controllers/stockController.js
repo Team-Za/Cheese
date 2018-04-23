@@ -25,6 +25,26 @@ const controller = {
       })
       .catch(err => res.status(422).json(err));
   }, 
+  findByPrice: (req, res) => {
+    db.Stock.findOne({
+      where: {
+        price: req.params.price,
+        PortfolioId:req.params.PortfolioId
+      }
+    })
+      .then(dbModel => {
+        if (dbModel) {
+          console.log(req.params,"success");
+          res.json(dbModel);
+        } else {
+          console.log(req.params,"fail");
+          res.status(404).json({
+            message: 'Price not found.'
+          });
+        }
+      })
+      .catch(err => {console.log(req.params,"megafail");res.status(422).json(err)});
+  },   
   create: (req, res) => {
     db.Stock.create({
       name: req.body.name,
