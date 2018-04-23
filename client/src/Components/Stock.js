@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
+import ToggleElement from "./ToggleElement";
 
 class Stock extends React.Component {
     state = {
@@ -27,7 +28,6 @@ class Stock extends React.Component {
                     <div className="stock-amount-holder">
                     {this.props.args.map(element => (
                         <div key={element.id}>
-
                             <div className="each-stock-info col-md-2"> {element.quantity}</div>
                             <div className="each-stock-info col-md-3"> {element.price}</div>
                             {/* <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">

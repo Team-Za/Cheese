@@ -7,7 +7,6 @@ import Navbar from "./Navbar";
 import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
-import bootbox from 'bootbox';
 
 const formColor = {
   color: "white"
