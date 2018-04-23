@@ -20,7 +20,7 @@ class Dashboard extends React.Component {
             eachStockPercentage: [],
         },
         eachStockPrice: [],
-        testData: [{ name: 'Netflix Inc.', symbol: 'NFLX', imageLink: "https://storage.googleapis.com/iex/api/logos/NFLX.png", price: 327.77, quantity: "20" }, { name: 'Apple', symbol: 'AAPL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAPL.png", price: 165.72, quantity: "30" },
+        testData: [{ name: 'Apple', symbol: 'AAPL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAPL.png", price: 165.72, quantity: "30" }, { name: 'Netflix Inc.', symbol: 'NFLX', imageLink: "https://storage.googleapis.com/iex/api/logos/NFLX.png", price: 327.77, quantity: "20" },
         { name: 'Manchester United Ltd. Class A', symbol: 'MANU', imageLink: "https://storage.googleapis.com/iex/api/logos/MANU.png", price: 18.5, quantity: "50" }, { name: 'American Airlines Group Inc.', symbol: 'AAL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAL.png", price: 46.78, quantity: "15" }],
         colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398']
     };
@@ -34,7 +34,6 @@ class Dashboard extends React.Component {
                 data: values[1],
                 userPortfolioData: values[0],
                 loading: false
-                // activeStock: values[0][0].name,
             });
             // this.getPieChartData();
         });

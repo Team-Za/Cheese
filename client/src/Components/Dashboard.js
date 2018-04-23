@@ -34,8 +34,9 @@ class Dashboard extends React.Component {
             this.setState({
                 data: values[1],
                 userPortfolioData: values[0],
-                loading: false
-                // activeStock: values[0][0].name,
+                loading: false,
+                activeStock: values[0][0].name,
+                activeStockSymbol: values[0][0].symbol
             });
             // this.getPieChartData();
         });

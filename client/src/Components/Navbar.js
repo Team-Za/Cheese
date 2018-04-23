@@ -8,12 +8,12 @@ const Navbar = ({ children, ...props }) => (
     {Auth.isUserAuthenticated() ? (
       <div>
         <Link to="/">
-          <div className="logo">
+          <div className="logo col-md-4">
             Stock Up
             </div>
         </Link>
 
-        <div className="top-menu">
+        <div className="top-menu col-md-8">
           <Link to="/dashboard">
             <div className="top-menu-item" id="dashboard">
               <i className="fas fa-th-large"></i> Dashboard
@@ -43,12 +43,12 @@ const Navbar = ({ children, ...props }) => (
     ) : (
         <div>
           <Link to="/">
-            <div className="logo">
+            <div className="logo col-md-4">
               Stock Up
                 </div>
           </Link>
 
-          <div className="top-menu">
+          <div className="top-menu col-md-8">
             <Link to="/dashboard">
               <div className="top-menu-item" id="dashboard">
                 <i className="fas fa-th-large"></i> Dashboard

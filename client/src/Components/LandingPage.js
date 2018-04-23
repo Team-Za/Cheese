@@ -9,11 +9,13 @@ import Dashboard from './Dashboard';
 import DashboardSample from './DashboardSample';
 import Success from './Success';
 import Market from './Market';
+import MarketSample from './MarketSample';
 import Portfolio from "./Portfolio";
 import SignUpForm from './SignUpForm';
 import Auth from '../modules/Auth';
 import LoginPage from '../containers/LoginPage.jsx';
 import SignUpPage from '../containers/SignUpPage.jsx';
+import Popup from 'react-popup';
 
 class LandingPage extends React.Component {
   state = {
@@ -35,13 +37,19 @@ class LandingPage extends React.Component {
     return (
       <Router>
         <div className="container-fluid">
+        <Popup />
+      {document.getElementById('popupContainer')}
           <Navbar />
           {Auth.isUserAuthenticated() ? (
           <Route exact path="/dashboard" component={Dashboard} />
            ):(
            <Route exact path="/dashboard" component={DashboardSample} />
           )}
-          <Route exact path="/market" component={Market} />
+          {Auth.isUserAuthenticated() ? (
+            <Route exact path="/market" component={Market} />
+          ) : (
+            <Route exact path="/market" component={MarketSample} />
+          )}
           <Route exact path="/portfolio" component={Portfolio} />
           <Route exact path="/signup" component={SignUpPage} />
           <Route exact path="/" render={() => (

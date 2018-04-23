@@ -64,7 +64,7 @@ class SignUpPage extends React.Component {
           sessionStorage.setItem("username", this.state.user.username);
           // make a redirect
           //this.props.router.replace('/login');
-          //window.location.reload();
+          // window.location.reload();
           //this.setPortfolio();
           // })
         } else {
