@@ -145,9 +145,7 @@ class Market extends React.Component {
         await Promise.all([this.updatePortfolio(tempPort), this.makeStock(temp)]);
         this.searchPortfolios(this.state.userId);
       }
-      else {
-        alert("Ok then...")
-      }
+
     }
   };
   handleSell = async (id, name, quantity, symbol, imageLink, originalPrice) => {
@@ -183,9 +181,7 @@ class Market extends React.Component {
           this.searchPortfolios(this.state.userId);
         }
       }
-      else {
-        alert("Ok then...")
-      }
+
     }
   };
   handleDelete = async (id, name, quantity, price) => {
@@ -198,9 +194,7 @@ class Market extends React.Component {
       console.log(tempPort)
       this.searchPortfolios(this.state.userId);
     }
-    else {
-      alert("Ok, fine.");
-    }
+
   };
   handleFormSubmit = async event => {
     event.preventDefault();
