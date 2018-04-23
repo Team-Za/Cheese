@@ -32,7 +32,7 @@ class LoginPage extends React.Component {
       }
 
     };
-   
+
 
 
     this.processForm = this.processForm.bind(this);
@@ -69,16 +69,16 @@ class LoginPage extends React.Component {
 
         // save the token
         Auth.authenticateUser(xhr.response.token);
+
         console.log("I'm in")
         userApi.getByUsername(this.state.user.username)
           .then(res => {
-            sessionStorage.setItem("UserId", res.id);
+            sessionStorage.setItem("UserId", res.id)
             window.location.reload();
           })
         // change the current URL to /
-        //this.props.history.push('/');
-      }
-      else {
+
+      } else {
         // failure
 
         // change the component state

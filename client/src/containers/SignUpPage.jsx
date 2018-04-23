@@ -2,7 +2,7 @@ import React from 'react';
 import SignUpForm from '../Components/SignUpForm.jsx';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
 import { resolve } from 'path';
-import { withRouter } from "react-router-dom";
+
 
 class SignUpPage extends React.Component {
 
@@ -17,8 +17,8 @@ class SignUpPage extends React.Component {
       errors: {},
       step1complete: false,
       user: {
-        email: '',
         username: '',
+        email: '',
         password: ''
       }
     };
@@ -63,7 +63,7 @@ class SignUpPage extends React.Component {
           sessionStorage.setItem("username", this.state.user.username);
           // make a redirect
           //this.props.router.replace('/login');
-          //window.location.reload();
+          // window.location.reload();
           //this.setPortfolio();
           // })
         } else {

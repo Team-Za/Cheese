@@ -7,11 +7,12 @@ import Navbar from "./Navbar";
 import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
+import bootbox from 'bootbox';
 
 const formColor = {
   color: "white"
 }
-class Market extends React.Component {
+class MarketSample extends React.Component {
   state = {
     result: [],
     loading: true,
@@ -371,28 +372,8 @@ class Market extends React.Component {
             </ul>
           </div>
         </div>
-        {/* ) : (
-                    //     <form>
-                    //         Quantity:
-                    // <input
-                    //             value={this.state.quantity}
-                    //             onChange={this.handleInputChange}
-                    //             name="quantity"
-                    //             placeholder={this.state.quantity}
-                    //         />
-                    //         <button onClick={this.handleEditSubmit}>
-                    //             submit
-                    //     </button>
-                    //     </form>
-                    <div>
-                        {this.state.message}
-                        <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
-                    </div>
-                       //<div/>
-                    )
-                } */}
       </div>
     );
   };
 }
-export default Market;
+export default MarketSample;
