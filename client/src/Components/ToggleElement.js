@@ -1,5 +1,7 @@
 import React from 'react';
-
+const buttonColor = {
+    color: "black"
+}
 class ToggleElement extends React.Component {
     constructor(props) {
         super(props);
@@ -45,7 +47,7 @@ class ToggleElement extends React.Component {
     render = () => {
         return (
             <div>
-                <button onClick={this.handleClick}>
+                <button style={buttonColor} onClick={this.handleClick}>
                     {this.state.isToggleOn ?
                         `${this.props.onMessage}`
                         :
@@ -58,13 +60,14 @@ class ToggleElement extends React.Component {
                             <h3>{this.state.errorMessage}</h3>
                             <form>
                                 <input
+                                    style={buttonColor}
                                     value={this.state.quantity}
                                     onChange={this.handleInputChange}
                                     name={`input${this.props.name}`}
                                     placeholder={this.props.placeholder}
                                     maxLength={8}
                                 />
-                                <button onClick={(e) => { this.props.method(this.state.quantity, e); this.handleClick(); }}>
+                                <button style={buttonColor} onClick={(e) => { this.props.method(this.state.quantity, e); this.handleClick(); }}>
                                     submit
                                 </button>
                             </form>

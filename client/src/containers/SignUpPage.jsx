@@ -2,7 +2,7 @@ import React from 'react';
 import SignUpForm from '../Components/SignUpForm.jsx';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
 import { resolve } from 'path';
-
+import {withRouter} from 'react-router-dom'
 
 class SignUpPage extends React.Component {
 
