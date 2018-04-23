@@ -8,7 +8,6 @@ import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
 import ToggleElement from "./ToggleElement";
-//import NewConfirm from "./NewConfirm"
 const formColor = {
     color: "white"
 }
@@ -63,6 +62,9 @@ class Portfolio extends React.Component {
             }
         }).then(this.setState({ companies: comps }))
     };
+    handleNumber = number => {
+        return new Number(number).toFixed(2);
+    }
     handleInputChange = event => {
         const { name, value } = event.target;
         if (typeof value === "string" && value.length > 3) {
@@ -77,7 +79,7 @@ class Portfolio extends React.Component {
         return (stockApi.create(stock).catch(err => console.log(err)));
     };
     getStock = price => {
-        return (stockApi.getByPrice(price, this.state.portId).catch(err => console.log(err)));
+        return (stockApi.getByPrice(parseFloat(price), this.state.portId).catch(err => console.log(err)));
     }
     getPrice = symbol => {
         return (API.allSymbols(`/stock/${symbol}/quote`).catch(err => console.log(err)));
@@ -101,7 +103,7 @@ class Portfolio extends React.Component {
                 quantity: quantity,
                 symbol: symbol,
                 imageLink: imageLink,
-                price: price,
+                price: parseFloat(price),
                 PortfolioId: this.state.portId
             }
         }
@@ -112,7 +114,7 @@ class Portfolio extends React.Component {
                 quantity: quantity,
                 symbol: symbol,
                 imageLink: imageLink,
-                price: price,
+                price: parseFloat(price),
                 PortfolioId: this.state.portId
             }
         }
@@ -128,7 +130,7 @@ class Portfolio extends React.Component {
     handleAdd = async (name, symbol, imageLink) => {
         const quoteData = await this.getPrice(symbol);
         console.log(quoteData.data, new Date());
-        const price = quoteData.data.latestPrice;
+        const price = this.handleNumber(quoteData.data.latestPrice);
         const userResp = prompt(`Current Balance: ${this.state.result.balance}\n
                 Please enter an amount of ${name} stock you would like to purchase at $${price}`);
         const userQuant = parseInt(userResp, 10);
@@ -136,11 +138,11 @@ class Portfolio extends React.Component {
             alert("Please enter a number");
         }
         else if (userQuant * price > this.state.result.balance) {
-            alert(`The quantity of stock you purchased ${userQuant} has a total price of $${userQuant * price} which is greater than your Current Balance: ${this.state.result.balance}`)
+            alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
         }
         else {
             const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-                    This will cost $${price} per share for a total of $${userQuant * price}\n
+                    This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
                     press OK to continue`);
             if (conf) {
                 const existingStock = await this.getStock(price);
@@ -168,7 +170,7 @@ class Portfolio extends React.Component {
     handleSell = async (id, name, quantity, symbol, imageLink, originalPrice) => {
         const quoteData = await this.getPrice(symbol);
         console.log(quoteData.data, new Date());
-        const newPrice = quoteData.data.latestPrice;
+        const newPrice = this.handleNumber(quoteData.data.latestPrice);
         let userResp = prompt(`Current Balance: ${this.state.result.balance}\n
                 Please enter an amount of ${name} stock you would like to sell at Current Price: $${newPrice}.\n
                 Original Price: $${originalPrice}`);
@@ -181,8 +183,8 @@ class Portfolio extends React.Component {
         }
         else {
             let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-                    This will add $${newPrice} per share to your account for a total of $${userQuant * newPrice} 
-                    and a net change of $${(userQuant * newPrice) - (userQuant * originalPrice)}.\n
+                    This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
+                    and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * originalPrice))}.\n
                     Press OK to continue`);
             if (conf) {
                 const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
@@ -207,7 +209,7 @@ class Portfolio extends React.Component {
         console.log(id);
         const quoteData = await this.getPrice(symbol);
         console.log(quoteData.data, new Date());
-        const newPrice = quoteData.data.latestPrice;
+        const newPrice = this.handleNumber(quoteData.data.latestPrice);
         let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
         Are you sure you want to delete batch of ${quantity} ${name} stock at $${price}?
         Current Price $${newPrice}`);
@@ -233,40 +235,43 @@ class Portfolio extends React.Component {
             }
             else {
                 symbol = localStorage.getItem(this.state.stockName);
-            }
-            const quoteData = await this.getPrice(symbol);
-            console.log(quoteData.data, new Date());
-            const price = quoteData.data.latestPrice;
-            if ((this.state.quantity * price) > this.state.result.balance) {
-                alert("You cannot afford that much");
-            }
-            else {
-                let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-                        This will cost $${price} per share for a total of $${this.state.quantity * price}\n
+                const quoteData = await this.getPrice(symbol);
+                console.log(quoteData.data, new Date());
+                const price = this.handleNumber(quoteData.data.latestPrice);
+                if ((this.state.quantity * price) > this.state.result.balance) {
+                    alert("You cannot afford that much");
+                }
+                else {
+                    let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+                        This will cost $${price} per share for a total of $${this.handleNumber(this.state.quantity * price)}\n
                         press OK to continue`);
-                if (conf) {
-                    const existingStock = await this.getStock(price);
-                    console.log(existingStock, "exist");
-                    let imageQuery = await this.getLogo(symbol);
-                    console.log(imageQuery, "img");
-                    const imageLink = imageQuery.data.url;
-                    console.log(symbol, price, imageLink, new Date());
-                    const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
-                    console.log(tempPort)
-                    if (existingStock == null || existingStock == undefined) {
-                        const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
-                        await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                    if (conf) {
+                        const existingStock = await this.getStock(price);
+                        console.log(existingStock, "exist");
+                        let imageQuery = await this.getLogo(symbol);
+                        console.log(imageQuery, "img");
+                        const imageLink = imageQuery.data.url;
+                        console.log(symbol, price, imageLink, new Date());
+                        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
+                        console.log(tempPort)
+                        if (existingStock == null || existingStock == undefined) {
+                            const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
+                            await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                        }
+                        else {
+                            const newQuant = parseInt(existingStock.quantity) + parseInt(this.state.quantity);
+                            const tempStock = await this.makeTempStock(this.state.stockName, newQuant, symbol, imageLink, price, existingStock.id);
+                            await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+                        }
+                        this.setState({
+                            quantity: 0,
+                            stockName: ""
+                        })
+                        this.searchPortfolios(this.state.userId)
                     }
-                    else {
-                        const newQuant = parseInt(existingStock.quantity) + parseInt(this.state.quantity);
-                        const tempStock = await this.makeTempStock(this.state.stockName, newQuant, symbol, imageLink, price, existingStock.id);
-                        await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+                    else{
+                        alert("Ok, then");
                     }
-                    this.setState({
-                        quantity: 0,
-                        stockName: ""
-                    })
-                    this.searchPortfolios(this.state.userId)
                 }
             }
         }
