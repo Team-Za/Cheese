@@ -26,6 +26,7 @@ const LoginForm = ({
           value={user.username}
         />
       </div>
+      <p className="error-message">{errors.username}</p>
       <div className="field-line">
       <i className="fas fa-lock icons"></i><input
           className="sign-up-inputs"
@@ -37,6 +38,7 @@ const LoginForm = ({
           value={user.password}
         />
       </div>
+      <p className="error-message">{errors.password}</p>
       <div className="button-line">
         <input className="sign-up-button" type="submit" value="Log in" primary />
       </div>
