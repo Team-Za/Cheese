@@ -17,12 +17,14 @@ class Portfolio extends React.Component {
         loading: true,
         stockName: "",
         quantity: 0,
-        userId: sessionStorage.getItem("UserId") || 1,
+        userId: sessionStorage.getItem("UserId"),
         portId: -1,
         sidebarArgs: [],
         sidebarState: "add",
         companies: [],
         Stocks: [],
+        errorMessage: "",
+        error: false
         //prompting: false,
         //message: ""
     };
@@ -88,7 +90,9 @@ class Portfolio extends React.Component {
         return (API.allSymbols(`/stock/${symbol}/logo`).catch(err => console.log(err)));
     };
     updatePortfolio = portfolio => {
-        return (portApi.update(portfolio).catch(err => console.log(err)));
+        return (portApi.update(portfolio)
+            .then(res => this.setState({ error: false }))
+            .catch(err => { console.log(err); this.setState({ error: true }) }));
     };
     updateStock = stock => {
         return (stockApi.update(stock).catch(err => console.log(err)));
@@ -269,7 +273,7 @@ class Portfolio extends React.Component {
                         })
                         this.searchPortfolios(this.state.userId)
                     }
-                    else{
+                    else {
                         alert("Ok, then");
                     }
                 }
@@ -320,10 +324,19 @@ class Portfolio extends React.Component {
         });
         return choices;
     };
-    editPortfolio = (quant, event) => {
+    editPortfolio = (quant, datapack, event) => {
         event.preventDefault();
-        this.updatePortfolio(this.makeTempPortfolio(quant));
-        this.searchPortfolios(this.state.userId);
+        this.updatePortfolio(this.makeTempPortfolio(quant))
+            .then(res => {
+                if (!this.state.error) {
+                    console.log('here')
+                    this.searchPortfolios(this.state.userId);
+                }
+                else {
+                    this.setState({ errorMessage: "Incorrect Inputs, digits only" });
+                    console.log('there', this.state.error, this.state.errorMessage)
+                }
+            })
     };
     render = () => {
         return (
@@ -341,11 +354,12 @@ class Portfolio extends React.Component {
                                 placeholder={"Quantity (required)"}
                                 method={this.editPortfolio}
                             />
+                            {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
                             {this.state.Stocks.length == 0 ? (
                                 <div>
                                     <h2>
                                         Looks like you don't have any stocks. Why don't you buy some?
-                                </h2>
+                                    </h2>
                                 </div>) : (
                                     <div>
                                         {this.state.Stocks.map(stock => (<Stock

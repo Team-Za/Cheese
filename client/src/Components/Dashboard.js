@@ -35,8 +35,8 @@ class Dashboard extends React.Component {
                 data: values[1],
                 userPortfolioData: values[0],
                 loading: false,
-                activeStock: values[0][0].name,
-                activeStockSymbol: values[0][0].symbol
+                activeStock: values[0][0].name||"Apple (aapl)",
+                activeStockSymbol: values[0][0].symbol||"aapl"
             });
             // this.getPieChartData();
         });

@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
+import ToggleElement from "./ToggleElement";
 
 class Stock extends React.Component {
     state = {

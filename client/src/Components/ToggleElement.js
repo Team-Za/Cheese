@@ -16,26 +16,27 @@ class ToggleElement extends React.Component {
     }
     handleInputChange = event => {
         const { name, value } = event.target;
-        const checker1=value.length;
-        const checker2=parseFloat(value);
-        console.log("doing it", value, name, event,typeof value, this.props.inputType, checker1, checker2, (this.props.inputType==="number"), (checker2===NaN), (this.props.inputType==="number"), (checker1>20))
-        if ((this.props.inputType==="number")&&(checker2===NaN)) {
+        const checker1 = value.length;
+        const checker2 = parseFloat(value);
+        console.log("doing it", value, name, event, typeof value, this.props.inputType, checker1, checker2, (this.props.inputType === "number"), isNaN(checker2), (this.props.inputType === "number"), (checker1 > 20));
+        if ((this.props.inputType === "number") && (isNaN(checker2))) {
             console.log("Incorrect input type")
             this.setState({
                 errorMessage: "Incorrect input type"
             });
+            console.log(this.state.errorMessage)
         }
-        else if ((this.props.inputType==="number")&&(checker1>20)){
-            console.log("Max of 20 digits")
+        else if ((this.props.inputType === "number") && (checker1 > 8)) {
+            console.log("Max of 8 digits")
             this.setState({
-                errorMessage: "Max of 20 digits"
+                errorMessage: "Max of 8 digits"
             });
         }
-        else{
-            console.log("execute", value, name, event,typeof value, this.props.inputType, checker1, checker2)
+        else {
+            console.log("execute", value, name, event, typeof value, this.props.inputType, checker1, checker2)
             this.setState({
                 quantity: value,
-                errorMessage:""
+                errorMessage: ""
             });
         }
     };
@@ -56,9 +57,10 @@ class ToggleElement extends React.Component {
                 {this.state.isToggleOn ? (
                     <div>
                         {console.log("show")}
-                        <fieldset>
-                            <h3>{this.state.errorMessage}</h3>
-                            <form>
+                        <form>
+                            <fieldset>
+                                <h3>{this.state.errorMessage}</h3>
+                                <legend><h2>{this.props.titleMessage}</h2></legend>
                                 <input
                                     style={buttonColor}
                                     value={this.state.quantity}
@@ -67,11 +69,11 @@ class ToggleElement extends React.Component {
                                     placeholder={this.props.placeholder}
                                     maxLength={8}
                                 />
-                                <button style={buttonColor} onClick={(e) => { this.props.method(this.state.quantity, e); this.handleClick(); }}>
+                                <button style={buttonColor} onClick={(e) => { this.props.method(this.state.quantity, this.props.datapack, e); this.handleClick(); }}>
                                     submit
                                 </button>
-                            </form>
-                        </fieldset>
+                            </fieldset>
+                        </form>
                     </div>) :
                     <div>
                         {console.log("hide")}
