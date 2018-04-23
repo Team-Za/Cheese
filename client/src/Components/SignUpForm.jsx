@@ -23,6 +23,7 @@ const SignUpForm = ({
           value={user.username}
         />
       </div>
+      <p className="error-message">{errors.username}</p>
       <div className="field-line">
       <i className="fas fa-envelope icons"></i><input
           className="sign-up-inputs"
@@ -33,6 +34,7 @@ const SignUpForm = ({
           value={user.email}
         />
       </div>
+      <p className="error-message">{errors.email}</p>
       <div className="field-line">
       <i className="fas fa-lock icons"></i><input
           className="sign-up-inputs"
@@ -44,6 +46,7 @@ const SignUpForm = ({
           value={user.password}
         />
       </div>
+      <p className="error-message">{errors.password}</p>
       <div className="button-line">
         <input className="sign-up-button" type="submit" value="Sign Up" primary />
       </div>
