@@ -8,7 +8,7 @@ const config = require('../../config');
  * Return the Passport Local Strategy object.
  */
 module.exports = new PassportLocalStrategy({
-  usernameField: 'email',
+  usernameField: 'username',
   passwordField: 'password',
   session: false,
   passReqToCallback: true
@@ -19,9 +19,10 @@ module.exports = new PassportLocalStrategy({
   };
 
   // find a user by email address
-  return User.findOne({ 
-      where: {username: userData.username }}).then( (user) => {
-      
+  return User.findOne({
+    where: { username: userData.username }
+  }).then((user) => {
+
 
     if (!user) {
       const error = new Error('Incorrect username or password');
@@ -53,7 +54,7 @@ module.exports = new PassportLocalStrategy({
 
       return done(null, token, data);
     });
-  }, (err)=> {
+  }, (err) => {
     return done(err);
   });
 });

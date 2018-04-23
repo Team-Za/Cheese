@@ -96,7 +96,7 @@ router.post('/signup', (req, res, next) => {
 
   return passport.authenticate('local-signup', (err) => {
     if (err) {
-      if (err.username === 'MySQL Error' && err.username == "DuplicateUsername") {
+      if (err.name == "DuplicateUsername") {
         // the 11000 Mongo code is for a duplication email error
         // the 409 HTTP status code is for conflict error
         return res.status(409).json({
