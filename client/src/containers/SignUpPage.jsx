@@ -1,8 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
 import { resolve } from 'path';
 import { withRouter } from "react-router-dom";
+
 class SignUpPage extends React.Component {
 
   /**
@@ -51,7 +53,6 @@ class SignUpPage extends React.Component {
       xhr.onload = () => {
         if (xhr.status === 200) {
           // success
-          //resolve(() => {
           // change the component-container state
           this.setState({
             errors: {},
@@ -68,7 +69,6 @@ class SignUpPage extends React.Component {
           // })
         } else {
           // failure
-          // reject(() => {
           const errors = xhr.response.errors ? xhr.response.errors : {};
           errors.summary = xhr.response.message;
 
@@ -76,7 +76,6 @@ class SignUpPage extends React.Component {
             errors
           });
           reject(console.log(this.state.errors, xhr.statusText));
-          // })
         }
       };
       console.log("Step 1 complete");
@@ -128,6 +127,7 @@ class SignUpPage extends React.Component {
       user
     });
   }
+
 
   /**
    * Render the component.
