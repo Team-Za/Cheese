@@ -14,7 +14,7 @@ class Stock extends React.Component {
                     {this.props.args.map(element => (
                         <div key={element.id}>
                             Quantity:{element.quantity} Price:{element.price}
-                            <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
+                            <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, this.props.symbol, element.price)} className="remove">
                                 Sell All
                             </button>
                             <button onClick={() => this.props.handleSell(element.id, this.props.name, element.quantity, this.props.symbol, this.props.imageLink, element.price)} className="add">

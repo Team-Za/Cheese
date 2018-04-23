@@ -7,6 +7,7 @@ import Navbar from "./Navbar";
 import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
+import ToggleElement from "./ToggleElement";
 //import NewConfirm from "./NewConfirm"
 const formColor = {
     color: "white"
@@ -75,6 +76,9 @@ class Portfolio extends React.Component {
     makeStock = stock => {
         return (stockApi.create(stock).catch(err => console.log(err)));
     };
+    getStock = price => {
+        return (stockApi.getByPrice(price, this.state.portId).catch(err => console.log(err)));
+    }
     getPrice = symbol => {
         return (API.allSymbols(`/stock/${symbol}/quote`).catch(err => console.log(err)));
     };
@@ -139,10 +143,21 @@ class Portfolio extends React.Component {
                     This will cost $${price} per share for a total of $${userQuant * price}\n
                     press OK to continue`);
             if (conf) {
-                const temp = await this.makeTempStock(name, userQuant, symbol, imageLink, price);
+                const existingStock = await this.getStock(price);
+                console.log(existingStock, "exist");
                 const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
                 console.log(tempPort);
-                await Promise.all([this.updatePortfolio(tempPort), this.makeStock(temp)]);
+                if (existingStock == null || existingStock == undefined) {
+                    console.log("here")
+                    const tempStock = await this.makeTempStock(name, userQuant, symbol, imageLink, price);
+                    await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                }
+                else {
+                    console.log("there")
+                    const newQuant = parseInt(existingStock.quantity) + parseInt(userQuant);
+                    const tempStock = await this.makeTempStock(name, newQuant, symbol, imageLink, price, existingStock.id);
+                    await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+                }
                 this.searchPortfolios(this.state.userId);
             }
             else {
@@ -188,11 +203,15 @@ class Portfolio extends React.Component {
             }
         }
     };
-    handleDelete = async (id, name, quantity, price) => {
+    handleDelete = async (id, name, quantity, symbol, price) => {
         console.log(id);
+        const quoteData = await this.getPrice(symbol);
+        console.log(quoteData.data, new Date());
+        const newPrice = quoteData.data.latestPrice;
         let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-        Are you sure you want to delete batch of ${quantity} ${name} stock at $${price}?`);
-        const tempPort = this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(quantity * price));
+        Are you sure you want to delete batch of ${quantity} ${name} stock at $${price}?
+        Current Price $${newPrice}`);
+        const tempPort = this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(quantity * newPrice));
         if (conf) {
             await Promise.all([this.deleteStock(id), this.updatePortfolio(tempPort)]);
             console.log(tempPort)
@@ -226,17 +245,26 @@ class Portfolio extends React.Component {
                         This will cost $${price} per share for a total of $${this.state.quantity * price}\n
                         press OK to continue`);
                 if (conf) {
+                    const existingStock = await this.getStock(price);
+                    console.log(existingStock, "exist");
                     let imageQuery = await this.getLogo(symbol);
-                    console.log(imageQuery)
+                    console.log(imageQuery, "img");
                     const imageLink = imageQuery.data.url;
-                    console.log(symbol, price, imageLink, new Date())
-                    const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
+                    console.log(symbol, price, imageLink, new Date());
                     const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
                     console.log(tempPort)
-                    await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                    if (existingStock == null || existingStock == undefined) {
+                        const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
+                        await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                    }
+                    else {
+                        const newQuant = parseInt(existingStock.quantity) + parseInt(this.state.quantity);
+                        const tempStock = await this.makeTempStock(this.state.stockName, newQuant, symbol, imageLink, price, existingStock.id);
+                        await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+                    }
                     this.setState({
-                        quantity:0,
-                        stockName:""
+                        quantity: 0,
+                        stockName: ""
                     })
                     this.searchPortfolios(this.state.userId)
                 }
@@ -287,21 +315,8 @@ class Portfolio extends React.Component {
         });
         return choices;
     };
-    setPortfolio() {
-        userApi.getByUsername(sessionStorage.getItem("username"))
-            .then(res2 => {
-                const tempPort = {
-                    userName: res2.username,
-                    balance: 10000,
-                    UserId: res2.id
-                }
-                sessionStorage.setItem("UserId", res2.id);
-                portApi.create(tempPort)
-                    .then(() => {
-                        console.log("Step 2 complete");
-                    })
-            })
-            .catch(err => console.log(err))
+    editPortfolio() {
+
     };
     render = () => {
         return (
@@ -310,26 +325,29 @@ class Portfolio extends React.Component {
                     {this.state.loading ? (<div>loading...</div>) :
                         (<div>
                             <h1>{this.state.result.userName}</h1>
-                            <h2>Current Balance: ${this.state.result.balance}</h2>
-                            {this.state.Stocks.length==0 ? (
-                            <div>
-                                <h2>
-                                Looks like you don't have any stocks. Why don't you buy some?
-                                </h2>
-                            </div>) : (
+                            <h2>Current Balance: ${this.state.result.balance}</h2> <ToggleElement
+                                offMessage={"Edit Balance"}
+                                onMessage={"Cancel"}
+                                titleMessage={"Edit Balance"}
+                            />
+                            {this.state.Stocks.length == 0 ? (
                                 <div>
-                                    {this.state.Stocks.map(stock => (<Stock
-                                        key={stock.name}
-                                        name={stock.name}
-                                        args={stock.args}
-                                        symbol={stock.symbol}
-                                        imageLink={stock.imageLink}
-                                        handleDelete={this.handleDelete}
-                                        handleAdd={this.handleAdd}
-                                        stateQuant={this.state.quantity}
-                                        handleSell={this.handleSell}
-                                    />))}
-                                </div>)}
+                                    <h2>
+                                        Looks like you don't have any stocks. Why don't you buy some?
+                                </h2>
+                                </div>) : (
+                                    <div>
+                                        {this.state.Stocks.map(stock => (<Stock
+                                            key={stock.name}
+                                            name={stock.name}
+                                            args={stock.args}
+                                            symbol={stock.symbol}
+                                            imageLink={stock.imageLink}
+                                            handleDelete={this.handleDelete}
+                                            handleAdd={this.handleAdd}
+                                            handleSell={this.handleSell}
+                                        />))}
+                                    </div>)}
                         </div>)}
                 </div>
                 {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
@@ -382,6 +400,7 @@ class Portfolio extends React.Component {
                         {this.state.message}
                         <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
                     </div>
+                    <button onClick = {this.editPortfolio}>Edit Balance</button>
                        //<div/>
                     )
                 } */}
