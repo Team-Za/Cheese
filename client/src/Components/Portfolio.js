@@ -315,8 +315,10 @@ class Portfolio extends React.Component {
         });
         return choices;
     };
-    editPortfolio() {
-
+    editPortfolio = (quant, event) => {
+        event.preventDefault();
+        this.updatePortfolio(this.makeTempPortfolio(quant));
+        this.searchPortfolios(this.state.userId);
     };
     render = () => {
         return (
@@ -329,6 +331,10 @@ class Portfolio extends React.Component {
                                 offMessage={"Edit Balance"}
                                 onMessage={"Cancel"}
                                 titleMessage={"Edit Balance"}
+                                inputType={"number"}
+                                name={"balancer"}
+                                placeholder={"Quantity (required)"}
+                                method={this.editPortfolio}
                             />
                             {this.state.Stocks.length == 0 ? (
                                 <div>
