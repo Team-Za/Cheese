@@ -45,7 +45,7 @@ const SignUpForm = ({
         />
       </div>
       <div className="button-line">
-        <input className="sign-up-button" type="submit" label="Create New Account" primary />
+        <input className="sign-up-button" type="submit" value="Sign Up" primary />
       </div>
       <div className="accounts">Already have an account? <Link to={'/login'}>Log in</Link></div>
     </form>

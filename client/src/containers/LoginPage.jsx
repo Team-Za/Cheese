@@ -75,9 +75,9 @@ class LoginPage extends React.Component {
             userApi.getByUsername(this.state.user.username)
               .then(res=>{
                 sessionStorage.setItem("UserId", res.id)
+                window.location.reload();
               })
             // change the current URL to /
-            this.props.history.push('/');
           
         } else {
           // failure
