@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import SignUpForm from '../Components/SignUpForm.jsx';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
 import { resolve } from 'path';

@@ -193,7 +193,7 @@ class Portfolio extends React.Component {
                     this.searchPortfolios(this.state.userId)
                 }
                 else {
-                    const tempStock = this.makeTempStock(name, (quantity - userQuant), symbol, imageLink, newPrice, id);
+                    const tempStock = this.makeTempStock(name, (quantity - userQuant), symbol, imageLink, originalPrice, id);
                     await this.updateStock(tempStock);
                     this.searchPortfolios(this.state.userId);
                 }
