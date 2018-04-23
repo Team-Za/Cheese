@@ -12,18 +12,19 @@ module.exports = new PassportLocalStrategy({
   passReqToCallback: true
 }, (req, email, password, done) => {
   const userData = {
+    username: req.body.username.trim(),
     email: email.trim(),
-    password: password.trim(),
-    username: req.body.username.trim()
+    password: password.trim()
+    
   };
   console.log(userData)
   return User.findOne({ 
     where: {username: userData.username }}).then( (user) => {
       if (user) {
-        //this return needs to be changed to what we need todo:
-        return done(null, false, {
-            message: 'That username is already taken'
-        });
+        const error = new Error('Username already exist.');
+        error.name = 'DuplicateUsername';
+  
+        return done(error);
       }
 
     else {
