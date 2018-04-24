@@ -634,6 +634,24 @@ a:focus {
   width: 18%;
 }
 
+.sidebar-field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+  width: 35%;
+}
+
+.sidebar-inputs {
+  border-radius: 3px;
+  width: 100%;
+  border: none;
+  color: $cool-green;
+}
+
 .thumbnail {
   width: 50px;
 }
