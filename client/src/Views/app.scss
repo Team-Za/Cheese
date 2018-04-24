@@ -334,11 +334,75 @@ a:focus {
   border: none;
   color: white;
   transition: .3s;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .edit-button:hover {
   transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.sell-btn {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.buy-btn {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-buy {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-sell {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.top-btns {
+  position: relative;
+  width: 100%;
+  text-align: right;
+}
+
+.add-stocks {
+  background: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
   box-shadow: $shadow;
 }
 
