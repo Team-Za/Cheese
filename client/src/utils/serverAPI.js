@@ -19,6 +19,7 @@ const portApi = {
 const stockApi = {
     getAll: () => axios.get('/api/stock').then(results => results.data),
     getById: id => axios.get(`/api/stock/${id}`).then(results => results.data),
+    getByPrice: (price, PortfolioId) => axios.get(`/api/stock/${price}/${PortfolioId}`).then(results => results.data),
     create: stock => axios.post('/api/stock', stock).then(results => results.data),
     update: stock => axios.put(`/api/stock/${stock.id}`, stock),
     delete: id => axios.delete(`/api/stock/${id}`)
