@@ -12,7 +12,9 @@ class Sidebar extends React.Component {
             isToggleOn: false,
             quantity: 0,
             errorMessage: "",
-            barstate:"Buy"
+            barstate:"Buy",
+            buyBtn: "active-btn-buy",
+            sellBtn: ""
         };
 
         // This binding is necessary to make `this` work in the callback
