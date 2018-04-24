@@ -51,6 +51,21 @@ class Sidebar extends React.Component {
             isToggleOn: !prevState.isToggleOn
         }));
     }
+
+    changeActiveClass = whichButton => {
+        if(whichButton === "sell") {
+            this.setState({
+                buyBtn: "",
+                sellBtn: "active-btn-sell"
+            })
+        } else {
+            this.setState({
+                buyBtn: "active-btn-buy",
+                sellBtn: ""
+            })
+        }
+    }
+
     render = () => {
         return (
             <div>
