@@ -453,16 +453,19 @@ class Market extends React.Component {
         <div className="portfolio col-md-5">
           {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
+              <div className="edit-balance">
+              <ToggleElement
+                offMessage={"Edit"}
                 onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
+                titleMessage={"Edit"}
                 inputType={"number"}
                 name={"balancer"}
                 placeholder={"Quantity (required)"}
                 method={this.editPortfolio}
               /></div>
+              </div>
+              <div className="panel-header">Your Stocks</div>
               {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
                 <div>

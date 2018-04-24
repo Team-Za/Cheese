@@ -100,7 +100,7 @@ class Sidebar extends React.Component {
                             <input
                             className="sidebar-inputs"
                                 style={buttonColor}
-                                value={this.state.quantity}
+                                // value={this.state.quantity}
                                 onChange={this.handleInputChange}
                                 name={`input${this.props.datapack.name}`}
                                 placeholder={"Amount"}
