@@ -7,7 +7,6 @@ import Navbar from "./Navbar";
 import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
-import bootbox from 'bootbox';
 
 const formColor = {
   color: "white"
@@ -15,15 +14,20 @@ const formColor = {
 class MarketSample extends React.Component {
   state = {
     result: [],
-    loading: true,
+    loading: false,
     stockName: "",
     quantity: 0,
-    userId: sessionStorage.getItem("UserId") || 1,
+    userId: sessionStorage.getItem("UserId"),
     portId: -1,
     sidebarArgs: [],
     sidebarState: "add",
     companies: [],
     Stocks: [],
+    testStocks: [
+      { name: 'Apple', symbol: 'AAPL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAPL.png", args: {quantity: 30, price: 165.72} }, 
+      { name: 'Netflix Inc.', symbol: 'NFLX', imageLink: "https://storage.googleapis.com/iex/api/logos/NFLX.png", args: {quantity: 20, price: 327.77} },
+      { name: 'Manchester United Ltd. Class A', symbol: 'MANU', imageLink: "https://storage.googleapis.com/iex/api/logos/MANU.png", args: {quantity: 50, price: 18.5} }, 
+      { name: 'American Airlines Group Inc.', symbol: 'AAL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAL.png", args: {price: 46.78, quantity: 15 }}]
     //prompting: false,
     //message: ""
   };
@@ -312,24 +316,39 @@ class MarketSample extends React.Component {
             (<div>
               <div className="panel-header">Your Stocks</div>
               <div className="panel-header">Current Balance: ${this.state.result.balance}</div>
-              {this.state.Stocks.length == 0 ? (
+              {this.state.testStocks.length == 0 ? (
                 <div>
                   <h2>
                     Looks like you don't have any stocks. Why don't you buy some?
                                 </h2>
                 </div>) : (
                   <div>
-                    {this.state.Stocks.map(stock => (<Stock
-                      key={stock.name}
-                      name={stock.name}
-                      args={stock.args}
-                      symbol={stock.symbol}
-                      imageLink={stock.imageLink}
-                      handleDelete={this.handleDelete}
-                      handleAdd={this.handleAdd}
-                      stateQuant={this.state.quantity}
-                      handleSell={this.handleSell}
-                    />))}
+                    {this.state.testStocks.map(stock =>
+                      <div className="stock col-md-12">
+                        <div className="each-stock">
+                          <div className="each-stock-info col-md-2"><img className="thumbnail" src={stock.imageLink} /></div>
+                          <div className="each-stock-info col-md-3"> {stock.name}</div>
+                          <div className="each-stock-info col-md-2"> {stock.symbol}</div>
+                          <div className="stock-amount-holder">
+                          
+                              <div>
+
+                                <div className="each-stock-info col-md-2"> {stock.args.quantity}</div>
+                                <div className="each-stock-info col-md-3"> {stock.args.price}</div>
+                                {/* <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
+                                Sell All
+                            </button> */}
+
+                                <div className={`sell-btn ${this.state.activeClass}`}><i className="fas fa-minus-square minus-btn"></i></div>
+                              </div>
+                            
+                          </div>
+                        </div>
+                        <div className={`add-btn ${this.state.activeClass}`}>
+                          <i className="fas fa-plus-square plus-btn"></i>
+                        </div>
+                      </div>
+                    )}
                   </div>)}
             </div>)}
         </div>
@@ -340,7 +359,7 @@ class MarketSample extends React.Component {
             <fieldset>
               <legend style={formColor}>Add More Stocks</legend>
               <div className="panel-header">Stock Name:</div>
-                            <div className="field-line">
+              <div className="field-line">
                 <input
                   className="sign-up-inputs"
                   value={this.state.stockName}
@@ -350,7 +369,7 @@ class MarketSample extends React.Component {
                 />
               </div>
               <div className="panel-header">Quantity:</div>
-                            <div className="field-line">
+              <div className="field-line">
                 <input
                   className="sign-up-inputs"
                   value={this.state.quantity}
@@ -360,8 +379,8 @@ class MarketSample extends React.Component {
                 />
               </div>
               <div className="submit-btn">
-                <input className="sign-up-button" type="submit" onClick={this.handleFormSubmit} value="Add Stock"/>
-                            </div>
+                <input className="sign-up-button" type="submit" onClick={this.handleFormSubmit} value="Add Stock" />
+              </div>
             </fieldset>
           </form>
           <div>

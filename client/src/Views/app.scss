@@ -16,6 +16,10 @@ $shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
   background-color: azure;
 }
 
+.row {
+  height: inherit
+}
+
 body {
   background-color: $dark-background;
 }
@@ -81,14 +85,30 @@ a:focus {
   margin-right: 20px;
   padding: 15px 25px 15px 25px;
   border-radius: 6px;
-  transition: .3s;
+  transition: all 0.3s ease;
 }
 
 .top-menu-item:hover {
-  background-color: $hover-font-color;
+  background: $gradient-blue;
   border-radius: 6px;
   cursor: pointer;
 }
+
+#log-in {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 20px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: $gradient-blue;
+}
+
+#log-in:hover {
+  opacity: .8;
+}
+
 
 // Landing Page 
 .landing-nav {
@@ -116,6 +136,7 @@ a:focus {
   padding: 8% 10% 8% 10%;
   border-radius: 6px;
   margin-top: 40px;
+  box-shadow: $shadow;
 }
 
 .landing-page-body {
@@ -436,6 +457,14 @@ a:focus {
   text-transform: uppercase;
   border-radius: $round-corners;
   box-shadow: $shadow;
+}
+
+.legend {
+  color: white;
+  border-bottom: 2pt solid white;
+  font-family: $new-font;
+  font-size: 25px;
+  margin-bottom: 20px;
 }
 
 .stock {
