@@ -488,7 +488,7 @@ class Market extends React.Component {
         {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
         {/* {!this.state.prompting ? ( */}
         {this.state.prompting ? (
-          <div className="row col-md-6 col-md-offset-1">
+          <div className="row col-md-6 col-md-offset-1 add-stocks">
             <Sidebar
               datapack={this.state.datapack}
               testHandleSell={this.testHandleSell}
@@ -496,7 +496,7 @@ class Market extends React.Component {
               cancelOut={this.cancelOut}
             />
           </div>) : (
-            <div className="row col-md-6 col-md-offset-1">
+            <div className="row col-md-6 col-md-offset-1 add-stocks">
               <form>
                 <fieldset>
                   <div className="legend" >Add More Stocks</div>

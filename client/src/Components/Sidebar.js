@@ -71,6 +71,13 @@ class Sidebar extends React.Component {
             <div>
                 <div>
                 <div className="top-btns">
+                <button className="cancel-btn" onClick={(e) => {
+                    console.log(this.props);
+                    this.props.cancelOut(e);
+                }}>
+                    Cancel
+                </button>
+
                 <button  className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
                     this.changeActiveClass("sell");
                     this.setState({barstate:"Sell"})
@@ -82,12 +89,6 @@ class Sidebar extends React.Component {
                     this.setState({barstate:"Buy"})
                 }}>
                     Buy
-                </button>
-                <button onClick={(e) => {
-                    console.log(this.props);
-                    this.props.cancelOut(e);
-                }}>
-                    Cancel
                 </button>
                 </div>
                 {/* {this.state.isToggleOn ? ( */}

@@ -390,6 +390,21 @@ a:focus {
   font-size: 14px;
 }
 
+.cancel-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
 .top-btns {
   position: relative;
   width: 100%;
