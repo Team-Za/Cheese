@@ -28,9 +28,7 @@ class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        console.log("YOOO", this.searchPortfolios(this.state.userId))
         Promise.all([this.searchPortfolios(this.state.userId), this.getFirstUserStock(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d"), this.plotData()]).then(values => {
-            console.log("SQUAD", values);
             if(values[1] === false) {
                 this.setState({
                     data: values[2],
@@ -69,7 +67,6 @@ class Dashboard extends React.Component {
         return new Promise((res, rej) => {
             var data = portApi.getPortfolioAndStocksbyUserId(id)
                 .then(res => {
-                    console.log("User Portfolio Data", res);
                     return res.Stocks;
                 })
                 .catch(err => console.log(err));
@@ -102,7 +99,6 @@ class Dashboard extends React.Component {
 
     getFirstUserStock = id => {
         var stock = this.searchPortfolios(id).then(data => {
-            console.log("This is what I need", data);
             if(data.length === 0) {
                 return false;
             } else {
@@ -116,17 +112,6 @@ class Dashboard extends React.Component {
         return stock;
     }
 
-    // getUsersStocks = query => {
-    //     API.getUserData(query)
-    //         .then(res => {
-    //             this.setState({
-    //                 result: res.data,
-    //                 data: this.getData(res.data)
-    //             }), console.log(this.state.result[0].minute)
-    //         })
-    //         .catch(err => console.log(err));
-    // }
-
     getData = stockData => {
         const dataArray = [];
         let latestNumber;
@@ -138,16 +123,12 @@ class Dashboard extends React.Component {
             if (stockData[i].marketAverage === -1) {
                 dataArray.push({
                     name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
                     Price: latestNumber
                 })
                 i = i + 4;
             } else {
                 dataArray.push({
                     name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
                     Price: stockData[i].marketAverage
                 })
                 i = i + 4;
@@ -182,16 +163,12 @@ class Dashboard extends React.Component {
 
             if (stockData[i].high === -1) {
                 dataArray.push({
-                    name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
+                    name: stockData[i].label, 
                     Price: latestNumber
                 })
             } else {
                 dataArray.push({
                     name: stockData[i].label,
-                    // High: stockData[i].marketHigh, 
-                    // Low: stockData[i].marketLow, 
                     Price: stockData[i].high
                 })
             }
@@ -216,11 +193,6 @@ class Dashboard extends React.Component {
                         }
                         allStockPrices.push(stock);
                         totalPortPrice += stockPrice;
-                        console.log("Name:", data[i].name);
-                        console.log("Stock:", stock);
-                        console.log("Quantity:", data[i].quantity);
-                        console.log("Price:", res.data)
-                        console.log("STATE", this.state)
                     })
             }
 
@@ -237,7 +209,6 @@ class Dashboard extends React.Component {
                 eachStockPrice: data,
                 loading: false
             })
-            console.log(this.state)
         })
         this.forceUpdate();
     }
@@ -282,8 +253,6 @@ class Dashboard extends React.Component {
                                         <Tooltip />
                                         <Legend />
                                         <Line type="monotone" isAnimationActive={true} dataKey="Price" stroke="#6e80bf" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 5 }} />
-                                        {/* <Line type="monotone" dataKey="Low" stroke="#82ca9d" />
-                            <Line type="monotone" dataKey="Average" stroke="#fff" /> */}
                                     </LineChart>
                                 </div>
 
@@ -321,12 +290,6 @@ class Dashboard extends React.Component {
                                                 <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
                                                 <ReferenceLine y={0} stroke='#000' />
                                                 <Brush dataKey='name' height={30} stroke="#6e80bf" />
-                                                {/* <defs>
-                                                    <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
-                                                        <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
-                                                    </linearGradient>
-                                                </defs> */}
                                                 <Bar dataKey="Price" fill="#8884d8" />
                                             </BarChart>
                                         </div>
