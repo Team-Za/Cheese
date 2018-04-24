@@ -338,77 +338,129 @@ class Portfolio extends React.Component {
                 }
             })
     };
+    testHandleSell = async (quant, datapack, event) => {
+        console.log(datapack);
+        const quoteData = await this.getPrice(datapack[0].symbol);
+        console.log(quoteData.data, new Date());
+        const newPrice = this.handleNumber(quoteData.data.latestPrice);
+        let userResp = quant;
+        alert(`Current Balance: ${this.state.result.balance}\n
+                Please enter an amount of ${datapack[0].name} stock you would like to sell at Current Price: $${newPrice}.\n
+                Original Price: $${datapack[0].price}`);
+        const userQuant = parseInt(userResp, 10);
+        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+            alert("Please enter a number");
+        }
+        else if (userQuant > datapack[0].quantity) {
+            alert("You don't have that much of this stock");
+        }
+        else {
+            let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+                    This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
+                    and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack[0].price))}.\n
+                    Press OK to continue`);
+            if (conf) {
+                const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
+                await this.updatePortfolio(tempPort);
+                if (userQuant === datapack[0].quantity) {
+                    console.log(tempPort);
+                    await this.deleteStock(datapack[0].id);
+                    this.searchPortfolios(this.state.userId)
+                }
+                else {
+                    const tempStock = this.makeTempStock(datapack[0].name, (datapack[0].quantity - userQuant), datapack[0].symbol, datapack[0].imageLink, datapack[0].price, datapack[0].id);
+                    await this.updateStock(tempStock);
+                    this.searchPortfolios(this.state.userId);
+                }
+            }
+            else {
+                alert("Ok then...")
+            }
+        }
+    }
+    sumStocks = () =>{
+        
+    }
     render = () => {
         return (
-            <div className="container">
-                <div className="portfolio">
-                    {this.state.loading ? (<div>loading...</div>) :
-                        (<div>
-                            <h1>{this.state.result.userName}</h1>
-                            <h2>Current Balance: ${this.state.result.balance}</h2> <ToggleElement
-                                offMessage={"Edit Balance"}
-                                onMessage={"Cancel"}
-                                titleMessage={"Edit Balance"}
-                                inputType={"number"}
-                                name={"balancer"}
-                                placeholder={"Quantity (required)"}
-                                method={this.editPortfolio}
-                            />
-                            {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
-                            {this.state.Stocks.length == 0 ? (
-                                <div>
-                                    <h2>
-                                        Looks like you don't have any stocks. Why don't you buy some?
-                                    </h2>
-                                </div>) : (
+            <div>{!Auth.isUserAuthenticated() ?
+                (<div>
+                    <Link to="/">
+                        <div>
+                            Sign in to view your portfolio.
+                        </div>
+                    </Link>
+                </div>) :
+                <div className="container">
+                    <div className="portfolio">
+                        {this.state.loading ? (<div>loading...</div>) :
+                            (<div>
+                                <h1>{this.state.result.userName}</h1>
+                                <h2>Current Balance: ${this.state.result.balance}</h2> <ToggleElement
+                                    offMessage={"Edit Balance"}
+                                    onMessage={"Cancel"}
+                                    titleMessage={"Edit Balance"}
+                                    inputType={"number"}
+                                    name={"balancer"}
+                                    placeholder={"Quantity (required)"}
+                                    method={this.editPortfolio}
+                                />
+                                {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
+                                {this.state.Stocks.length == 0 ? (
                                     <div>
-                                        {this.state.Stocks.map(stock => (<Stock
-                                            key={stock.name}
-                                            name={stock.name}
-                                            args={stock.args}
-                                            symbol={stock.symbol}
-                                            imageLink={stock.imageLink}
-                                            handleDelete={this.handleDelete}
-                                            handleAdd={this.handleAdd}
-                                            handleSell={this.handleSell}
-                                        />))}
-                                    </div>)}
-                        </div>)}
-                </div>
-                {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
-                {/* {!this.state.prompting ? ( */}
-                <div>
-                    <form>
-                        <fieldset>
-                            <legend style={formColor}>Add new stocks here</legend>
-                            Stock Name:
-                            <input
-                                value={this.state.stockName}
-                                onChange={this.handleInputChange}
-                                name="stockName"
-                                placeholder="Name of stock (required)"
-                            />
-                            Quantity:
-                            <input
-                                value={this.state.quantity}
-                                onChange={this.handleInputChange}
-                                name="quantity"
-                                placeholder="Quantity (required)"
-                            />
-                            <button onClick={this.handleFormSubmit}>
-                                submit
-                            </button>
-                        </fieldset>
-                    </form>
-                    <div>
-                        <ul>
-                            {this.state.companies.map(company => (
-                                <li onClick={() => this.setState({ stockName: company })}>{company}</li>
-                            ))}
-                        </ul>
+                                        <h2>
+                                            Looks like you don't have any stocks. Why don't you buy some?
+                                    </h2>
+                                    </div>) : (
+                                        <div>
+                                            {this.state.Stocks.map(stock => (<Stock
+                                                key={stock.name}
+                                                name={stock.name}
+                                                args={stock.args}
+                                                symbol={stock.symbol}
+                                                imageLink={stock.imageLink}
+                                                handleDelete={this.handleDelete}
+                                                handleAdd={this.handleAdd}
+                                                handleSell={this.handleSell}
+                                                testHandleSell={this.testHandleSell}
+                                            />))}
+                                        </div>)}
+                            </div>)}
                     </div>
-                </div>
-                {/* ) : (
+                    {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
+                    {/* {!this.state.prompting ? ( */}
+                    <div>
+                        <form>
+                            <fieldset>
+                                <legend style={formColor}>Add new stocks here</legend>
+                                Stock Name:
+                            <input
+                                    value={this.state.stockName}
+                                    onChange={this.handleInputChange}
+                                    name="stockName"
+                                    placeholder="Name of stock (required)"
+                                />
+                                Quantity:
+                            <input
+                                    value={this.state.quantity}
+                                    onChange={this.handleInputChange}
+                                    name="quantity"
+                                    placeholder="Quantity (required)"
+                                />
+                                <button onClick={this.handleFormSubmit}>
+                                    submit
+                            </button>
+                            </fieldset>
+                        </form>
+                        <div>
+                            <ul>
+                                {this.state.companies.map(company => (
+                                    <li onClick={() => this.setState({ stockName: company })}>{company}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    {/* ) : (
                     //     <form>
                     //         Quantity:
                     // <input
@@ -429,7 +481,8 @@ class Portfolio extends React.Component {
                        //<div/>
                     )
                 } */}
-            </div>
+                </div>
+            }</div>
         );
     };
 }

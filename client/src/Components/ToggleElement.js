@@ -2,6 +2,9 @@ import React from 'react';
 const buttonColor = {
     color: "black"
 }
+const titleColor ={
+    color:"white"
+}
 class ToggleElement extends React.Component {
     constructor(props) {
         super(props);
@@ -60,7 +63,7 @@ class ToggleElement extends React.Component {
                         <form>
                             <fieldset>
                                 <h3>{this.state.errorMessage}</h3>
-                                <legend><h2>{this.props.titleMessage}</h2></legend>
+                                <legend><h3 style={titleColor}>{this.props.titleMessage}</h3></legend>
                                 <input
                                     style={buttonColor}
                                     value={this.state.quantity}

@@ -32,10 +32,19 @@ class Stock extends React.Component {
                             <div className="each-stock-info col-md-3"> {element.price}</div>
                             {/* <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
                                 Sell All
-                            </button> */}
-                        
+                            </button> */}                        
                             <div className={`sell-btn ${this.state.activeClass}`} onClick={() => this.props.handleSell(element.id, this.props.name, element.quantity, this.props.symbol, this.props.imageLink, element.price)}><i className="fas fa-minus-square minus-btn"></i></div>
-                            </div>
+                            {/* <ToggleElement
+                                offMessage={"Sell"}
+                                onMessage={"Cancel"}
+                                titleMessage={"Input the amount you want to sell"}
+                                inputType={"number"}
+                                name={`sellField${element.id}`}
+                                placeholder={"Quantity (required)"}
+                                method={this.props.testHandleSell}
+                                datapack={[{id:element.id, name:this.props.name, quantity:element.quantity, symbol:this.props.symbol, imageLink:this.props.imageLink, price:element.price}]}
+                            /> */}
+                            </div> 
                         ))}
                         </div>
                 </div>
