@@ -8,10 +8,11 @@ import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
 import ToggleElement from "./ToggleElement";
-
+import Sidebar from "./Sidebar";
 const formColor = {
   color: "white"
 }
+
 class Market extends React.Component {
   state = {
     result: [],
@@ -24,7 +25,10 @@ class Market extends React.Component {
     sidebarState: "add",
     companies: [],
     Stocks: [],
-    //prompting: false,
+    errorMessage: "",
+    error: false,
+    datapack: {},
+    prompting: false
     //message: ""
   };
   componentDidMount = async () => {
@@ -89,7 +93,9 @@ class Market extends React.Component {
     return (API.allSymbols(`/stock/${symbol}/logo`).catch(err => console.log(err)));
   };
   updatePortfolio = portfolio => {
-    return (portApi.update(portfolio).catch(err => console.log(err)));
+    return (portApi.update(portfolio)
+        .then(res => this.setState({ error: false }))
+        .catch(err => { console.log(err); this.setState({ error: true }) }));
   };
   updateStock = stock => {
     return (stockApi.update(stock).catch(err => console.log(err)));
@@ -136,10 +142,12 @@ class Market extends React.Component {
             Please enter an amount of ${name} stock you would like to purchase at $${price}`);
     const userQuant = parseInt(userResp, 10);
     if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      alert("Please enter a number");
+      this.state.errorAlert.number = "Please enter a number";
+      console.log(this.state.errorAlert)
+      console.log("hello")
     }
     else if (userQuant * price > this.state.result.balance) {
-      alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+      this.state.errorAlert.price = `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`
     }
     else {
       const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -175,10 +183,10 @@ class Market extends React.Component {
             Original Price: $${originalPrice}`);
     const userQuant = parseInt(userResp, 10);
     if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      alert("Please enter a number");
+      this.state.errorAlert.num = "Please enter a number";
     }
     else if (userQuant > quantity) {
-      alert("You don't have that much of this stock");
+      this.state.errorAlert.stock ="You don't have that much of this stock";
     }
     else {
       let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -226,7 +234,7 @@ class Market extends React.Component {
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
       if (localStorage.getItem(this.state.stockName) === null) {
-        alert("Stock name not found");
+        this.state.errorAlert.name ="Stock name not found";
       }
       else {
         symbol = localStorage.getItem(this.state.stockName);
@@ -234,7 +242,7 @@ class Market extends React.Component {
         console.log(quoteData.data, new Date());
         const price = this.handleNumber(quoteData.data.latestPrice);
         if ((this.state.quantity * price) > this.state.result.balance) {
-          alert("You cannot afford that much");
+          this.state.errorAlert.money ="You cannot afford that much";
         }
         else {
           let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -264,14 +272,12 @@ class Market extends React.Component {
             })
             this.searchPortfolios(this.state.userId)
           }
-          else {
-            alert("Ok, then");
-          }
+          
         }
       }
     }
     else {
-      alert("Please fill out required fields!");
+      this.state.errorAlert.empty ="Please fill out required fields!";
     }
   };
   formatStocks = stocks => {
@@ -315,27 +321,147 @@ class Market extends React.Component {
     });
     return choices;
   };
-  editPortfolio = (quant, event) => {
+  editPortfolio = (quant, datapack, event) => {
     event.preventDefault();
-    this.updatePortfolio(this.makeTempPortfolio(quant));
-    this.searchPortfolios(this.state.userId);
+    this.updatePortfolio(this.makeTempPortfolio(quant))
+        .then(res => {
+            if (!this.state.error) {
+                console.log('here')
+                this.searchPortfolios(this.state.userId);
+            }
+            else {
+                this.setState({ errorMessage: "Incorrect Inputs, digits only" });
+                console.log('there', this.state.error, this.state.errorMessage)
+            }
+        })
+};
+  testHandleSell = async (quant, datapack, event) => {
+    event.preventDefault();
+    console.log(datapack);
+    const quoteData = await this.getPrice(datapack.symbol);
+    console.log(quoteData.data, new Date());
+    const newPrice = this.handleNumber(quoteData.data.latestPrice);
+    let userResp = quant;
+    const userQuant = parseInt(userResp, 10);
+    if (userResp === null || isNaN(userResp) || userResp === undefined) {
+      alert("Please enter a number");
+    }
+    else if (userQuant > datapack.quantity) {
+      alert("You don't have that much of this stock");
+    }
+    else {
+      let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+                This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
+                and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}.\n
+                Press OK to continue`);
+      if (conf) {
+        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
+        if (userQuant === datapack.quantity) {
+          console.log(tempPort, "del");
+          await this.deleteStock(datapack.id);
+          await this.updatePortfolio(tempPort);
+          this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
+        }
+        else {
+          const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
+          await this.updateStock(tempStock);
+          console.log(tempStock, "put")
+          await this.updatePortfolio(tempPort);
+          this.setState({ prompting: false });
+          this.searchPortfolios(this.state.userId);
+        }
+      }
+      else {
+        alert("Ok then...")
+      }
+    }
+  };
+  testHandleAdd = async (quant, datapack, event) => {
+    event.preventDefault();
+    const quoteData = await this.getPrice(datapack.symbol);
+    console.log(quoteData.data, new Date());
+    const price = this.handleNumber(quoteData.data.latestPrice);
+    const userResp = quant;
+    const userQuant = parseInt(userResp, 10);
+    if (userResp === null || isNaN(userResp) || userResp === undefined) {
+      alert("Please enter a number");
+    }
+    else if (userQuant * price > this.state.result.balance) {
+      alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+    }
+    else {
+      const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+                This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
+                press OK to continue`);
+      if (conf) {
+        const existingStock = await this.getStock(price);
+        console.log(existingStock, "exist");
+        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
+        console.log(tempPort);
+        if (existingStock === null || existingStock === undefined) {
+          console.log("here")
+          const tempStock = await this.makeTempStock(datapack.name, userQuant, datapack.symbol, datapack.imageLink, price);
+          await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+        }
+        else {
+          console.log("there")
+          const newQuant = parseInt(existingStock.quantity) + parseInt(userQuant);
+          const tempStock = await this.makeTempStock(datapack.name, newQuant, datapack.symbol, datapack.imageLink, price, existingStock.id);
+          await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+        }
+        this.setState({ prompting: false });
+        this.searchPortfolios(this.state.userId);
+      }
+      else {
+        alert("Ok then...")
+      }
+    }
+  };
+  makeDatapack = async (datapack) => {
+    let tempPack = datapack;
+    console.log(datapack);
+    const quoteData = await this.getPrice(datapack.symbol);
+    console.log(quoteData.data, new Date());
+    const newPrice = this.handleNumber(quoteData.data.latestPrice);
+    tempPack.newPrice = newPrice;
+    this.setState({
+      datapack: tempPack,
+      prompting: true
+    })
+    console.log(tempPack);
+  }
+  cancelOut = event => {
+    event.preventDefault();
+    this.setState({ prompting: false });
   };
   render = () => {
     return (
+      <div>{!Auth.isUserAuthenticated() ?
+        (<div>
+            <Link to="/">
+                <div>
+                    Sign in to view your portfolio.
+                </div>
+            </Link>
+        </div>) :
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
+              <div className="edit-balance">
+              <ToggleElement
+                offMessage={"Edit"}
                 onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
+                titleMessage={"Edit"}
                 inputType={"number"}
                 name={"balancer"}
                 placeholder={"Quantity (required)"}
                 method={this.editPortfolio}
               /></div>
+              </div>
+              <div className="panel-header">Your Stocks</div>
+              {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
                 <div>
                   <h2>
@@ -351,51 +477,60 @@ class Market extends React.Component {
                       imageLink={stock.imageLink}
                       handleDelete={this.handleDelete}
                       handleAdd={this.handleAdd}
-                      stateQuant={this.state.quantity}
                       handleSell={this.handleSell}
+                      makeDatapack={this.makeDatapack}
                     />))}
                   </div>)}
             </div>)}
         </div>
         {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
         {/* {!this.state.prompting ? ( */}
-        <div className="row col-md-6 col-md-offset-1">
-          <form>
-            <fieldset>
-              <legend style={formColor}>Add More Stocks</legend>
-              <div className="panel-header">Stock Name:</div>
-              <div className="field-line">
-                <input
-                  className="sign-up-inputs"
-                  value={this.state.stockName}
-                  onChange={this.handleInputChange}
-                  name="stockName"
-                  placeholder="Name of stock (required)"
-                />
+        {this.state.prompting ? (
+          <div className="row col-md-6 col-md-offset-1 add-stocks">
+            <Sidebar
+              datapack={this.state.datapack}
+              testHandleSell={this.testHandleSell}
+              testHandleAdd={this.testHandleAdd}
+              cancelOut={this.cancelOut}
+            />
+          </div>) : (
+            <div className="row col-md-6 col-md-offset-1 add-stocks">
+              <form>
+                <fieldset>
+                  <div className="legend" >Add More Stocks</div>
+                  <div className="panel-header">Stock Name:</div>
+                  <div className="field-line">
+                    <input
+                      className="sign-up-inputs"
+                      value={this.state.stockName}
+                      onChange={this.handleInputChange}
+                      name="stockName"
+                      placeholder="Name of stock (required)"
+                    />
+                  </div>
+                  <div className="panel-header">Quantity:</div>
+                  <div className="field-line">
+                    <input
+                      className="sign-up-inputs"
+                      value={this.state.quantity}
+                      onChange={this.handleInputChange}
+                      name="quantity"
+                      placeholder="Quantity (required)"
+                    />
+                  </div>
+                  <div className="submit-btn">
+                    <input className="sign-up-button" type="submit" onClick={this.handleFormSubmit} value="Add Stock" />
+                  </div>
+                </fieldset>
+              </form>
+              <div>
+                <ul>
+                  {this.state.companies.map(company => (
+                    <div className="company" onClick={() => this.setState({ stockName: company })}>{company}</div>
+                  ))}
+                </ul>
               </div>
-              <div className="panel-header">Quantity:</div>
-              <div className="field-line">
-                <input
-                  className="sign-up-inputs"
-                  value={this.state.quantity}
-                  onChange={this.handleInputChange}
-                  name="quantity"
-                  placeholder="Quantity (required)"
-                />
-              </div>
-              <div className="submit-btn">
-                <input className="sign-up-button" type="submit" onClick={this.handleFormSubmit} value="Add Stock" />
-              </div>
-            </fieldset>
-          </form>
-          <div>
-            <ul>
-              {this.state.companies.map(company => (
-                <div className="company" onClick={() => this.setState({ stockName: company })}>{company}</div>
-              ))}
-            </ul>
-          </div>
-        </div>
+            </div>)}
         {/* ) : (
                     //     <form>
                     //         Quantity:
@@ -417,6 +552,7 @@ class Market extends React.Component {
                     )
                 } */}
       </div>
+      }</div>
     );
   };
 }

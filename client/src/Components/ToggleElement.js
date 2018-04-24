@@ -2,6 +2,9 @@ import React from 'react';
 const buttonColor = {
     color: "black"
 }
+const titleColor ={
+    color:"white"
+}
 class ToggleElement extends React.Component {
     constructor(props) {
         super(props);
@@ -48,25 +51,25 @@ class ToggleElement extends React.Component {
     render = () => {
         return (
             <div>
-                <button style={buttonColor} onClick={this.handleClick}>
+                <div className="submit-btn">
+                <button className="edit-button" onClick={this.handleClick}>
                     {this.state.isToggleOn ?
                         `${this.props.onMessage}`
                         :
                         `${this.props.offMessage}`}
-                </button>
+                        </button>
+                </div>
                 {this.state.isToggleOn ? (
                     <div>
                         {console.log("show")}
                         <form>
                             <fieldset>
                                 <h3>{this.state.errorMessage}</h3>
-                                <legend><h2>{this.props.titleMessage}</h2></legend>
                                 <input
                                     style={buttonColor}
-                                    value={this.state.quantity}
                                     onChange={this.handleInputChange}
                                     name={`input${this.props.name}`}
-                                    placeholder={this.props.placeholder}
+                                    placeholder="Amount"
                                     maxLength={8}
                                 />
                                 <button style={buttonColor} onClick={(e) => { this.props.method(this.state.quantity, this.props.datapack, e); this.handleClick(); }}>
