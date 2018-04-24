@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import API from "../utils/API";
 import '../Views/app.scss';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
-import { Brush, BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, Brush, BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 class Dashboard extends React.Component {
     state = {
@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
         activeStock: "Apple (aapl)",
         activeStockSymbol: "aapl",
         userPortfolioData: [],
-        userId: sessionStorage.getItem('id') || 1,
+        userId: sessionStorage.getItem('id'),
         whichChart: "area",
         pieChartData: {
             totalPortfolioPrice: 0,
@@ -158,6 +158,47 @@ class Dashboard extends React.Component {
     }
 
 
+    // getPieChartData = () => {
+    //         return new Promise((resolve, reject) => {
+    //             let totalPortPrice = 0;
+    //             let allStockPrices = [];
+    //             for (let i = 0; i < this.state.userPortfolioData.length; i++) {
+    //                 API.pieChartData(this.state.userPortfolioData[i].symbol)
+    //                     .then(res => {
+    //                         let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
+    //                         let stockName = this.state.userPortfolioData[i].name;
+    //                         let stock = {
+    //                             name: stockName,
+    //                             value: stockPrice
+    //                         }
+    //                         allStockPrices.push(stock);
+    //                         totalPortPrice += stockPrice;
+    //                         console.log("Price Here:", this.state.userPortfolioData[i].quantity);
+    //                         console.log("Result:", res.data)
+    //                     })
+    //             }
+    //             var neededPieChartInfo = {
+    //                 totalPortPrice,
+    //                 allStockPrices
+    //             }
+    //             resolve(neededPieChartInfo);
+    
+    //         }).then(values => {
+    //             console.log("PIE CHART", values)
+    //             this.setState({
+    //                 pieChartData: {
+    //                     totalPortfolioPrice: values.totalPortPrice
+    //                 },
+    //                 eachStockPrice: values.allStockPrices,
+    //                 testData: values.allStockPrices,
+    //                 loading: false
+    //             })
+    
+    //         })
+    
+    
+    //     }
+
 
     render() {
         return (
@@ -188,6 +229,7 @@ class Dashboard extends React.Component {
                                         {/* <Line type="monotone" dataKey="Low" stroke="#82ca9d" />
                             <Line type="monotone" dataKey="Average" stroke="#fff" /> */}
                                     </LineChart>
+                                   
                                 </div>
 
                                 : this.state.whichChart === "area" ?
@@ -287,14 +329,14 @@ class Dashboard extends React.Component {
                                     <div className="stock-info-header">Price</div>
                                     <div className="stock-info-header">Quantity</div>
                                 </div>
-                                {this.state.testData.map(data => (
-                                    <div className="stock-panel-child" value={data.symbol} onClick={() => this.plotData(data.symbol, data.name)}>
+                               
+                                    {/* <div className="stock-panel-child">
                                         <div className="stock-info"><img className="stock-image" src={data.imageLink} /></div>
                                         <div className="stock-info">{data.name}</div>
                                         <div className="stock-info">{data.price}</div>
                                         <div className="stock-info-quantity">{data.quantity}</div>
-                                    </div>
-                                ))}
+                                    </div> */}
+                                
                             </div>
                         }
                     </div>
