@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import API from '../utils/API';
 import '../Views/app.scss';
 import Navbar from './Navbar';
+import Navbar2 from './Navbar2';
 import DowChart from './DowChart';
 import Sp500 from './Sp500Data';
 import Dashboard from './Dashboard';
@@ -36,7 +37,10 @@ class LandingPage extends React.Component {
     return (
       <Router>
         <div className="container-fluid">
-          <Navbar />
+        <Route exact path="/" component={Navbar} />
+        <Route exact path="/dashboard" component={Navbar2} />
+        <Route exact path="/market" component={Navbar2} />
+          
           {Auth.isUserAuthenticated() ? (
           <Route exact path="/dashboard" component={Dashboard} />
            ):(

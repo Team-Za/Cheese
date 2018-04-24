@@ -22,7 +22,9 @@ class Dashboard extends React.Component {
         eachStockPrice: [],
         testData: [{ name: 'Apple', symbol: 'AAPL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAPL.png", price: 165.72, quantity: "30" }, { name: 'Netflix Inc.', symbol: 'NFLX', imageLink: "https://storage.googleapis.com/iex/api/logos/NFLX.png", price: 327.77, quantity: "20" },
         { name: 'Manchester United Ltd. Class A', symbol: 'MANU', imageLink: "https://storage.googleapis.com/iex/api/logos/MANU.png", price: 18.5, quantity: "50" }, { name: 'American Airlines Group Inc.', symbol: 'AAL', imageLink: "https://storage.googleapis.com/iex/api/logos/AAL.png", price: 46.78, quantity: "15" }],
-        colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398']
+        colors: ['#6e80bf', '#4cc2f0', '#f07089', '#f5918d', '#6bc398'],
+        testPieChartData: [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
+        {name: 'Group C', value: 300}, {name: 'Group D', value: 200}]
     };
 
     componentDidMount() {
@@ -150,10 +152,11 @@ class Dashboard extends React.Component {
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
         return (
+            <div>
             <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
                 {`${(percent * 100).toFixed(0)}%`}
             </text>
-
+            </div>
         );
     }
 
@@ -204,9 +207,9 @@ class Dashboard extends React.Component {
         return (
             <div>
                 {this.state.loading ?
-                    <div className="loading">Loading...</div>
+                    <div className="col-md-6 loading panel">Loading...</div>
                     :
-                    <div className="row">
+                    <div className="container-fluid">
                         <div className="col-md-6 user-chart panel">
                             <div className="switch-chart">
                                 <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i className="fas fa-chart-area"></i><br />Area Chart</div></a>
@@ -291,31 +294,33 @@ class Dashboard extends React.Component {
 
                         {/* Pie Chart Data */}
                         <div className="col-md-5 col-md-offset-1 bar-chart">
-                            <div onClick={() => this.getPieChartData()}>Click Me</div>
-
+                        <div className="panel-heading">
+                            Sample Pie Chart
+                    </div>
                             <PieChart width={400} height={400} onMouseEnter={this.onPieEnter}>
                                 <Pie
 
-                                    data={this.state.eachStockPrice}
+                                    data={this.state.testPieChartData}
                                     dataKey="value"
-                                    cx={200}
+                                    cx={225}
                                     cy={200}
                                     labelLine={true}
-                                    label={this.renderCustomizedLabel}
+                                    isAnimationActive={false}
+                                    label={true}
                                     outerRadius={120}
                                     fill="#8884d8"
                                 >
                                     {
-                                        this.state.eachStockPrice.map((entry, index) => <Cell fill={this.state.colors[index % this.state.colors.length]} />)
+                                        this.state.testPieChartData.map((entry, index) => <Cell fill={this.state.colors[index % this.state.colors.length]} />)
                                     }
                                 </Pie>
                             </PieChart>
                         </div>
                     </div>
                 }
-                <div className="row">
+                <div className="container-fluid">
 
-                    <div className="col-md-7 panel user-stocks">
+                    <div className="col-md-12 panel user-stocks">
                         <div className="panel-heading">
                             Sample Stocks
                     </div>

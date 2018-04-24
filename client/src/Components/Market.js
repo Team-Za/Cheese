@@ -321,27 +321,42 @@ class Market extends React.Component {
     });
     return choices;
   };
-  editPortfolio = (quant, event) => {
+  editPortfolio = (quant, datapack, event) => {
     event.preventDefault();
-    this.updatePortfolio(this.makeTempPortfolio(quant));
-    this.searchPortfolios(this.state.userId);
-  };
+    this.updatePortfolio(this.makeTempPortfolio(quant))
+        .then(res => {
+            if (!this.state.error) {
+                console.log('here')
+                this.searchPortfolios(this.state.userId);
+            }
+            else {
+                this.setState({ errorMessage: "Incorrect Inputs, digits only" });
+                console.log('there', this.state.error, this.state.errorMessage)
+            }
+        })
+};
   render = () => {
     return (
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
-                onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
-                inputType={"number"}
-                name={"balancer"}
-                placeholder={"Quantity (required)"}
-                method={this.editPortfolio}
-              /></div>
+            <div className=""><div className="panel-header balance-container">Current Balance: <span className="current-balance">${this.state.result.balance}</span>
+                </div></div>
+                <div className="edit-balance">
+                <ToggleElement
+                  offMessage={"Edit"}
+                  onMessage={"Cancel"}
+                  titleMessage={"Edit Balance"}
+                  inputType={"number"}
+                  name={"balancer"}
+                  placeholder={"Quantity (required)"}
+                  method={this.editPortfolio}
+                />
+              </div>
+              <div className="">
+                <div className="panel-header">Your Stocks</div>
+              </div>
               {this.state.Stocks.length == 0 ? (
                 <div>
                   <h2>
@@ -365,7 +380,7 @@ class Market extends React.Component {
         </div>
         {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
         {/* {!this.state.prompting ? ( */}
-        <div className="row col-md-6 col-md-offset-1">
+        <div className="row col-md-6 col-md-offset-1 add-stocks">
           <form>
             <fieldset>
               <div className="legend" >Add More Stocks</div>
@@ -395,11 +410,9 @@ class Market extends React.Component {
             </fieldset>
           </form>
           <div>
-            <ul>
               {this.state.companies.map(company => (
                 <div className="company" onClick={() => this.setState({ stockName: company })}>{company}</div>
               ))}
-            </ul>
           </div>
         </div>
         {/* ) : (
