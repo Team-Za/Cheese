@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar";
 const formColor = {
   color: "white"
 }
+
 class Market extends React.Component {
   state = {
     result: [],
@@ -141,10 +142,12 @@ class Market extends React.Component {
             Please enter an amount of ${name} stock you would like to purchase at $${price}`);
     const userQuant = parseInt(userResp, 10);
     if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      alert("Please enter a number");
+      this.state.errorAlert.number = "Please enter a number";
+      console.log(this.state.errorAlert)
+      console.log("hello")
     }
     else if (userQuant * price > this.state.result.balance) {
-      alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+      this.state.errorAlert.price = `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`
     }
     else {
       const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -180,10 +183,10 @@ class Market extends React.Component {
             Original Price: $${originalPrice}`);
     const userQuant = parseInt(userResp, 10);
     if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      alert("Please enter a number");
+      this.state.errorAlert.num = "Please enter a number";
     }
     else if (userQuant > quantity) {
-      alert("You don't have that much of this stock");
+      this.state.errorAlert.stock ="You don't have that much of this stock";
     }
     else {
       let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -231,7 +234,7 @@ class Market extends React.Component {
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
       if (localStorage.getItem(this.state.stockName) === null) {
-        alert("Stock name not found");
+        this.state.errorAlert.name ="Stock name not found";
       }
       else {
         symbol = localStorage.getItem(this.state.stockName);
@@ -239,7 +242,7 @@ class Market extends React.Component {
         console.log(quoteData.data, new Date());
         const price = this.handleNumber(quoteData.data.latestPrice);
         if ((this.state.quantity * price) > this.state.result.balance) {
-          alert("You cannot afford that much");
+          this.state.errorAlert.money ="You cannot afford that much";
         }
         else {
           let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -269,14 +272,12 @@ class Market extends React.Component {
             })
             this.searchPortfolios(this.state.userId)
           }
-          else {
-            alert("Ok, then");
-          }
+          
         }
       }
     }
     else {
-      alert("Please fill out required fields!");
+      this.state.errorAlert.empty ="Please fill out required fields!";
     }
   };
   formatStocks = stocks => {
