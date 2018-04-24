@@ -31,11 +31,7 @@ class Stock extends React.Component {
                     {this.props.args.map(element => (
                         <div key={element.id}>
                             <div className="each-stock-info col-md-2"> {element.quantity}</div>
-                            <div className="each-stock-info col-md-3"> {element.price}</div>
-                            {/* <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
-                                Sell All
-                            </button> */}
-                             <button style = {buttonColor} onClick={()=> this.props.makeDatapack({id:element.id, name:this.props.name, quantity:element.quantity, symbol:this.props.symbol, imageLink:this.props.imageLink, price:element.price})}>edit</button>                        
+                            <div className="each-stock-info col-md-3"> {element.price}</div>  <button style = {buttonColor} onClick={()=> this.props.makeDatapack({id:element.id, name:this.props.name, quantity:element.quantity, symbol:this.props.symbol, imageLink:this.props.imageLink, price:element.price})}>edit</button>                        
                             {/* <div className={`sell-btn ${this.state.activeClass}`} onClick={() => this.props.handleSell(element.id, this.props.name, element.quantity, this.props.symbol, this.props.imageLink, element.price)}><i className="fas fa-minus-square minus-btn"></i></div> */}
                             {/* <ToggleElement
                                 offMessage={"Sell"}
@@ -47,6 +43,9 @@ class Stock extends React.Component {
                                 method={this.props.testHandleSell}
                                 datapack={[{id:element.id, name:this.props.name, quantity:element.quantity, symbol:this.props.symbol, imageLink:this.props.imageLink, price:element.price}]}
                             /> */}
+                            {/* <button onClick={() => this.props.handleDelete(element.id, this.props.name, element.quantity, element.price)} className="remove">
+                                Sell All
+                            </button> */}
                             </div> 
                         ))}
                         </div>
