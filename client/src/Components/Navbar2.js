@@ -4,10 +4,10 @@ import Auth from '../modules/Auth';
 import LoginPage from '../containers/LoginPage.jsx';
 
 const Navbar = ({ children, ...props }) => (
-  <div className="row landing-nav">
+  <div className="row pages-nav">
     {Auth.isUserAuthenticated() ? (
       <div>
-        <div className="col-md-4">
+          <div className="col-md-4">
         <Link to="/">
           <div className="logo">
             Stock Up
@@ -28,6 +28,7 @@ const Navbar = ({ children, ...props }) => (
             </div>
           </Link>
 
+        
             <div className="top-menu-item" id="dashboard" onClick={() => {
               Auth.deauthenticateUser();
               sessionStorage.removeItem("UserId");
@@ -40,7 +41,7 @@ const Navbar = ({ children, ...props }) => (
       </div>
     ) : (
         <div>
-          <div className="col-md-4">
+            <div className="col-md-4">
           <Link to="/">
             <div className="logo">
               Stock Up
@@ -61,7 +62,7 @@ const Navbar = ({ children, ...props }) => (
                 </div>
             </Link>
 
-           
+            
 
             <Link to="/">
               <div id="log-in">

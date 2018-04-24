@@ -28,7 +28,6 @@ class Market extends React.Component {
     error: false,
     datapack: {},
     prompting: false
-    //message: ""
   };
   componentDidMount = async () => {
     await this.loadSymbols();
@@ -312,14 +311,12 @@ class Market extends React.Component {
           PortfolioId: stock.PortfolioId
         }
         choices.push(tempStock);
-        // console.log(i)
         indices.set(stock.name, choices.length - 1);
       }
     }
     choices.sort((name1, name2) => {
       return name1.name.localeCompare(name2.name);
     });
-    //console.log(choices, indices);
     this.setState({
       Stocks: choices,
       loading: false
@@ -365,7 +362,7 @@ class Market extends React.Component {
           console.log(tempPort, "del");
           await this.deleteStock(datapack.id);
           await this.updatePortfolio(tempPort);
-          this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
+          this.searchPortfolios(this.state.userId)
         }
         else {
           const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
@@ -443,24 +440,27 @@ class Market extends React.Component {
     return (
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
+              <div className="edit-balance">
+              <ToggleElement
+                offMessage={"Edit"}
                 onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
+                titleMessage={"Edit"}
                 inputType={"number"}
                 name={"balancer"}
                 placeholder={"Quantity (required)"}
                 method={this.editPortfolio}
               /></div>
+              </div>
+              <div className="panel-header">Your Stocks</div>
               {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
                 <div>
-                  <h2>
+                  <h5>
                     Looks like you don't have any stocks. Why don't you buy some?
-                                </h2>
+                                </h5>
                 </div>) : (
                   <div>
                     {this.state.Stocks.map(stock => (<Stock
@@ -478,7 +478,7 @@ class Market extends React.Component {
             </div>)}
         </div>
         {this.state.prompting ? (
-          <div className="row col-md-6 col-md-offset-1">
+          <div className="row col-md-6 col-md-offset-1 add-stocks">
             <Sidebar
               datapack={this.state.datapack}
               testHandleSell={this.testHandleSell}
@@ -486,7 +486,7 @@ class Market extends React.Component {
               cancelOut={this.cancelOut}
             />
           </div>) : (
-            <div className="row col-md-6 col-md-offset-1">
+            <div className="row col-md-6 col-md-offset-1 add-stocks">
               <form>
                 <fieldset>
                   <div className="legend" >Add More Stocks</div>

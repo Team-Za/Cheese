@@ -314,8 +314,11 @@ class MarketSample extends React.Component {
         <div className="portfolio col-md-5">
           {this.state.loading ? (<div>loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance}</div>
+              <div className=""><div className="panel-header balance-container">Current Balance: <span className="current-balance">$10000</span>
+                </div></div>
+              <div className="">
+                <div className="panel-header">Sample Stocks</div>
+              </div>
               {this.state.testStocks.length == 0 ? (
                 <div>
                   <h2>
@@ -339,14 +342,12 @@ class MarketSample extends React.Component {
                                 Sell All
                             </button> */}
 
-                                <div className={`sell-btn ${this.state.activeClass}`}><i className="fas fa-minus-square minus-btn"></i></div>
+                                
                               </div>
                             
                           </div>
                         </div>
-                        <div className={`add-btn ${this.state.activeClass}`}>
-                          <i className="fas fa-plus-square plus-btn"></i>
-                        </div>
+                        
                       </div>
                     )}
                   </div>)}
@@ -354,10 +355,10 @@ class MarketSample extends React.Component {
         </div>
         {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
         {/* {!this.state.prompting ? ( */}
-        <div className="row col-md-6 col-md-offset-1">
+        <div className="row col-md-6 col-md-offset-1 add-stocks ">
           <form>
             <fieldset>
-              <legend style={formColor}>Add More Stocks</legend>
+            <div className="legend" >Add More Stocks</div>
               <div className="panel-header">Stock Name:</div>
               <div className="field-line">
                 <input
@@ -384,11 +385,9 @@ class MarketSample extends React.Component {
             </fieldset>
           </form>
           <div>
-            <ul>
               {this.state.companies.map(company => (
                 <div className="company" onClick={() => this.setState({ stockName: company })}>{company}</div>
               ))}
-            </ul>
           </div>
         </div>
       </div>
