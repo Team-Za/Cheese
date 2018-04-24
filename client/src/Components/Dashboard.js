@@ -10,6 +10,7 @@ class Dashboard extends React.Component {
         result: [],
         loading: true,
         data: [],
+        activeStockData: [],
         activeStock: "Apple (aapl)",
         activeStockSymbol: "aapl",
         userPortfolioData: [],
@@ -28,18 +29,40 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         console.log("YOOO", this.searchPortfolios(this.state.userId))
-        Promise.all([this.searchPortfolios(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d")]).then(values => {
-            console.log(values);
+        Promise.all([this.searchPortfolios(this.state.userId), this.getFirstUserStock(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d"), this.plotData()]).then(values => {
+            console.log("SQUAD", values);
+            if(values[1] === false) {
+                this.setState({
+                    data: values[2],
+                    userPortfolioData: values[0],
+                    // loading: false,
+                    activeStock: "Sample Stock",
+                    activeStockSymbol: "aapl",
+                    // pieChartData: {
+                    //     totalPortfolioPrice: values[].totalPortPrice
+                    // },
+                    // eachStockPrice: values.allStockPrices
+                    // testData: values.allStockPrices
+                });
+                this.getPieChartData();
+            } else {
+                this.setState({
+                    data: values[1],
+                    userPortfolioData: values[0],
+                    // loading: false,
+                    activeStock: values[0][0].name,
+                    activeStockSymbol: values[0][0].symbol,
+                    // pieChartData: {
+                    //     totalPortfolioPrice: values[].totalPortPrice
+                    // },
+                    // eachStockPrice: values.allStockPrices
+                    // testData: values.allStockPrices
+                });
+                this.getPieChartData();
             
-            this.setState({
-                data: values[1],
-                userPortfolioData: values[0],
-                loading: false,
-                activeStock: values[0][0].name||"Apple (aapl)",
-                activeStockSymbol: values[0][0].symbol||"aapl"
-            });
-            // this.getPieChartData();
+            }
         });
+
     }
 
     searchPortfolios = id => {
@@ -74,6 +97,23 @@ class Dashboard extends React.Component {
             .catch(err => console.log(err));
 
         return data;
+    }
+
+
+    getFirstUserStock = id => {
+        var stock = this.searchPortfolios(id).then(data => {
+            console.log("This is what I need", data);
+            if(data.length === 0) {
+                return false;
+            } else {
+                return API.chartData(data[0].symbol)
+                .then(res => {
+                    return this.getData(res.data)
+                })
+                .catch(err => console.log(err));
+            }
+        })
+        return stock;
     }
 
     // getUsersStocks = query => {
@@ -160,46 +200,47 @@ class Dashboard extends React.Component {
         return dataArray;
     }
 
-    // getPieChartData = () => {
-    //     return new Promise((resolve, reject) => {
-    //         let totalPortPrice = 0;
-    //         let allStockPrices = [];
-    //         for (let i = 0; i < this.state.userPortfolioData.length; i++) {
-    //             API.pieChartData(this.state.userPortfolioData[i].symbol)
-    //                 .then(res => {
-    //                     let stockPrice = Math.round((this.state.userPortfolioData[i].quantity) * res.data);
-    //                     let stockName = this.state.userPortfolioData[i].name;
-    //                     let stock = {
-    //                         name: stockName,
-    //                         value: stockPrice
-    //                     }
-    //                     allStockPrices.push(stock);
-    //                     totalPortPrice += stockPrice;
-    //                     console.log("Price Here:", this.state.userPortfolioData[i].quantity);
-    //                     console.log("Result:", res.data)
-    //                 })
-    //         }
-    //         var neededPieChartInfo = {
-    //             totalPortPrice,
-    //             allStockPrices
-    //         }
-    //         resolve(neededPieChartInfo);
+    getPieChartData = () => {
+        this.searchPortfolios(this.state.userId).then(data => {
 
-    //     }).then(values => {
-    //         console.log("PIE CHART", values)
-    //         this.setState({
-    //             pieChartData: {
-    //                 totalPortfolioPrice: values.totalPortPrice
-    //             },
-    //             eachStockPrice: values.allStockPrices,
-    //             testData: values.allStockPrices,
-    //             loading: false
-    //         })
+            let totalPortPrice = 0;
+            let allStockPrices = [];
+            for (let i = 0; i < data.length; i++) {
+                API.pieChartData(data[i].symbol)
+                    .then(res => {
+                        let stockPrice = Math.round((data[i].quantity) * res.data);
+                        let stockName = data[i].name;
+                        let stock = {
+                            name: stockName,
+                            value: stockPrice
+                        }
+                        allStockPrices.push(stock);
+                        totalPortPrice += stockPrice;
+                        console.log("Name:", data[i].name);
+                        console.log("Stock:", stock);
+                        console.log("Quantity:", data[i].quantity);
+                        console.log("Price:", res.data)
+                        console.log("STATE", this.state)
+                    })
+            }
 
-    //     })
+            return allStockPrices;
+            var neededPieChartInfo = {
+                totalPortPrice,
+                allStockPrices
+            }
 
 
-    // }
+
+        }).then((data) => {
+            this.setState({
+                eachStockPrice: data,
+                loading: false
+            })
+            console.log(this.state)
+        })
+        this.forceUpdate();
+    }
 
     renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
         const RADIAN = Math.PI / 180;
@@ -214,8 +255,6 @@ class Dashboard extends React.Component {
 
         );
     }
-
-
 
     render() {
         return (
@@ -270,26 +309,26 @@ class Dashboard extends React.Component {
                                     </div>
                                     : this.state.whichChart === "bar" ?
                                         <div>
-                                        <div className="panel-heading">
-                                            {this.state.activeStock}
-                                        </div>
-                                        <BarChart width={600} height={300} data={this.state.data}
-                                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="name" />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
-                                            <ReferenceLine y={0} stroke='#000' />
-                                            <Brush dataKey='name' height={30} stroke="#8884d8" />
-                                            <defs>
-                                                <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
-                                                    <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
-                                                </linearGradient>
-                                            </defs>
-                                            <Bar dataKey="Price" fill="#8884d8" />
-                                        </BarChart>
+                                            <div className="panel-heading">
+                                                {this.state.activeStock}
+                                            </div>
+                                            <BarChart width={600} height={300} data={this.state.data}
+                                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="name" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
+                                                <ReferenceLine y={0} stroke='#000' />
+                                                <Brush dataKey='name' height={30} stroke="#8884d8" />
+                                                <defs>
+                                                    <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
+                                                        <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
+                                                    </linearGradient>
+                                                </defs>
+                                                <Bar dataKey="Price" fill="#8884d8" />
+                                            </BarChart>
                                         </div>
                                         : <div>test</div>
                             }
@@ -307,7 +346,7 @@ class Dashboard extends React.Component {
 
                         {/* Pie Chart Data */}
                         <div className="col-md-5 col-md-offset-1 bar-chart">
-                            <div onClick={() => this.getPieChartData()}>Click Me</div>
+                            {/* <div onClick={() => this.getPieChartData()}>Click Me</div> */}
 
                             <PieChart width={400} height={400} onMouseEnter={this.onPieEnter}>
                                 <Pie
@@ -326,18 +365,6 @@ class Dashboard extends React.Component {
                                     }
                                 </Pie>
                             </PieChart>
-
-                            {/* <BarChart width={600} height={300} data={this.state.data}
-                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis domain={['dataMin - 2', 'dataMax + 2']} />
-                                <Tooltip />
-                                <Legend />
-                                <ReferenceLine y={0} stroke='#000' />
-                                <Bar dataKey="Price" fill="#8884d8" />
-                                <Bar dataKey="Price" fill="#82ca9d" />
-                            </BarChart> */}
                         </div>
                     </div>
                 }
@@ -370,7 +397,6 @@ class Dashboard extends React.Component {
                     </div>
 
                 </div>
-
             </div>
         );
     }

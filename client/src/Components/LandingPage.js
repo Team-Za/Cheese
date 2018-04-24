@@ -36,7 +36,6 @@ class LandingPage extends React.Component {
     return (
       <Router>
         <div className="container-fluid">
-      {document.getElementById('popupContainer')}
           <Navbar />
           {Auth.isUserAuthenticated() ? (
           <Route exact path="/dashboard" component={Dashboard} />
