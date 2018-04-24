@@ -322,7 +322,7 @@ class Market extends React.Component {
     });
     return choices;
   };
-  editPortfolio = (quant, event) => {
+  editPortfolio = (quant, datapack, event) => {
     event.preventDefault();
     this.updatePortfolio(this.makeTempPortfolio(quant));
     this.searchPortfolios(this.state.userId);
@@ -426,18 +426,24 @@ class Market extends React.Component {
     return (
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
-                onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
-                inputType={"number"}
-                name={"balancer"}
-                placeholder={"Quantity (required)"}
-                method={this.editPortfolio}
-              /></div>
+            <div className=""><div className="panel-header balance-container">Current Balance: <span className="current-balance">${this.state.result.balance}</span>
+                </div></div>
+                <div className="edit-balance">
+                <ToggleElement
+                  offMessage={"Edit"}
+                  onMessage={"Cancel"}
+                  titleMessage={"Edit Balance"}
+                  inputType={"number"}
+                  name={"balancer"}
+                  placeholder={"Quantity (required)"}
+                  method={this.editPortfolio}
+                />
+              </div>
+              <div className="">
+                <div className="panel-header">Your Stocks</div>
+              </div>
               {this.state.Stocks.length == 0 ? (
                 <div>
                   <h2>

@@ -260,9 +260,9 @@ class Dashboard extends React.Component {
         return (
             <div>
                 {this.state.loading ?
-                    <div className="loading">Loading...</div>
+                    <div className="col-md-6 loading panel">Loading...</div>
                     :
-                    <div className="row">
+                    <div className="container-fluid">
                         <div className="col-md-6 user-chart panel">
                             <div className="switch-chart">
                                 <a href="#/"><div className="chart-tabs" onClick={() => this.switchChart("area")}><i className="fas fa-chart-area"></i><br />Area Chart</div></a>
@@ -320,13 +320,13 @@ class Dashboard extends React.Component {
                                                 <Tooltip />
                                                 <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
                                                 <ReferenceLine y={0} stroke='#000' />
-                                                <Brush dataKey='name' height={30} stroke="#8884d8" />
-                                                <defs>
+                                                <Brush dataKey='name' height={30} stroke="#6e80bf" />
+                                                {/* <defs>
                                                     <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
                                                         <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
                                                         <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
                                                     </linearGradient>
-                                                </defs>
+                                                </defs> */}
                                                 <Bar dataKey="Price" fill="#8884d8" />
                                             </BarChart>
                                         </div>
@@ -347,6 +347,9 @@ class Dashboard extends React.Component {
                         {/* Pie Chart Data */}
                         <div className="col-md-5 col-md-offset-1 bar-chart">
                             {/* <div onClick={() => this.getPieChartData()}>Click Me</div> */}
+                            <div className="panel-heading">
+                            Overall Stock Percentage
+                    </div>
 
                             <PieChart width={400} height={400} onMouseEnter={this.onPieEnter}>
                                 <Pie
@@ -356,7 +359,7 @@ class Dashboard extends React.Component {
                                     cx={200}
                                     cy={200}
                                     labelLine={true}
-                                    label={this.renderCustomizedLabel}
+                                    label={true}
                                     outerRadius={120}
                                     fill="#8884d8"
                                 >
@@ -368,9 +371,9 @@ class Dashboard extends React.Component {
                         </div>
                     </div>
                 }
-                <div className="row">
+                <div className="container-fluid">
 
-                    <div className="col-md-7 panel user-stocks">
+                    <div className="col-md-12 panel user-stocks">
                         <div className="panel-heading">
                             Your Stocks
                     </div>
