@@ -445,18 +445,21 @@ class Market extends React.Component {
         </div>) :
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header">Your Stocks</div>
-              <div className="panel-header">Current Balance: ${this.state.result.balance} <ToggleElement
-                offMessage={"Edit Balance"}
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
+              <div className="edit-balance">
+              <ToggleElement
+                offMessage={"Edit"}
                 onMessage={"Cancel"}
-                titleMessage={"Edit Balance"}
+                titleMessage={"Edit"}
                 inputType={"number"}
                 name={"balancer"}
                 placeholder={"Quantity (required)"}
                 method={this.editPortfolio}
               /></div>
+              </div>
+              <div className="panel-header">Your Stocks</div>
               {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
                 <div>
@@ -482,7 +485,7 @@ class Market extends React.Component {
         {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
         {/* {!this.state.prompting ? ( */}
         {this.state.prompting ? (
-          <div className="row col-md-6 col-md-offset-1">
+          <div className="row col-md-6 col-md-offset-1 add-stocks">
             <Sidebar
               datapack={this.state.datapack}
               testHandleSell={this.testHandleSell}
@@ -490,7 +493,7 @@ class Market extends React.Component {
               cancelOut={this.cancelOut}
             />
           </div>) : (
-            <div className="row col-md-6 col-md-offset-1">
+            <div className="row col-md-6 col-md-offset-1 add-stocks">
               <form>
                 <fieldset>
                   <div className="legend" >Add More Stocks</div>
