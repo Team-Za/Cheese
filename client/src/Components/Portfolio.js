@@ -441,7 +441,7 @@ class Portfolio extends React.Component {
                 sum: sum,
                 loading: false
             }))
-    }
+    };
     makeDatapack = async (datapack) => {
         let tempPack = datapack;
         console.log(datapack);
@@ -454,7 +454,11 @@ class Portfolio extends React.Component {
             prompting: true
         })
         console.log(tempPack);
-    }
+    };
+    cancelOut = event => {
+        event.preventDefault();
+        this.setState({ prompting: false });
+    };
     render = () => {
         return (
             <div>{!Auth.isUserAuthenticated() ?
@@ -507,23 +511,25 @@ class Portfolio extends React.Component {
                     {/* <h2>Current Value of stocks: {this.state.sum}</h2> */}
                     {this.state.prompting ? (
                         <Sidebar
+                            cancelOut={this.cancelOut}
                             datapack={this.state.datapack}
                             testHandleSell={this.testHandleSell}
                             testHandleAdd={this.testHandleAdd}
+
                         />) : (
                             <div>
                                 <form>
                                     <fieldset>
                                         <legend style={formColor}>Add new stocks here</legend>
                                         Stock Name:
-                            <input
+                                        <input
                                             value={this.state.stockName}
                                             onChange={this.handleInputChange}
                                             name="stockName"
                                             placeholder="Name of stock (required)"
                                         />
                                         Quantity:
-                            <input
+                                        <input
                                             value={this.state.quantity}
                                             onChange={this.handleInputChange}
                                             name="quantity"
@@ -531,7 +537,7 @@ class Portfolio extends React.Component {
                                         />
                                         <button onClick={this.handleFormSubmit}>
                                             submit
-                            </button>
+                                        </button>
                                     </fieldset>
                                 </form>
                                 <div>
