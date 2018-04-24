@@ -342,14 +342,12 @@ class MarketSample extends React.Component {
                                 Sell All
                             </button> */}
 
-                                <div className={`sell-btn ${this.state.activeClass}`}><i className="fas fa-minus-square minus-btn"></i></div>
+                                
                               </div>
                             
                           </div>
                         </div>
-                        <div className={`add-btn ${this.state.activeClass}`}>
-                          <i className="fas fa-plus-square plus-btn"></i>
-                        </div>
+                        
                       </div>
                     )}
                   </div>)}
