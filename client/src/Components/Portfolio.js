@@ -194,7 +194,7 @@ class Portfolio extends React.Component {
                     and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * originalPrice))}.\n
                     Press OK to continue`);
             if (conf) {
-                const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));  
+                const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
                 if (userQuant === quantity) {
                     console.log(tempPort);
                     await this.deleteStock(id);
@@ -374,7 +374,7 @@ class Portfolio extends React.Component {
                     await this.updateStock(tempStock);
                     console.log(tempStock, "put")
                     await this.updatePortfolio(tempPort);
-                    this.setState({prompting:false});
+                    this.setState({ prompting: false });
                     this.searchPortfolios(this.state.userId);
                 }
             }
@@ -416,7 +416,7 @@ class Portfolio extends React.Component {
                     const tempStock = await this.makeTempStock(datapack.name, newQuant, datapack.symbol, datapack.imageLink, price, existingStock.id);
                     await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
                 }
-                this.setState({prompting:false});
+                this.setState({ prompting: false });
                 this.searchPortfolios(this.state.userId);
             }
             else {
