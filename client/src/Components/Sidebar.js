@@ -12,7 +12,9 @@ class Sidebar extends React.Component {
             isToggleOn: false,
             quantity: 0,
             errorMessage: "",
-            barstate:"Buy"
+            barstate:"Buy",
+            buyBtn: "active-btn-buy",
+            sellBtn: ""
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -49,33 +51,54 @@ class Sidebar extends React.Component {
             isToggleOn: !prevState.isToggleOn
         }));
     }
+
+    changeActiveClass = whichButton => {
+        if(whichButton === "sell") {
+            this.setState({
+                buyBtn: "",
+                sellBtn: "active-btn-sell"
+            })
+        } else {
+            this.setState({
+                buyBtn: "active-btn-buy",
+                sellBtn: ""
+            })
+        }
+    }
+
     render = () => {
         return (
             <div>
                 <div>
-                <button onClick={() => {
+                    <div className="top-btns">
+                <button className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
+                    this.changeActiveClass("sell");
                     this.setState({barstate:"Sell"})
                 }}>
                     Sell
                 </button>
-                <button onClick={() => {
+                <button className={`buy-btn ${this.state.buyBtn}`} onClick={() => {
+                    this.changeActiveClass("buy");
                     this.setState({barstate:"Buy"})
                 }}>
                     Buy
                 </button>
+                </div>
                 {/* {this.state.isToggleOn ? ( */}
                     <form>
                         <fieldset>
                             <h3>{this.state.errorMessage}</h3>
                             <legend><h3 style={titleColor}>{this.props.datapack.name}</h3></legend>
+                            <div className="sidebar-field-line">
                             <input
-                                style={buttonColor}
-                                value={this.state.quantity}
+                                className="sidebar-inputs"
+                                // value={this.state.quantity}
                                 onChange={this.handleInputChange}
                                 name={`input${this.props.datapack.name}`}
                                 placeholder={"Amount"}
                                 maxLength={8}
                             />
+                            </div>
                             <h4>Price purchased: {this.props.datapack.price}</h4>
                             <h4>Current price: {this.props.datapack.newPrice}</h4>
                             <p>Current Mode: {this.state.barstate}</p>
