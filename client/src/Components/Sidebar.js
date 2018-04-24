@@ -63,6 +63,12 @@ class Sidebar extends React.Component {
                 }}>
                     Buy
                 </button>
+                <button onClick={(e) => {
+                    console.log(this.props);
+                    this.props.cancelOut(e);
+                }}>
+                    Cancel
+                </button>
                 {/* {this.state.isToggleOn ? ( */}
                     <form>
                         <fieldset>
