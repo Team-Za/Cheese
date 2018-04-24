@@ -338,7 +338,7 @@ class Market extends React.Component {
     const newPrice = this.handleNumber(quoteData.data.latestPrice);
     let userResp = quant;
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined) {
+    if (userResp === null || isNaN(userResp) || userResp === undefined ||userQuant===0) {
       alert("Please enter a number");
     }
     else if (userQuant > datapack.quantity) {
@@ -378,7 +378,7 @@ class Market extends React.Component {
     const price = this.handleNumber(quoteData.data.latestPrice);
     const userResp = quant;
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined) {
+    if (userResp === null || isNaN(userResp) || userResp === undefined || userQuant===0) {
       alert("Please enter a number");
     }
     else if (userQuant * price > this.state.result.balance) {
