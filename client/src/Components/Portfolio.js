@@ -8,6 +8,7 @@ import Stock from "./Stock";
 import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
 import ToggleElement from "./ToggleElement";
+import Sidebar from "./Sidebar";
 const formColor = {
     color: "white"
 }
@@ -19,13 +20,15 @@ class Portfolio extends React.Component {
         quantity: 0,
         userId: sessionStorage.getItem("UserId"),
         portId: -1,
-        sidebarArgs: [],
-        sidebarState: "add",
+        // sidebarArgs: [],
+        // sidebarState: "add",
         companies: [],
         Stocks: [],
         errorMessage: "",
-        error: false
-        //prompting: false,
+        error: false,
+        datapack: {},
+        sum: 0,
+        prompting: false,
         //message: ""
     };
     componentDidMount = async () => {
@@ -153,7 +156,7 @@ class Portfolio extends React.Component {
                 console.log(existingStock, "exist");
                 const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
                 console.log(tempPort);
-                if (existingStock == null || existingStock == undefined) {
+                if (existingStock === null || existingStock === undefined) {
                     console.log("here")
                     const tempStock = await this.makeTempStock(name, userQuant, symbol, imageLink, price);
                     await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
@@ -192,15 +195,16 @@ class Portfolio extends React.Component {
                     Press OK to continue`);
             if (conf) {
                 const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
-                await this.updatePortfolio(tempPort);
                 if (userQuant === quantity) {
                     console.log(tempPort);
                     await this.deleteStock(id);
+                    await this.updatePortfolio(tempPort);
                     this.searchPortfolios(this.state.userId)
                 }
                 else {
                     const tempStock = this.makeTempStock(name, (quantity - userQuant), symbol, imageLink, originalPrice, id);
                     await this.updateStock(tempStock);
+                    await this.updatePortfolio(tempPort);
                     this.searchPortfolios(this.state.userId);
                 }
             }
@@ -258,7 +262,7 @@ class Portfolio extends React.Component {
                         console.log(symbol, price, imageLink, new Date());
                         const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
                         console.log(tempPort)
-                        if (existingStock == null || existingStock == undefined) {
+                        if (existingStock === null || existingStock === undefined) {
                             const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
                             await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
                         }
@@ -339,37 +343,38 @@ class Portfolio extends React.Component {
             })
     };
     testHandleSell = async (quant, datapack, event) => {
+        event.preventDefault();
         console.log(datapack);
-        const quoteData = await this.getPrice(datapack[0].symbol);
+        const quoteData = await this.getPrice(datapack.symbol);
         console.log(quoteData.data, new Date());
         const newPrice = this.handleNumber(quoteData.data.latestPrice);
         let userResp = quant;
-        alert(`Current Balance: ${this.state.result.balance}\n
-                Please enter an amount of ${datapack[0].name} stock you would like to sell at Current Price: $${newPrice}.\n
-                Original Price: $${datapack[0].price}`);
         const userQuant = parseInt(userResp, 10);
         if (userResp === null || isNaN(userResp) || userResp === undefined) {
             alert("Please enter a number");
         }
-        else if (userQuant > datapack[0].quantity) {
+        else if (userQuant > datapack.quantity) {
             alert("You don't have that much of this stock");
         }
         else {
             let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
                     This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
-                    and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack[0].price))}.\n
+                    and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}.\n
                     Press OK to continue`);
             if (conf) {
                 const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
-                await this.updatePortfolio(tempPort);
-                if (userQuant === datapack[0].quantity) {
-                    console.log(tempPort);
-                    await this.deleteStock(datapack[0].id);
-                    this.searchPortfolios(this.state.userId)
+                if (userQuant === datapack.quantity) {
+                    console.log(tempPort, "del");
+                    await this.deleteStock(datapack.id);
+                    await this.updatePortfolio(tempPort);
+                    this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
                 }
                 else {
-                    const tempStock = this.makeTempStock(datapack[0].name, (datapack[0].quantity - userQuant), datapack[0].symbol, datapack[0].imageLink, datapack[0].price, datapack[0].id);
+                    const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
                     await this.updateStock(tempStock);
+                    console.log(tempStock, "put")
+                    await this.updatePortfolio(tempPort);
+                    this.setState({ prompting: false });
                     this.searchPortfolios(this.state.userId);
                 }
             }
@@ -377,9 +382,78 @@ class Portfolio extends React.Component {
                 alert("Ok then...")
             }
         }
+    };
+    testHandleAdd = async (quant, datapack, event) => {
+        event.preventDefault();
+        const quoteData = await this.getPrice(datapack.symbol);
+        console.log(quoteData.data, new Date());
+        const price = this.handleNumber(quoteData.data.latestPrice);
+        const userResp = quant;
+        const userQuant = parseInt(userResp, 10);
+        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+            alert("Please enter a number");
+        }
+        else if (userQuant * price > this.state.result.balance) {
+            alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+        }
+        else {
+            const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+                    This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
+                    press OK to continue`);
+            if (conf) {
+                const existingStock = await this.getStock(price);
+                console.log(existingStock, "exist");
+                const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
+                console.log(tempPort);
+                if (existingStock === null || existingStock === undefined) {
+                    console.log("here")
+                    const tempStock = await this.makeTempStock(datapack.name, userQuant, datapack.symbol, datapack.imageLink, price);
+                    await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+                }
+                else {
+                    console.log("there")
+                    const newQuant = parseInt(existingStock.quantity) + parseInt(userQuant);
+                    const tempStock = await this.makeTempStock(datapack.name, newQuant, datapack.symbol, datapack.imageLink, price, existingStock.id);
+                    await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+                }
+                this.setState({ prompting: false });
+                this.searchPortfolios(this.state.userId);
+            }
+            else {
+                alert("Ok then...")
+            }
+        }
+    };
+    sumStocks = async () => {
+        let sum = 0;
+        const prom1 = await new Promise((resolve) => {
+            this.state.Stocks.map(stock => {
+                this.getPrice(stock.symbol)
+                    .then(res => {
+                        console.log(res);
+                        let temp = res.data.latestPrice;
+                        sum += temp;
+                        console.log(sum);
+                    })
+            })
+        }).then(
+            this.setState({
+                sum: sum,
+                loading: false
+            }))
     }
-    sumStocks = () =>{
-        
+    makeDatapack = async (datapack) => {
+        let tempPack = datapack;
+        console.log(datapack);
+        const quoteData = await this.getPrice(datapack.symbol);
+        console.log(quoteData.data, new Date());
+        const newPrice = this.handleNumber(quoteData.data.latestPrice);
+        tempPack.newPrice = newPrice;
+        this.setState({
+            datapack: tempPack,
+            prompting: true
+        })
+        console.log(tempPack);
     }
     render = () => {
         return (
@@ -406,7 +480,7 @@ class Portfolio extends React.Component {
                                     method={this.editPortfolio}
                                 />
                                 {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
-                                {this.state.Stocks.length == 0 ? (
+                                {this.state.Stocks.length === 0 ? (
                                     <div>
                                         <h2>
                                             Looks like you don't have any stocks. Why don't you buy some?
@@ -423,64 +497,72 @@ class Portfolio extends React.Component {
                                                 handleAdd={this.handleAdd}
                                                 handleSell={this.handleSell}
                                                 testHandleSell={this.testHandleSell}
+                                                makeDatapack={this.makeDatapack}
                                             />))}
                                         </div>)}
                             </div>)}
                     </div>
                     {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
                     {/* {!this.state.prompting ? ( */}
-                    <div>
-                        <form>
-                            <fieldset>
-                                <legend style={formColor}>Add new stocks here</legend>
-                                Stock Name:
+                    {/* <h2>Current Value of stocks: {this.state.sum}</h2> */}
+                    {this.state.prompting ? (
+                        <Sidebar
+                            datapack={this.state.datapack}
+                            testHandleSell={this.testHandleSell}
+                            testHandleAdd={this.testHandleAdd}
+                        />) : (
+                            <div>
+                                <form>
+                                    <fieldset>
+                                        <legend style={formColor}>Add new stocks here</legend>
+                                        Stock Name:
                             <input
-                                    value={this.state.stockName}
-                                    onChange={this.handleInputChange}
-                                    name="stockName"
-                                    placeholder="Name of stock (required)"
-                                />
-                                Quantity:
+                                            value={this.state.stockName}
+                                            onChange={this.handleInputChange}
+                                            name="stockName"
+                                            placeholder="Name of stock (required)"
+                                        />
+                                        Quantity:
                             <input
-                                    value={this.state.quantity}
-                                    onChange={this.handleInputChange}
-                                    name="quantity"
-                                    placeholder="Quantity (required)"
-                                />
-                                <button onClick={this.handleFormSubmit}>
-                                    submit
+                                            value={this.state.quantity}
+                                            onChange={this.handleInputChange}
+                                            name="quantity"
+                                            placeholder="Quantity (required)"
+                                        />
+                                        <button onClick={this.handleFormSubmit}>
+                                            submit
                             </button>
-                            </fieldset>
-                        </form>
-                        <div>
-                            <ul>
-                                {this.state.companies.map(company => (
-                                    <li onClick={() => this.setState({ stockName: company })}>{company}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
+                                    </fieldset>
+                                </form>
+                                <div>
+                                    <ul>
+                                        {this.state.companies.map(company => (
+                                            <li onClick={() => this.setState({ stockName: company })}>{company}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>)}
                     {/* ) : (
-                    //     <form>
-                    //         Quantity:
-                    // <input
-                    //             value={this.state.quantity}
-                    //             onChange={this.handleInputChange}
-                    //             name="quantity"
-                    //             placeholder={this.state.quantity}
-                    //         />
-                    //         <button onClick={this.handleEditSubmit}>
-                    //             submit
-                    //     </button>
-                    //     </form>
-                    <div>
-                        {this.state.message}
-                        <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
-                    </div>
-                    <button onClick = {this.editPortfolio}>Edit Balance</button>
-                       //<div/>
-                    )
-                } */}
+                //     //     <form>
+                //     //         Quantity:
+                //     // <input
+                //     //             value={this.state.quantity}
+                //     //             onChange={this.handleInputChange}
+                //     //             name="quantity"
+                //     //             placeholder={this.state.quantity}
+                //     //         />
+                //     //         <button onClick={this.handleEditSubmit}>
+                //     //             submit
+                //     //     </button>
+                //     //     </form>
+                //     <div>
+                //         {this.state.message}
+                //         <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
+                //     </div>
+                //     <button onClick = {this.editPortfolio}>Edit Balance</button>
+                //        //<div/>
+                //     )
+                // } */}
                 </div>
             }</div>
         );
