@@ -70,15 +70,8 @@ class Sidebar extends React.Component {
         return (
             <div>
                 <div>
-                <div className="top-btns">
-                <button className="cancel-btn" onClick={(e) => {
-                    console.log(this.props);
-                    this.props.cancelOut(e);
-                }}>
-                    Cancel
-                </button>
-
-                <button  className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
+                    <div className="top-btns">
+                <button className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
                     this.changeActiveClass("sell");
                     this.setState({barstate:"Sell"})
                 }}>
@@ -98,8 +91,7 @@ class Sidebar extends React.Component {
                             <legend><h3 style={titleColor}>{this.props.datapack.name}</h3></legend>
                             <div className="sidebar-field-line">
                             <input
-                            className="sidebar-inputs"
-                                style={buttonColor}
+                                className="sidebar-inputs"
                                 // value={this.state.quantity}
                                 onChange={this.handleInputChange}
                                 name={`input${this.props.datapack.name}`}

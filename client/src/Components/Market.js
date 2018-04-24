@@ -24,6 +24,8 @@ class Market extends React.Component {
     sidebarState: "add",
     companies: [],
     Stocks: [],
+    errorMessage: "",
+    error: false,
     datapack: {},
     prompting: false
     //message: ""
@@ -90,7 +92,9 @@ class Market extends React.Component {
     return (API.allSymbols(`/stock/${symbol}/logo`).catch(err => console.log(err)));
   };
   updatePortfolio = portfolio => {
-    return (portApi.update(portfolio).catch(err => console.log(err)));
+    return (portApi.update(portfolio)
+        .then(res => this.setState({ error: false }))
+        .catch(err => { console.log(err); this.setState({ error: true }) }));
   };
   updateStock = stock => {
     return (stockApi.update(stock).catch(err => console.log(err)));
@@ -324,9 +328,18 @@ class Market extends React.Component {
   };
   editPortfolio = (quant, datapack, event) => {
     event.preventDefault();
-    this.updatePortfolio(this.makeTempPortfolio(quant));
-    this.searchPortfolios(this.state.userId);
-  };
+    this.updatePortfolio(this.makeTempPortfolio(quant))
+        .then(res => {
+            if (!this.state.error) {
+                console.log('here')
+                this.searchPortfolios(this.state.userId);
+            }
+            else {
+                this.setState({ errorMessage: "Incorrect Inputs, digits only" });
+                console.log('there', this.state.error, this.state.errorMessage)
+            }
+        })
+};
   testHandleSell = async (quant, datapack, event) => {
     event.preventDefault();
     console.log(datapack);
@@ -422,28 +435,38 @@ class Market extends React.Component {
     })
     console.log(tempPack);
   }
+  cancelOut = event => {
+    event.preventDefault();
+    this.setState({ prompting: false });
+  };
   render = () => {
     return (
+      <div>{!Auth.isUserAuthenticated() ?
+        (<div>
+            <Link to="/">
+                <div>
+                    Sign in to view your portfolio.
+                </div>
+            </Link>
+        </div>) :
       <div className="container-fluid">
         <div className="portfolio col-md-5">
           {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-            <div className=""><div className="panel-header balance-container">Current Balance: <span className="current-balance">${this.state.result.balance}</span>
-                </div></div>
-                <div className="edit-balance">
-                <ToggleElement
-                  offMessage={"Edit"}
-                  onMessage={"Cancel"}
-                  titleMessage={"Edit Balance"}
-                  inputType={"number"}
-                  name={"balancer"}
-                  placeholder={"Quantity (required)"}
-                  method={this.editPortfolio}
-                />
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
+              <div className="edit-balance">
+              <ToggleElement
+                offMessage={"Edit"}
+                onMessage={"Cancel"}
+                titleMessage={"Edit"}
+                inputType={"number"}
+                name={"balancer"}
+                placeholder={"Quantity (required)"}
+                method={this.editPortfolio}
+              /></div>
               </div>
-              <div className="">
-                <div className="panel-header">Your Stocks</div>
-              </div>
+              <div className="panel-header">Your Stocks</div>
+              {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
                 <div>
                   <h2>
@@ -473,6 +496,7 @@ class Market extends React.Component {
               datapack={this.state.datapack}
               testHandleSell={this.testHandleSell}
               testHandleAdd={this.testHandleAdd}
+              cancelOut={this.cancelOut}
             />
           </div>) : (
             <div className="row col-md-6 col-md-offset-1 add-stocks">
@@ -533,6 +557,7 @@ class Market extends React.Component {
                     )
                 } */}
       </div>
+      }</div>
     );
   };
 }
