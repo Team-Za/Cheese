@@ -368,7 +368,7 @@ class Market extends React.Component {
         <div className="row col-md-6 col-md-offset-1">
           <form>
             <fieldset>
-              <legend style={formColor}>Add More Stocks</legend>
+              <div className="legend" >Add More Stocks</div>
               <div className="panel-header">Stock Name:</div>
               <div className="field-line">
                 <input
