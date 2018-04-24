@@ -441,14 +441,6 @@ class Market extends React.Component {
   };
   render = () => {
     return (
-      <div>{!Auth.isUserAuthenticated() ?
-        (<div>
-            <Link to="/">
-                <div>
-                    Sign in to view your portfolio.
-                </div>
-            </Link>
-        </div>) :
       <div className="container-fluid">
         <div className="portfolio col-md-5">
           {this.state.loading ? (<div>loading...</div>) :
@@ -485,8 +477,6 @@ class Market extends React.Component {
                   </div>)}
             </div>)}
         </div>
-        {/* <button onClick={()=>(console.log(this.getPrice("AAPL")))}>test</button> */}
-        {/* {!this.state.prompting ? ( */}
         {this.state.prompting ? (
           <div className="row col-md-6 col-md-offset-1">
             <Sidebar
@@ -533,28 +523,7 @@ class Market extends React.Component {
                 </ul>
               </div>
             </div>)}
-        {/* ) : (
-                    //     <form>
-                    //         Quantity:
-                    // <input
-                    //             value={this.state.quantity}
-                    //             onChange={this.handleInputChange}
-                    //             name="quantity"
-                    //             placeholder={this.state.quantity}
-                    //         />
-                    //         <button onClick={this.handleEditSubmit}>
-                    //             submit
-                    //     </button>
-                    //     </form>
-                    <div>
-                        {this.state.message}
-                        <button onClick={()=>(this.setState({prompting:false}))}>ok</button>
-                    </div>
-                       //<div/>
-                    )
-                } */}
       </div>
-      }</div>
     );
   };
 }

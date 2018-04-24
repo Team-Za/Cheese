@@ -367,7 +367,7 @@ class Portfolio extends React.Component {
                     console.log(tempPort, "del");
                     await this.deleteStock(datapack.id);
                     await this.updatePortfolio(tempPort);
-                    this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
+                    this.searchPortfolios(this.state.userId)
                 }
                 else {
                     const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
