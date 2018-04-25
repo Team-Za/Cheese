@@ -26,6 +26,9 @@ module.exports = function (sequelize, Sequelize) {
     quantity: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      validate: {
+        len: [1]
+      }
     },
     symbol:{
       type: Sequelize.TEXT,

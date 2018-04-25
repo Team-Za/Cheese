@@ -366,6 +366,19 @@ a:focus {
   font-size: 14px;
 }
 
+.edit-price-btn {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+
 .active-btn-buy {
   border-radius: 0px 3px 3px 0px;
   padding: 1% 2% 1% 2%;
@@ -379,6 +392,18 @@ a:focus {
 }
 
 .active-btn-sell {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-edit-price {
   border-radius: 3px 0px 0px 3px;
   padding: 1% 2% 1% 2%;
   position: relative;

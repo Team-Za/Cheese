@@ -15,7 +15,6 @@ export default path => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.static(`${path}/client`));
   app.use(passport.initialize());
-  app.use("/api/organization", routers.organization);
   app.use("/api/portfolio", routers.portfolio);
   app.use("/api/stock", routers.stock);
   app.use("/api/user", routers.user);
