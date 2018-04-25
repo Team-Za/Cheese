@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar";
 const formColor = {
   color: "white"
 }
+
 class Market extends React.Component {
   state = {
     result: [],
@@ -139,11 +140,12 @@ class Market extends React.Component {
     const userResp = prompt(`Current Balance: ${this.state.result.balance}\n
             Please enter an amount of ${name} stock you would like to purchase at $${price}`);
     const userQuant = parseInt(userResp, 10);
+
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
       alert("Please enter a number");
     }
     else if (userQuant * price > this.state.result.balance) {
-      alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+      this.setState({errorAlert:  `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`});
     }
     else {
       const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -167,9 +169,7 @@ class Market extends React.Component {
         }
         this.searchPortfolios(this.state.userId);
       }
-      else {
-        alert("Ok then...")
-      }
+
     }
   };
   handleSell = async (id, name, quantity, symbol, imageLink, originalPrice) => {
@@ -180,11 +180,12 @@ class Market extends React.Component {
             Please enter an amount of ${name} stock you would like to sell at Current Price: $${newPrice}.\n
             Original Price: $${originalPrice}`);
     const userQuant = parseInt(userResp, 10);
+
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
       alert("Please enter a number");
     }
     else if (userQuant > quantity) {
-      alert("You don't have that much of this stock");
+      this.setState({errorAlert: "You don't have that much of this stock"});
     }
     else {
       let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -205,9 +206,7 @@ class Market extends React.Component {
           this.searchPortfolios(this.state.userId);
         }
       }
-      else {
-        alert("Ok then...")
-      }
+
     }
   };
   handleDelete = async (id, name, quantity, symbol, price) => {
@@ -224,9 +223,7 @@ class Market extends React.Component {
       console.log(tempPort)
       this.searchPortfolios(this.state.userId);
     }
-    else {
-      alert("Ok, fine.");
-    }
+
   };
   handleFormSubmit = async event => {
     event.preventDefault();
@@ -236,7 +233,7 @@ class Market extends React.Component {
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
       if (localStorage.getItem(this.state.stockName) === null) {
-        alert("Stock name not found");
+        this.setState({errorAlert: "Stock name not found"});
       }
       else {
         symbol = localStorage.getItem(this.state.stockName);
@@ -244,7 +241,7 @@ class Market extends React.Component {
         console.log(quoteData.data, new Date());
         const price = this.handleNumber(quoteData.data.latestPrice);
         if ((this.state.quantity * price) > this.state.result.balance) {
-          alert("You cannot afford that much");
+          this.setState({errorAlert: "You cannot afford that much"});
         }
         else {
           let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
@@ -274,14 +271,12 @@ class Market extends React.Component {
             })
             this.searchPortfolios(this.state.userId)
           }
-          else {
-            alert("Ok, then");
-          }
+          
         }
       }
     }
     else {
-      alert("Please fill out required fields!");
+      this.setState({errorAlert: "Please fill out required fields!"});
     }
   };
   formatStocks = stocks => {
@@ -465,8 +460,8 @@ class Market extends React.Component {
                 name={"balancer"}
                 placeholder={"Quantity (required)"}
                 method={this.editPortfolio}
-              /></div>
-                            </div>
+              /><div className='error-message'>{this.state.errorAlert}</div></div>
+              </div>
               <div className="panel-header">Your Stocks</div>
               {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
               {this.state.Stocks.length == 0 ? (
