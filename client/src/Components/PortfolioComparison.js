@@ -60,6 +60,7 @@ class PortfolioComparison extends React.Component {
             console.log("Total", pricesToCompare);
             var difference = (pricesToCompare.userTotalPortPrice / pricesToCompare.currentTotalPortPrice).toFixed(4);
             var change = (pricesToCompare.currentTotalPortPrice - pricesToCompare.userTotalPortPrice);
+            var userPort = pricesToCompare.userTotalPortPrice.toFixed(2);
             if(pricesToCompare === undefined) {
                 this.setState({
                     loading: false
@@ -67,7 +68,7 @@ class PortfolioComparison extends React.Component {
             } else {
                 if(Math.sign(change) === -1) {
                     this.setState({
-                        portfolioTotal: pricesToCompare.userTotalPortPrice,
+                        portfolioTotal: userPort,
                         currentTotal: pricesToCompare.currentTotalPortPrice,
                         portfolioDifference: difference,
                         portfolioChange: "negative",
@@ -75,7 +76,7 @@ class PortfolioComparison extends React.Component {
                     })
                 } else {
                     this.setState({
-                        portfolioTotal: pricesToCompare.userTotalPortPrice,
+                        portfolioTotal: userPort,
                         currentTotal: pricesToCompare.currentTotalPortPrice,
                         portfolioDifference: difference,
                         portfolioChange: "positive",
