@@ -9,6 +9,7 @@ import { Promise } from 'core-js';
 import Auth from '../modules/Auth';
 import ToggleElement from "./ToggleElement";
 import Sidebar from "./Sidebar";
+import Conf from "./Conf";
 const formColor = {
   color: "white"
 }
@@ -19,7 +20,7 @@ class Market extends React.Component {
     loading: true,
     stockName: "",
     quantity: 0,
-    userId: sessionStorage.getItem("UserId") || 1,
+    userId: sessionStorage.getItem("UserId"),
     portId: -1,
     sidebarArgs: [],
     sidebarState: "add",
@@ -28,7 +29,9 @@ class Market extends React.Component {
     errorMessage: "",
     error: false,
     datapack: {},
-    prompting: false
+    prompting: false,
+    isShowingModal: false,
+    mode: "submit"
   };
   componentDidMount = async () => {
     await this.loadSymbols();
@@ -93,8 +96,8 @@ class Market extends React.Component {
   };
   updatePortfolio = portfolio => {
     return (portApi.update(portfolio)
-        .then(res => this.setState({ error: false }))
-        .catch(err => { console.log(err); this.setState({ error: true }) }));
+      .then(res => this.setState({ error: false }))
+      .catch(err => { console.log(err); this.setState({ error: true }) }));
   };
   updateStock = stock => {
     return (stockApi.update(stock).catch(err => console.log(err)));
@@ -133,98 +136,6 @@ class Market extends React.Component {
       UserId: this.state.userId
     }
   };
-  handleAdd = async (name, symbol, imageLink) => {
-    const quoteData = await this.getPrice(symbol);
-    console.log(quoteData.data, new Date());
-    const price = this.handleNumber(quoteData.data.latestPrice);
-    const userResp = prompt(`Current Balance: ${this.state.result.balance}\n
-            Please enter an amount of ${name} stock you would like to purchase at $${price}`);
-    const userQuant = parseInt(userResp, 10);
-
-    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
-      alert("Please enter a number");
-    }
-    else if (userQuant * price > this.state.result.balance) {
-      this.setState({errorAlert:  `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`});
-    }
-    else {
-      const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-                This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
-                press OK to continue`);
-      if (conf) {
-        const existingStock = await this.getStock(price);
-        console.log(existingStock, "exist");
-        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
-        console.log(tempPort);
-        if (existingStock == null || existingStock == undefined) {
-          console.log("here")
-          const tempStock = await this.makeTempStock(name, userQuant, symbol, imageLink, price);
-          await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
-        }
-        else {
-          console.log("there")
-          const newQuant = parseInt(existingStock.quantity) + parseInt(userQuant);
-          const tempStock = await this.makeTempStock(name, newQuant, symbol, imageLink, price, existingStock.id);
-          await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
-        }
-        this.searchPortfolios(this.state.userId);
-      }
-
-    }
-  };
-  handleSell = async (id, name, quantity, symbol, imageLink, originalPrice) => {
-    const quoteData = await this.getPrice(symbol);
-    console.log(quoteData.data, new Date());
-    const newPrice = this.handleNumber(quoteData.data.latestPrice);
-    let userResp = prompt(`Current Balance: ${this.state.result.balance}\n
-            Please enter an amount of ${name} stock you would like to sell at Current Price: $${newPrice}.\n
-            Original Price: $${originalPrice}`);
-    const userQuant = parseInt(userResp, 10);
-
-    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
-      alert("Please enter a number");
-    }
-    else if (userQuant > quantity) {
-      this.setState({errorAlert: "You don't have that much of this stock"});
-    }
-    else {
-      let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-                This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
-                and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * originalPrice))}.\n
-                Press OK to continue`);
-      if (conf) {
-        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
-        await this.updatePortfolio(tempPort);
-        if (userQuant === quantity) {
-          console.log(tempPort);
-          await this.deleteStock(id);
-          this.searchPortfolios(this.state.userId)
-        }
-        else {
-          const tempStock = this.makeTempStock(name, (quantity - userQuant), symbol, imageLink, originalPrice, id);
-          await this.updateStock(tempStock);
-          this.searchPortfolios(this.state.userId);
-        }
-      }
-
-    }
-  };
-  handleDelete = async (id, name, quantity, symbol, price) => {
-    console.log(id);
-    const quoteData = await this.getPrice(symbol);
-    console.log(quoteData.data, new Date());
-    const newPrice = this.handleNumber(quoteData.data.latestPrice);
-    let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
-    Are you sure you want to delete batch of ${quantity} ${name} stock at $${price}?
-    Current Price $${newPrice}`);
-    const tempPort = this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(quantity * newPrice));
-    if (conf) {
-      await Promise.all([this.deleteStock(id), this.updatePortfolio(tempPort)]);
-      console.log(tempPort)
-      this.searchPortfolios(this.state.userId);
-    }
-
-  };
   handleFormSubmit = async event => {
     event.preventDefault();
     this.setState({
@@ -244,34 +155,16 @@ class Market extends React.Component {
           this.setState({errorAlert: "You cannot afford that much"});
         }
         else {
-          let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+          let tempPack = { price: price }
+          tempPack.message = (`Current Balance: ${this.state.result.balance}\n
                     This will cost $${price} per share for a total of $${this.handleNumber(this.state.quantity * price)}\n
                     press OK to continue`);
-          if (conf) {
-            const existingStock = await this.getStock(price);
-            console.log(existingStock, "exist");
-            let imageQuery = await this.getLogo(symbol);
-            console.log(imageQuery, "img");
-            const imageLink = imageQuery.data.url;
-            console.log(symbol, price, imageLink, new Date());
-            const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * price));
-            console.log(tempPort)
-            if (existingStock == null || existingStock == undefined) {
-              const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, symbol, imageLink, price);
-              await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
-            }
-            else {
-              const newQuant = parseInt(existingStock.quantity) + parseInt(this.state.quantity);
-              const tempStock = await this.makeTempStock(this.state.stockName, newQuant, symbol, imageLink, price, existingStock.id);
-              await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
-            }
-            this.setState({
-              quantity: 0,
-              stockName: ""
-            })
-            this.searchPortfolios(this.state.userId)
-          }
-          
+          tempPack.symbol = symbol;
+          this.setState({
+            datapack: tempPack,
+            isShowingModal: true,
+            mode: "submit"
+          });
         }
       }
     }
@@ -279,6 +172,32 @@ class Market extends React.Component {
       this.setState({errorAlert: "Please fill out required fields!"});
     }
   };
+  handleFormSubmit2 = async (datapack, event) => {
+    event.preventDefault();
+    const existingStock = await this.getStock(datapack.price);
+    console.log(existingStock, "exist");
+    let imageQuery = await this.getLogo(datapack.symbol);
+    console.log(imageQuery, "img");
+    const imageLink = imageQuery.data.url;
+    console.log(datapack.symbol, datapack.price, imageLink, new Date());
+    const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(this.state.quantity * datapack.price));
+    console.log(tempPort)
+    if (existingStock == null || existingStock == undefined) {
+      const tempStock = await this.makeTempStock(this.state.stockName, this.state.quantity, datapack.symbol, imageLink, datapack.price);
+      await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+    }
+    else {
+      const newQuant = parseInt(existingStock.quantity) + parseInt(this.state.quantity);
+      const tempStock = await this.makeTempStock(this.state.stockName, newQuant, datapack.symbol, imageLink, datapack.price, existingStock.id);
+      await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+    }
+    this.setState({
+      quantity: 0,
+      stockName: "",
+      isShowingModal: false
+    })
+    this.searchPortfolios(this.state.userId)
+  }
   formatStocks = stocks => {
     let choices = [];
     let indices = new Map([]);
@@ -306,14 +225,12 @@ class Market extends React.Component {
           PortfolioId: stock.PortfolioId
         }
         choices.push(tempStock);
-        // console.log(i)
         indices.set(stock.name, choices.length - 1);
       }
     }
     choices.sort((name1, name2) => {
       return name1.name.localeCompare(name2.name);
     });
-    //console.log(choices, indices);
     this.setState({
       Stocks: choices,
       loading: false
@@ -323,109 +240,127 @@ class Market extends React.Component {
   editPortfolio = (quant, datapack, event) => {
     event.preventDefault();
     this.updatePortfolio(this.makeTempPortfolio(quant))
-        .then(res => {
-            if (!this.state.error) {
-                console.log('here')
-                this.searchPortfolios(this.state.userId);
-            }
-            else {
-                this.setState({ errorMessage: "Incorrect Inputs, digits only" });
-                console.log('there', this.state.error, this.state.errorMessage)
-            }
-        })
-};
+      .then(res => {
+        if (!this.state.error) {
+          console.log('here')
+          this.searchPortfolios(this.state.userId);
+        }
+        else {
+          this.setState({ errorMessage: "Incorrect Inputs, digits only" });
+          console.log('there', this.state.error, this.state.errorMessage)
+        }
+      })
+  };
   testHandleSell = async (quant, datapack, event) => {
     event.preventDefault();
     console.log(datapack);
+    let tempPack = datapack;
     const quoteData = await this.getPrice(datapack.symbol);
     console.log(quoteData.data, new Date());
     const newPrice = this.handleNumber(quoteData.data.latestPrice);
     let userResp = quant;
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
-    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
       alert("Please enter a number greater than 0");
     }
     else if (userQuant > datapack.quantity) {
       alert("You don't have that much of this stock");
     }
     else {
-      let conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+      tempPack.message = (`Current Balance: ${this.state.result.balance}\n
                 This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
                 and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}.\n
                 Press OK to continue`);
-      if (conf) {
-        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(userQuant * newPrice));
-        if (userQuant === datapack.quantity) {
-          console.log(tempPort, "del");
-          await this.deleteStock(datapack.id);
-          await this.updatePortfolio(tempPort);
-          this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
-        }
-        else {
-          const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
-          await this.updateStock(tempStock);
-          console.log(tempStock, "put")
-          await this.updatePortfolio(tempPort);
-          this.setState({ prompting: false });
-          this.searchPortfolios(this.state.userId);
-        }
-      }
-      else {
-        alert("Ok then...")
-      }
+      tempPack.userQuant = userQuant;
+      tempPack.newPrice = newPrice;
+      this.setState({
+        datapack: tempPack,
+        isShowingModal: true,
+        mode: "sell"
+      });
+    }
+  };
+  testHandleSell2 = async (datapack, event) => {
+    event.preventDefault();
+    this.setState({
+      prompting: false,
+      isShowingModal: false
+    });
+    const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) + parseFloat(datapack.userQuant * datapack.newPrice));
+    if (datapack.userQuant === datapack.quantity) {
+      console.log(tempPort, "del");
+      await this.deleteStock(datapack.id);
+      await this.updatePortfolio(tempPort);
+      this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
+    }
+    else {
+      const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - datapack.userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
+      await this.updateStock(tempStock);
+      console.log(tempStock, "put")
+      await this.updatePortfolio(tempPort);
+      this.searchPortfolios(this.state.userId);
     }
   };
   testHandleAdd = async (quant, datapack, event) => {
     event.preventDefault();
+    let tempPack = datapack;
     const quoteData = await this.getPrice(datapack.symbol);
     console.log(quoteData.data, new Date());
     const price = this.handleNumber(quoteData.data.latestPrice);
     const userResp = quant;
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
-    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
       alert("Please enter a number greater than 0");
     }
     else if (userQuant * price > this.state.result.balance) {
       alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
     }
     else {
-      const conf = window.confirm(`Current Balance: ${this.state.result.balance}\n
+      tempPack.message = (`Current Balance: $${this.state.result.balance}\n
                 This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
                 press OK to continue`);
-      if (conf) {
-        const existingStock = await this.getStock(price);
-        console.log(existingStock, "exist");
-        const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(userQuant * price));
-        console.log(tempPort);
-        if (existingStock === null || existingStock === undefined) {
-          console.log("here")
-          const tempStock = await this.makeTempStock(datapack.name, userQuant, datapack.symbol, datapack.imageLink, price);
-          await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
-        }
-        else {
-          console.log("there")
-          const newQuant = parseInt(existingStock.quantity) + parseInt(userQuant);
-          const tempStock = await this.makeTempStock(datapack.name, newQuant, datapack.symbol, datapack.imageLink, price, existingStock.id);
-          await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
-        }
-        this.setState({ prompting: false });
-        this.searchPortfolios(this.state.userId);
-      }
-      else {
-        alert("Ok then...")
-      }
+      tempPack.userQuant = userQuant;
+      tempPack.price = price;
+      this.setState({
+        datapack: tempPack,
+        isShowingModal: true,
+        mode: "add"
+      });
     }
   };
-  testHandleEdit= async (quant, datapack, event) => {
+  testHandleAdd2 = async (datapack, event) => {
+    event.preventDefault();
+    this.setState({
+      prompting: false,
+      isShowingModal: false
+    });
+    const existingStock = await this.getStock(datapack.price);
+    console.log(existingStock, "exist");
+    const tempPort = await this.makeTempPortfolio(parseFloat(this.state.result.balance) - parseFloat(datapack.userQuant * datapack.price));
+    console.log(tempPort);
+    if (existingStock === null || existingStock === undefined) {
+      console.log("here")
+      const tempStock = await this.makeTempStock(datapack.name, datapack.userQuant, datapack.symbol, datapack.imageLink, datapack.price);
+      await Promise.all([this.updatePortfolio(tempPort), this.makeStock(tempStock)]);
+    }
+    else {
+      console.log("there")
+      const newQuant = parseInt(existingStock.quantity) + parseInt(datapack.userQuant);
+      const tempStock = await this.makeTempStock(datapack.name, newQuant, datapack.symbol, datapack.imageLink, datapack.price, existingStock.id);
+      await Promise.all([this.updatePortfolio(tempPort), this.updateStock(tempStock)]);
+    }
+    this.searchPortfolios(this.state.userId);
+  };
+  testHandleEdit = async (quant, datapack, event) => {
     event.preventDefault();
     const tempStock = await this.makeTempStock(datapack.name, datapack.quantity, datapack.symbol, datapack.imageLink, quant, datapack.id);
     this.updateStock(tempStock)
-    .then(()=>{
-      this.setState({ prompting: false });
-      this.searchPortfolios(this.state.userId);
-    })
+      .then(() => {
+        this.setState({ prompting: false });
+        this.searchPortfolios(this.state.userId);
+      })
   }
   makeDatapack = async (datapack) => {
     let tempPack = datapack;
@@ -444,23 +379,37 @@ class Market extends React.Component {
     event.preventDefault();
     this.setState({ prompting: false });
   };
+  handleClose = () => {
+    this.setState({
+      isShowingModal: false
+    })
+  }
   render = () => {
     return (
       <div className="container-fluid">
+        <Conf
+          isShowingModal={this.state.isShowingModal}
+          handleClose={this.handleClose}
+          datapack={this.state.datapack}
+          mode={this.state.mode}
+          handleAdd2={this.testHandleAdd2}
+          handleSell2={this.testHandleSell2}
+          handleFormSubmit2={this.handleFormSubmit2}
+        />
         <div className="portfolio col-md-5">
-        {this.state.loading ? (<div>Loading...</div>) :
+          {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
-              <div className="edit-balance">
-              <ToggleElement
-                offMessage={"Edit"}
-                onMessage={"Cancel"}
-                titleMessage={"Edit"}
-                inputType={"number"}
-                name={"balancer"}
-                placeholder={"Quantity (required)"}
-                method={this.editPortfolio}
-              /><div className='error-message'>{this.state.errorAlert}</div></div>
+              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance}
+                <div className="edit-balance">
+                  <ToggleElement
+                    offMessage={"Edit"}
+                    onMessage={"Cancel"}
+                    titleMessage={"Edit"}
+                    inputType={"number"}
+                    name={"balancer"}
+                    placeholder={"Quantity (required)"}
+                    method={this.editPortfolio}
+                  /></div>
               </div>
               <div className="panel-header">Your Stocks</div>
               {!this.state.error ? (<div> </div>) : (<p>{this.state.errorMessage}</p>)}
