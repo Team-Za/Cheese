@@ -12,9 +12,10 @@ class Sidebar extends React.Component {
             isToggleOn: false,
             quantity: 0,
             errorMessage: "",
-            barstate:"Buy",
+            barstate: "Buy",
             buyBtn: "active-btn-buy",
-            sellBtn: ""
+            sellBtn: "",
+            editBtn: ""
         };
 
         // This binding is necessary to make `this` work in the callback
@@ -53,15 +54,24 @@ class Sidebar extends React.Component {
     }
 
     changeActiveClass = whichButton => {
-        if(whichButton === "sell") {
+        if (whichButton === "sell") {
             this.setState({
                 buyBtn: "",
-                sellBtn: "active-btn-sell"
+                sellBtn: "active-btn-sell",
+                editBtn: ""
+            })
+        }
+        else if (whichButton === "edit") {
+            this.setState({
+                buyBtn: "",
+                sellBtn: "",
+                editBtn: "active-btn-edit-price"
             })
         } else {
             this.setState({
                 buyBtn: "active-btn-buy",
-                sellBtn: ""
+                sellBtn: "",
+                editBtn: ""
             })
         }
     }
@@ -70,61 +80,77 @@ class Sidebar extends React.Component {
         return (
             <div>
                 <div>
-                <div className="top-btns">
-                <button className="cancel-btn" onClick={(e) => {
-                    console.log(this.props);
-                    this.props.cancelOut(e);
-                }}>
-                    Cancel
+                    <div className="top-btns">
+                        <button className="cancel-btn" onClick={(e) => {
+                            console.log(this.props);
+                            this.props.cancelOut(e);
+                        }}>
+                            Cancel
                 </button>
-
-                <button  className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
-                    this.changeActiveClass("sell");
-                    this.setState({barstate:"Sell"})
-                }}>
-                    Sell
+                        <button className={`edit-price-btn ${this.state.editBtn}`} onClick={() => {
+                            this.changeActiveClass("edit");
+                            this.setState({ barstate: "Edit" })
+                        }}>
+                            Edit Price
                 </button>
-                <button className={`buy-btn ${this.state.buyBtn}`} onClick={() => {
-                    this.changeActiveClass("buy");
-                    this.setState({barstate:"Buy"})
-                }}>
-                    Buy
+                        <button className={`sell-btn ${this.state.sellBtn}`} onClick={() => {
+                            this.changeActiveClass("sell");
+                            this.setState({ barstate: "Sell" })
+                        }}>
+                            Sell
                 </button>
-                </div>
-                {/* {this.state.isToggleOn ? ( */}
+                        <button className={`buy-btn ${this.state.buyBtn}`} onClick={() => {
+                            this.changeActiveClass("buy");
+                            this.setState({ barstate: "Buy" })
+                        }}>
+                            Buy
+                </button>
+                    </div>
+                    {/* {this.state.isToggleOn ? ( */}
                     <form>
                         <fieldset>
                             <h3>{this.state.errorMessage}</h3>
                             <legend><h3 style={titleColor}>{this.props.datapack.name}</h3></legend>
                             <div className="sidebar-field-line">
-                            <input
-                            className="sidebar-inputs"
-                                style={buttonColor}
-                                // value={this.state.quantity}
-                                onChange={this.handleInputChange}
-                                name={`input${this.props.datapack.name}`}
-                                placeholder={"Amount"}
-                                maxLength={8}
-                            />
+                                <input
+                                    className="sidebar-inputs"
+                                    style={buttonColor}
+                                    // value={this.state.quantity}
+                                    onChange={this.handleInputChange}
+                                    name={`input${this.props.datapack.name}`}
+                                    placeholder={"Amount"}
+                                    maxLength={8}
+                                />
                             </div>
                             <h4>Price purchased: {this.props.datapack.price}</h4>
-                            <h4>Current price: {this.props.datapack.newPrice}</h4>
-                            <p>Current Mode: {this.state.barstate}</p>
-                            <button style={buttonColor} onClick={(e) => {
-                                if(this.state.barstate==="Buy"){
-                                    console.log("adding");
-                                    this.props.testHandleAdd(this.state.quantity, this.props.datapack, e);
-                                }
-                                else{
-                                    console.log("selling");
-                                    this.props.testHandleSell(this.state.quantity, this.props.datapack, e);
-                                }
-                            }}>
-                                submit
+                            {this.state.barstate === "Edit" ?
+                                (<div>
+                                    <p>Current Mode: {this.state.barstate}</p>
+                                    <button style={buttonColor} onClick={(e) => {
+                                        console.log("editing");
+                                        this.props.testHandleEdit(this.state.quantity, this.props.datapack, e);
+                                    }}>
+                                    submit
+                                    </button>
+                                </div>) : (<div>
+                                    <h4>Current price: {this.props.datapack.newPrice}</h4>
+                                    <p>Current Mode: {this.state.barstate}</p>
+                                    <button style={buttonColor} onClick={(e) => {
+                                        if (this.state.barstate === "Buy") {
+                                            console.log("adding");
+                                            this.props.testHandleAdd(this.state.quantity, this.props.datapack, e);
+                                        }
+                                        else {
+                                            console.log("selling");
+                                            this.props.testHandleSell(this.state.quantity, this.props.datapack, e);
+                                        }
+                                    }}>
+                                        submit
                             </button>
+                                </div>)}
                         </fieldset>
                     </form>
-                {/* ):(<div/>)} */}
+                    {/* ):(<div/>)}  */}
                 </div>
             </div>
         );
