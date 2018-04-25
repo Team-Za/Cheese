@@ -140,8 +140,9 @@ class Market extends React.Component {
     const userResp = prompt(`Current Balance: ${this.state.result.balance}\n
             Please enter an amount of ${name} stock you would like to purchase at $${price}`);
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      this.setState({errorAlert: "Please enter a number"});
+
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+      alert("Please enter a number");
     }
     else if (userQuant * price > this.state.result.balance) {
       this.setState({errorAlert:  `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`});
@@ -179,8 +180,9 @@ class Market extends React.Component {
             Please enter an amount of ${name} stock you would like to sell at Current Price: $${newPrice}.\n
             Original Price: $${originalPrice}`);
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined) {
-      this.setState({errorAlert: "Please enter a number"});
+
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+      alert("Please enter a number");
     }
     else if (userQuant > quantity) {
       this.setState({errorAlert: "You don't have that much of this stock"});
@@ -304,12 +306,14 @@ class Market extends React.Component {
           PortfolioId: stock.PortfolioId
         }
         choices.push(tempStock);
+        // console.log(i)
         indices.set(stock.name, choices.length - 1);
       }
     }
     choices.sort((name1, name2) => {
       return name1.name.localeCompare(name2.name);
     });
+    //console.log(choices, indices);
     this.setState({
       Stocks: choices,
       loading: false
@@ -338,8 +342,9 @@ class Market extends React.Component {
     const newPrice = this.handleNumber(quoteData.data.latestPrice);
     let userResp = quant;
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined ||userQuant===0) {
-      alert("Please enter a number");
+    console.log(userQuant)
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+      alert("Please enter a number greater than 0");
     }
     else if (userQuant > datapack.quantity) {
       alert("You don't have that much of this stock");
@@ -355,7 +360,7 @@ class Market extends React.Component {
           console.log(tempPort, "del");
           await this.deleteStock(datapack.id);
           await this.updatePortfolio(tempPort);
-          this.searchPortfolios(this.state.userId)
+          this.searchPortfolios(this.state.userId) //technically these are never accessed because updatePortfolio changes state and therefore rerenders the page
         }
         else {
           const tempStock = this.makeTempStock(datapack.name, (datapack.quantity - userQuant), datapack.symbol, datapack.imageLink, datapack.price, datapack.id);
@@ -378,8 +383,9 @@ class Market extends React.Component {
     const price = this.handleNumber(quoteData.data.latestPrice);
     const userResp = quant;
     const userQuant = parseInt(userResp, 10);
-    if (userResp === null || isNaN(userResp) || userResp === undefined || userQuant===0) {
-      alert("Please enter a number");
+    console.log(userQuant)
+    if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
+      alert("Please enter a number greater than 0");
     }
     else if (userQuant * price > this.state.result.balance) {
       alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
@@ -412,6 +418,15 @@ class Market extends React.Component {
       }
     }
   };
+  testHandleEdit= async (quant, datapack, event) => {
+    event.preventDefault();
+    const tempStock = await this.makeTempStock(datapack.name, datapack.quantity, datapack.symbol, datapack.imageLink, quant, datapack.id);
+    this.updateStock(tempStock)
+    .then(()=>{
+      this.setState({ prompting: false });
+      this.searchPortfolios(this.state.userId);
+    })
+  }
   makeDatapack = async (datapack) => {
     let tempPack = datapack;
     console.log(datapack);
@@ -431,17 +446,9 @@ class Market extends React.Component {
   };
   render = () => {
     return (
-      <div>{!Auth.isUserAuthenticated() ?
-        (<div>
-            <Link to="/">
-                <div>
-                    Sign in to view your portfolio.
-                </div>
-            </Link>
-        </div>) :
       <div className="container-fluid">
         <div className="portfolio col-md-5">
-          {this.state.loading ? (<div>Loading...</div>) :
+        {this.state.loading ? (<div>Loading...</div>) :
             (<div>
               <div className="panel-header balance-container">Current Balance: ${this.state.result.balance} 
               <div className="edit-balance">
@@ -484,6 +491,7 @@ class Market extends React.Component {
               datapack={this.state.datapack}
               testHandleSell={this.testHandleSell}
               testHandleAdd={this.testHandleAdd}
+              testHandleEdit={this.testHandleEdit}
               cancelOut={this.cancelOut}
             />
           </div>) : (
@@ -525,7 +533,6 @@ class Market extends React.Component {
               </div>
             </div>)}
       </div>
-      }</div>
     );
   };
 }
