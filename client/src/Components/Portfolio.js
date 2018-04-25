@@ -141,7 +141,7 @@ class Portfolio extends React.Component {
         const userResp = prompt(`Current Balance: ${this.state.result.balance}\n
                 Please enter an amount of ${name} stock you would like to purchase at $${price}`);
         const userQuant = parseInt(userResp, 10);
-        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+        if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
             alert("Please enter a number");
         }
         else if (userQuant * price > this.state.result.balance) {
@@ -182,7 +182,7 @@ class Portfolio extends React.Component {
                 Please enter an amount of ${name} stock you would like to sell at Current Price: $${newPrice}.\n
                 Original Price: $${originalPrice}`);
         const userQuant = parseInt(userResp, 10);
-        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+        if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant===0) {
             alert("Please enter a number");
         }
         else if (userQuant > quantity) {
@@ -350,7 +350,7 @@ class Portfolio extends React.Component {
         const newPrice = this.handleNumber(quoteData.data.latestPrice);
         let userResp = quant;
         const userQuant = parseInt(userResp, 10);
-        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+        if (userQuant === null || isNaN(userQuant) || userQuant === undefined||userQuant === 0) {
             alert("Please enter a number");
         }
         else if (userQuant > datapack.quantity) {
@@ -367,6 +367,7 @@ class Portfolio extends React.Component {
                     console.log(tempPort, "del");
                     await this.deleteStock(datapack.id);
                     await this.updatePortfolio(tempPort);
+                    this.setState({ prompting: false });
                     this.searchPortfolios(this.state.userId)
                 }
                 else {
@@ -390,7 +391,7 @@ class Portfolio extends React.Component {
         const price = this.handleNumber(quoteData.data.latestPrice);
         const userResp = quant;
         const userQuant = parseInt(userResp, 10);
-        if (userResp === null || isNaN(userResp) || userResp === undefined) {
+        if (userQuant === null || isNaN(userQuant) || userQuant === undefined|| userQuant == 0) {
             alert("Please enter a number");
         }
         else if (userQuant * price > this.state.result.balance) {
