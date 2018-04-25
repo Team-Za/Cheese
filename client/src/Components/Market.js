@@ -13,6 +13,7 @@ import Conf from "./Conf";
 const formColor = {
   color: "white"
 }
+
 class Market extends React.Component {
   state = {
     result: [],
@@ -143,7 +144,7 @@ class Market extends React.Component {
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
       if (localStorage.getItem(this.state.stockName) === null) {
-        alert("Stock name not found");
+        this.setState({errorAlert: "Stock name not found"});
       }
       else {
         symbol = localStorage.getItem(this.state.stockName);
@@ -151,7 +152,7 @@ class Market extends React.Component {
         console.log(quoteData.data, new Date());
         const price = this.handleNumber(quoteData.data.latestPrice);
         if ((this.state.quantity * price) > this.state.result.balance) {
-          alert("You cannot afford that much");
+          this.setState({errorAlert: "You cannot afford that much"});
         }
         else {
           let tempPack = { price: price }
@@ -168,7 +169,7 @@ class Market extends React.Component {
       }
     }
     else {
-      alert("Please fill out required fields!");
+      this.setState({errorAlert: "Please fill out required fields!"});
     }
   };
   handleFormSubmit2 = async (datapack, event) => {
