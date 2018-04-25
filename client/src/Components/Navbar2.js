@@ -28,7 +28,6 @@ const Navbar = ({ children, ...props }) => (
             </div>
           </Link>
 
-        
             <div className="top-menu-item" id="dashboard" onClick={() => {
               Auth.deauthenticateUser();
               sessionStorage.removeItem("UserId");
@@ -61,8 +60,6 @@ const Navbar = ({ children, ...props }) => (
                 <i className="fas fa-chart-line"></i> Market
                 </div>
             </Link>
-
-            
 
             <Link to="/">
               <div id="log-in">
