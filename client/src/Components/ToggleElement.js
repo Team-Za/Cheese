@@ -52,12 +52,15 @@ class ToggleElement extends React.Component {
         return (
             <div>
                 <div className="submit-btn">
-                <button className="edit-button" onClick={this.handleClick}>
                     {this.state.isToggleOn ?
-                        `${this.props.onMessage}`
-                        :
-                        `${this.props.offMessage}`}
+                    <button className="toggle-cancel-btn" onClick={this.handleClick}>
+                        {this.props.onMessage}
                         </button>
+                        :
+                        <button className="toggle-edit-btn" onClick={this.handleClick}>
+                        {this.props.offMessage}
+                        </button>
+                    }
                 </div>
                 {this.state.isToggleOn ? (
                     <div>
@@ -65,15 +68,17 @@ class ToggleElement extends React.Component {
                         <form>
                             <fieldset>
                                 <h3>{this.state.errorMessage}</h3>
+                                <div className="toggle-field-line">
                                 <input
-                                    style={buttonColor}
+                                    className="sign-up-inputs"
                                     onChange={this.handleInputChange}
                                     name={`input${this.props.name}`}
                                     placeholder="Amount"
                                     maxLength={8}
                                 />
-                                <button style={buttonColor} onClick={(e) => { this.props.method(this.state.quantity, this.props.datapack, e); this.handleClick(); }}>
-                                    submit
+                                </div>
+                                <button className="sidebar-submit-button" onClick={(e) => { this.props.method(this.state.quantity, this.props.datapack, e); this.handleClick(); }}>
+                                    Submit
                                 </button>
                             </fieldset>
                         </form>
