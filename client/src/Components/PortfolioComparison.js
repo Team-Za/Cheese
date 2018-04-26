@@ -65,7 +65,7 @@ class PortfolioComparison extends React.Component {
             if(pricesToCompare !== undefined) {
                 change = (pricesToCompare.currentTotalPortPrice - pricesToCompare.userTotalPortPrice);
                 difference = ((change / pricesToCompare.userTotalPortPrice) * 100).toFixed(4);
-                userPort = pricesToCompare.userTotalPortPrice.toFixed(2);
+                userPort = Math.round(pricesToCompare.userTotalPortPrice.toFixed(2));
             }
             if(pricesToCompare === undefined) {
                 this.setState({

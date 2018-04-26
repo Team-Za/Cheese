@@ -859,6 +859,47 @@ a:focus {
   transform: scale(1.2);
 }
 
+// Toggle Component
+.toggle-field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+  width: 35%;
+  margin-left: auto;
+}
+
+.toggle-edit-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-top: 10px; 
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
+.toggle-cancel-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
 // Modal CSS
 .narcissus_17w311v {
 border: 3pt solid $lighter-background;
