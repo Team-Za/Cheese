@@ -632,7 +632,6 @@ class Portfolio extends React.Component {
                                         />
                                         Quantity:
                                         <input
-                                            value={this.state.quantity}
                                             onChange={this.handleInputChange}
                                             name="quantity"
                                             placeholder="Quantity (required)"
