@@ -286,6 +286,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "sell"
       });
+      this.setState({errorAlertSide: ""});
     }
   };
   testHandleSell2 = async (datapack, event) => {
@@ -337,6 +338,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "add"
       });
+      this.setState({errorAlertSide: ""});
     }
   };
   testHandleAdd2 = async (datapack, event) => {
