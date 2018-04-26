@@ -389,6 +389,21 @@ class Portfolio extends React.Component {
         });
         return choices;
     };
+    // getStockDifferences=async(stock)=>{
+    //     let price = await this.getPrice(stock.symbol)
+    //     return price.data.latestPrice;
+    // }
+    // getSum=async()=>{
+    //     let sum = 0;
+    //     for(let i=0;this.state.Stocks.length;i++){
+    //         sum+= await this.getStockDifferences(this.state.Stocks[i]);
+    //     }
+    //     console.log(sum)
+    //     this.setState({
+    //         loading: false
+    //     })
+    //     return sum;
+    // }
     editPortfolio = (quant, datapack, event) => {
         event.preventDefault();
         this.updatePortfolio(this.makeTempPortfolio(quant))
