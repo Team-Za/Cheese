@@ -467,7 +467,7 @@ class Market extends React.Component {
                   <div className="field-line">
                     <input
                       className="sign-up-inputs"
-                      value={this.state.quantity}
+                      
                       onChange={this.handleInputChange}
                       name="quantity"
                       placeholder="Quantity (required)"
