@@ -157,9 +157,9 @@ class Market extends React.Component {
         else {
           let tempPack = { price: price }
           tempPack.message = (<div>
-              <div className="single-modal-message">`Current Balance: ${this.state.result.balance}</div>
-                  <div className="single-modal-message">This will cost $${price} per share for a total of $${this.handleNumber(this.state.quantity * price)}</div>
-                  <div className="single-modal-message">press OK to continue`</div>
+              <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
+                  <div className="single-modal-message">This will cost <span className="modal-price">${price}</span> per share for a total of <span className="modal-price">${this.handleNumber(this.state.quantity * price)}</span>.</div>
+                  <div className="single-modal-message">Press OK to continue</div>
                   </div>);
           tempPack.symbol = symbol;
           this.setState({
