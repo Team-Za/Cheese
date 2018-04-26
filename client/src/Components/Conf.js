@@ -7,22 +7,25 @@ class Conf extends React.Component {
     }
     chooseMethod = () => {
         if(this.props.mode==="add") {
-                return <button onClick={(e) => {
+                return <div className="modal-confirm-btn-container">
+                <button className="modal-confirm-btn" onClick={(e) => {
                     console.log(this.props)
                     this.props.handleAdd2(this.props.datapack, e);
-                }}>Ok</button>
+                }}>Ok</button></div>
         }
         else if(this.props.mode==="sell"){
-            return <button onClick={(e) => {
+            return <div className="modal-confirm-btn-container">
+            <button className="modal-confirm-btn" onClick={(e) => {
                 console.log(this.props)
                 this.props.handleSell2(this.props.datapack, e);
-            }}>Ok</button>
+            }}>Ok</button></div>
         }
         else{
-            return <button onClick={(e) => {
+            return <div className="modal-confirm-btn-container">
+            <button className="modal-confirm-btn" onClick={(e) => {
                 console.log(this.props)
                 this.props.handleFormSubmit2(this.props.datapack, e);
-            }}>Ok</button>
+            }}>Ok</button></div>
         }
     }
     render = () => {
@@ -34,7 +37,10 @@ class Conf extends React.Component {
                         <h1>Confirm</h1>
                         <p>{this.props.datapack.message}</p>
                         {console.log(this.props.method)}
-                        <button onClick={this.props.handleClose}>Cancel</button> {this.chooseMethod()}
+                        <div className="modal-btns-container">
+                        <div className="modal-cancel-btn-container">
+                        <button className="modal-cancel-btn" onClick={this.props.handleClose}>Cancel</button></div> {this.chooseMethod()}
+                        </div>
                     </ModalDialog>
                 </ModalContainer>
             }
