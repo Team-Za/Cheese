@@ -126,12 +126,14 @@ class Sidebar extends React.Component {
                             {this.state.barstate === "Edit" ?
                                 (<div>
                                     <p>Current Mode: {this.state.barstate}</p>
-                                    <button style={buttonColor} onClick={(e) => {
+                                    <div className="submit-btn-container">
+                                    <button className="sidebar-submit-button" onClick={(e) => {
                                         console.log("editing");
                                         this.props.testHandleEdit(this.state.quantity, this.props.datapack, e);
                                     }}>
-                                    submit
+                                    Submit
                                     </button>
+                                    </div>
                                 </div>) : (<div>
                                     <h4>Current price: {this.props.datapack.newPrice}</h4>
                                     <p>Current Mode: {this.state.barstate}</p>
