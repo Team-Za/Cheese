@@ -204,8 +204,8 @@ class Dashboard extends React.Component {
 
 
 
-        }).then((data) => {
-            this.setState({
+        }).then(async (data) => {
+            await this.setState({
                 eachStockPrice: data,
                 loading: false
             })
