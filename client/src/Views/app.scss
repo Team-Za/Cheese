@@ -150,6 +150,44 @@ a:focus {
   box-shadow: $shadow;
 }
 
+.comparison-container {
+  background-color: #2e323a;
+    padding: 20px;
+    color: #ffffff;
+    font-family: "Concert One", cursive;
+    font-size: 15px;
+    border-radius: 6px;
+    -webkit-box-shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+    box-shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+}
+
+.welcome {
+  font-size: 25px;
+  border-bottom: 0.2pt solid rgba(255, 255, 255, 0.2);
+}
+
+.daily-portfolio {
+  margin-top: 30px;
+  font-size: 20px;
+  width: 40%;
+  position: relative;
+  display: inline-block;
+}
+
+.daily-portfolio-amount {
+  margin-top: 30px;
+  font-size: 20px;
+  width: 59%;
+  position: relative;
+  display: inline-block;
+  text-align: right;
+}
+
+.difference {
+  color: rgb(185, 185, 185);
+  text-align: right;
+}
+
 .landing-page-body {
   margin-top: 30px;
   position: relative;
@@ -808,6 +846,7 @@ a:focus {
   animation: bounce-down 3s infinite;
   color: rgb(226, 5, 5);
   display: inline-flex;
+  margin: 0 5px;
 }
 
 @-moz-keyframes bounce-down {
@@ -860,6 +899,7 @@ a:focus {
   animation: bounce-up 3s infinite;
   color: $cool-green;
   display: inline-flex;
+  margin: 0 5px;
 }
 
 @-moz-keyframes bounce-up {

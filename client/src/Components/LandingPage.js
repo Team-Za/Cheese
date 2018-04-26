@@ -16,6 +16,7 @@ import SignUpForm from './SignUpForm';
 import Auth from '../modules/Auth';
 import LoginPage from '../containers/LoginPage.jsx';
 import SignUpPage from '../containers/SignUpPage.jsx';
+import PortfolioComparison from './PortfolioComparison';
 
 class LandingPage extends React.Component {
   state = {

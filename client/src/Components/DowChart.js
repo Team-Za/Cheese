@@ -6,6 +6,7 @@ import Auth from '../modules/Auth';
 import LoginPage from '../containers/LoginPage.jsx';
 import SignUpPage from '../containers/SignUpPage.jsx';
 import { NavLink, Link, IndexLink } from 'react-router-dom';
+import PortfolioComparison from './PortfolioComparison';
 
 class DowChart extends React.Component {
     state = {
@@ -83,7 +84,7 @@ class DowChart extends React.Component {
                 </div>
 
                 <div className="sign-up">
-                    {!Auth.isUserAuthenticated() &&
+                    {!Auth.isUserAuthenticated() ?
                         <Fragment>
                             <div className="form-bar col-md-12">
                                 <div className={`tab-login-btn ${this.state.activeLogin}`} onClick={() => {this.changeForm("login"); this.changeActiveClasses("login")}}>Log in</div>
@@ -98,7 +99,10 @@ class DowChart extends React.Component {
                             : <div> No Form</div>
                             }
                         </Fragment>
-                    }
+                    : <div className="comparison-container col-md-12">
+                        <PortfolioComparison/>
+                    </div> 
+                }
                 </div>
             </div>
         );
