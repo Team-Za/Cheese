@@ -63,8 +63,8 @@ class PortfolioComparison extends React.Component {
             var userPort;
 
             if(pricesToCompare !== undefined) {
-                difference = (pricesToCompare.userTotalPortPrice / pricesToCompare.currentTotalPortPrice).toFixed(4);
                 change = (pricesToCompare.currentTotalPortPrice - pricesToCompare.userTotalPortPrice);
+                difference = ((change / pricesToCompare.userTotalPortPrice) * 100).toFixed(4);
                 userPort = pricesToCompare.userTotalPortPrice.toFixed(2);
             }
             if(pricesToCompare === undefined) {
@@ -101,7 +101,8 @@ class PortfolioComparison extends React.Component {
                     :
                     <Fragment>
                         <div className="welcome">Welcome {this.state.userName},</div>
-                        <div className="daily-portfolio"> Overall Portfolio:</div> <div className="daily-portfolio-amount">${this.state.portfolioTotal}
+                        <div className="daily-portfolio"> Purchased Portfolio:</div> <div className="daily-portfolio-amount">${this.state.portfolioTotal}</div>
+                        <div className="daily-portfolio"> Current Portfolio:</div> <div className="daily-portfolio-amount">${this.state.currentTotal}
                         {this.state.portfolioChange === "positive" ?
                             <i className="fas fa-arrow-up bounce-up"></i>
                         : this.state.portfolioChange === "negative" ?
@@ -109,7 +110,6 @@ class PortfolioComparison extends React.Component {
                         : <div></div>}
                         </div>
                         <div className="difference">({this.state.portfolioDifference}) %</div>
-                        <div>{this.state.currentTotal}</div>
                     </Fragment>
                 }
             </div>
