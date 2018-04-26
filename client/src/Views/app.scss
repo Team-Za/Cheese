@@ -405,15 +405,15 @@ a:focus {
 }
 
 .edit-price-btn {
-  border-radius: 0px 3px 3px 0px;
+  border-radius: 3px;
   padding: 1% 2% 1% 2%;
   position: relative;
-  margin-left: auto;
   background: $lighter-background;
   border: none;
   color: white;
   transition: .3s;
   font-size: 14px;
+  left: 0;
 }
 
 
@@ -651,6 +651,27 @@ a:focus {
   font-family: $new-font;
 }
 
+.sidebar-submit-button {
+  border-radius: 3px;
+  padding: 1% 1% 1% 1%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.sidebar-submit-button:hover {
+  transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.submit-btn-container {
+  text-align: right
+}
+
 .portfolio {
   background: $dark-background;
   padding: 20px;
@@ -838,6 +859,100 @@ a:focus {
   transform: scale(1.2);
 }
 
+// Modal CSS
+.narcissus_17w311v {
+border: 3pt solid $lighter-background;
+}
+
+.modal-header {
+  font-family: $new-font;
+  background-color: white;
+  text-transform: uppercase;
+  color: $lighter-background;
+  font-size: 30px;
+  border-bottom: 2px solid $lighter-background !important;
+  padding-left: 0px !important;
+}
+
+.modal-message {
+  font-family: $new-font;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.single-modal-message {
+  position: relative;
+  display: block;
+  margin: 10px 0px;
+}
+
+.modal-price {
+  color: rgb(226, 5, 5);
+}
+
+.modal-total {
+  color: rgb(226, 5, 5);
+}
+
+.modal-balance {
+  color: $cool-green;
+}
+
+.modal-new-price {
+  color: $cool-green;
+}
+
+.modal-confirm-btn {
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px ;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+  font-family: $new-font;
+}
+
+.modal-confirm-btn:hover {
+  opacity: .6;
+}
+
+.modal-cancel-btn {
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px ;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+  font-family: $new-font;
+}
+
+.modal-cancel-btn:hover {
+  opacity: .6;
+}
+
+.modal-confirm-btn-container {
+  position: relative;
+  display: inline-block;
+}
+
+.modal-cancel-btn-container {
+  position: relative;
+  display: inline-block;
+}
+
+.modal-btns-container {
+  position: relative;
+  text-align: right;
+}
 
 // Down Arrow Animation
 .bounce-down {
