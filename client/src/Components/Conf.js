@@ -34,8 +34,8 @@ class Conf extends React.Component {
                 this.props.isShowingModal &&
                 <ModalContainer onClose={this.props.handleClose}>
                     <ModalDialog onClose={this.props.handleClose}>
-                        <h1>Confirm</h1>
-                        <p>{this.props.datapack.message}</p>
+                        <div className="modal-header">Are You Sure?</div>
+                        <div className="modal-message">{this.props.datapack.message}</div>
                         {console.log(this.props.method)}
                         <div className="modal-btns-container">
                         <div className="modal-cancel-btn-container">

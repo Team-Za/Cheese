@@ -135,7 +135,8 @@ class Sidebar extends React.Component {
                                 </div>) : (<div>
                                     <h4>Current price: {this.props.datapack.newPrice}</h4>
                                     <p>Current Mode: {this.state.barstate}</p>
-                                    <button style={buttonColor} onClick={(e) => {
+                                    <div className="submit-btn-container">
+                                    <button className="sidebar-submit-button" onClick={(e) => {
                                         if (this.state.barstate === "Buy") {
                                             console.log("adding");
                                             this.props.testHandleAdd(this.state.quantity, this.props.datapack, e);
@@ -145,8 +146,9 @@ class Sidebar extends React.Component {
                                             this.props.testHandleSell(this.state.quantity, this.props.datapack, e);
                                         }
                                     }}>
-                                        submit
+                                        Submit
                             </button>
+                            </div>
                                 </div>)}
                         </fieldset>
                     </form>

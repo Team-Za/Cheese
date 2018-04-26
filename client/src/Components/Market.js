@@ -156,9 +156,11 @@ class Market extends React.Component {
         }
         else {
           let tempPack = { price: price }
-          tempPack.message = (`Current Balance: ${this.state.result.balance}\n
-                    This will cost $${price} per share for a total of $${this.handleNumber(this.state.quantity * price)}\n
-                    press OK to continue`);
+          tempPack.message = (<div>
+              <div className="single-modal-message">`Current Balance: ${this.state.result.balance}</div>
+                  <div className="single-modal-message">This will cost $${price} per share for a total of $${this.handleNumber(this.state.quantity * price)}</div>
+                  <div className="single-modal-message">press OK to continue`</div>
+                  </div>);
           tempPack.symbol = symbol;
           this.setState({
             datapack: tempPack,
@@ -262,16 +264,17 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      alert("Please enter a number greater than 0");
+      alert(<div className="single-modal-message">Please enter a number greater than 0</div>);
     }
     else if (userQuant > datapack.quantity) {
-      alert("You don't have that much of this stock");
-    }
-    else {
-      tempPack.message = (`Current Balance: ${this.state.result.balance}\n
-                This will add $${newPrice} per share to your account for a total of $${this.handleNumber(userQuant * newPrice)} 
-                and a net change of $${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}.\n
-                Press OK to continue`);
+      alert(<div className="single-modal-message">You don't have that much of this stock</div>);
+    
+    } else {
+      tempPack.message = (<div>
+      <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
+      <div className="single-modal-message">This will add <span className="modal-new-price">${newPrice}</span> per share to your account for a total of <span className="modal-new-price">${this.handleNumber(userQuant * newPrice)} </span>
+                and a net change of <span className="modal-new-price">${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}</span>.</div>
+                <div className="single-modal-message">Press OK to continue</div></div>);
       tempPack.userQuant = userQuant;
       tempPack.newPrice = newPrice;
       this.setState({
@@ -312,15 +315,17 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      alert("Please enter a number greater than 0");
+      alert(<div className="single-modal-message">Please enter a number greater than 0</div>);
     }
     else if (userQuant * price > this.state.result.balance) {
-      alert(`The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`)
+      alert(<div className="single-modal-message">The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}</div>)
     }
     else {
-      tempPack.message = (`Current Balance: $${this.state.result.balance}\n
-                This will cost $${price} per share for a total of $${this.handleNumber(userQuant * price)}\n
-                press OK to continue`);
+      tempPack.message = (<div>
+        <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
+        <div className="single-modal-message">This will cost <span className="modal-price">${price}</span> per share for a total of <span className="modal-total">${this.handleNumber(userQuant * price)}.</span></div>
+        <div className="single-modal-message">Press OK to continue</div>
+        </div>);
       tempPack.userQuant = userQuant;
       tempPack.price = price;
       this.setState({
@@ -399,7 +404,7 @@ class Market extends React.Component {
         <div className="portfolio col-md-5">
           {this.state.loading ? (<div>Loading...</div>) :
             (<div>
-              <div className="panel-header balance-container">Current Balance: ${this.state.result.balance}
+              <div className="panel-header balance-container">Current Balance: <span className="current-balance">${this.state.result.balance}</span>
                 <div className="edit-balance">
                   <ToggleElement
                     offMessage={"Edit"}
