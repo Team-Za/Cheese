@@ -144,7 +144,8 @@ class Market extends React.Component {
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
       if (localStorage.getItem(this.state.stockName) === null) {
-        this.setState({errorAlert: "Stock name not found"});
+        this.setState({errorStock: "Stock name not found"});
+        this.setState({errorAlert: ""});
       }
       else {
         symbol = localStorage.getItem(this.state.stockName);
@@ -162,6 +163,8 @@ class Market extends React.Component {
                   <div className="single-modal-message">Press OK to continue</div>
                   </div>);
           tempPack.symbol = symbol;
+          this.setState({errorAlert: ""})
+          this.setState({errorStock: ""})
           this.setState({
             datapack: tempPack,
             isShowingModal: true,
@@ -171,7 +174,8 @@ class Market extends React.Component {
       }
     }
     else {
-      this.setState({errorAlert: "Please fill out required fields!"});
+      this.setState({errorAlert: "Please fill out required fields with proper input!"});
+      this.setState({errorStock: ""});
     }
   };
   handleFormSubmit2 = async (datapack, event) => {
@@ -264,10 +268,10 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      alert(<div className="single-modal-message">Please enter a number greater than 0</div>);
+      this.setState({errorAlertSide: "Please enter a number greater than 0"});
     }
     else if (userQuant > datapack.quantity) {
-      alert(<div className="single-modal-message">You don't have that much of this stock</div>);
+      this.setState({errorAlertSide: "You don't have that much of this stock"});
     
     } else {
       tempPack.message = (<div>
@@ -282,6 +286,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "sell"
       });
+      this.setState({errorAlertSide: ""});
     }
   };
   testHandleSell2 = async (datapack, event) => {
@@ -315,10 +320,10 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      alert(<div className="single-modal-message">Please enter a number greater than 0</div>);
+      this.setState({errorAlertSide: "Please enter a number greater than 0"});
     }
     else if (userQuant * price > this.state.result.balance) {
-      alert(<div className="single-modal-message">The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}</div>)
+      this.setState({errorAlertSide: `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`})
     }
     else {
       tempPack.message = (<div>
@@ -333,6 +338,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "add"
       });
+      this.setState({errorAlertSide: ""});
     }
   };
   testHandleAdd2 = async (datapack, event) => {
@@ -447,6 +453,7 @@ class Market extends React.Component {
               testHandleAdd={this.testHandleAdd}
               testHandleEdit={this.testHandleEdit}
               cancelOut={this.cancelOut}
+              errorAlertSide={this.state.errorAlertSide}
             />
           </div>) : (
             <div className="row col-md-6 col-md-offset-1 add-stocks">
@@ -463,6 +470,7 @@ class Market extends React.Component {
                       placeholder="Name of stock (required)"
                     />
                   </div>
+                  <div><p className="error-message">{this.state.errorStock}</p></div>
                   <div className="panel-header">Quantity:</div>
                   <div className="field-line">
                     <input
@@ -472,6 +480,7 @@ class Market extends React.Component {
                       placeholder="Quantity (required)"
                     />
                   </div>
+                  <div><p className="error-message">{this.state.errorAlert}</p></div>
                   <div className="submit-btn">
                     <input className="sign-up-button" type="submit" onClick={this.handleFormSubmit} value="Add Stock" />
                   </div>
