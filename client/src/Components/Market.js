@@ -22,9 +22,8 @@ class Market extends React.Component {
     quantity: 0,
     userId: sessionStorage.getItem("UserId"),
     portId: -1,
-    sidebarArgs: [],
-    sidebarState: "add",
     companies: [],
+    symbol: "",
     Stocks: [],
     errorMessage: "",
     error: false,
@@ -62,9 +61,17 @@ class Market extends React.Component {
     const prom1 = new Promise((resolve) => {
       for (let i = 0; i < localStorage.length; i++) {
         let tempCompName = localStorage.key(i);
+        let tempCompSymbol = localStorage.getItem(tempCompName);
+        let tempComp = {
+          name: tempCompName,
+          symbol: tempCompSymbol
+        }
         const filter = this.state.stockName.toUpperCase();
         if (tempCompName.toUpperCase().indexOf(filter) > -1) {
-          comps.push(tempCompName);
+          comps.push(tempComp);
+        }
+        else if (tempCompSymbol.toUpperCase().indexOf(filter) > -1) {
+          comps.push(tempComp);
         }
       }
     }).then(this.setState({ companies: comps }))
@@ -74,7 +81,7 @@ class Market extends React.Component {
   }
   handleInputChange = event => {
     const { name, value } = event.target;
-    if (typeof value === "string" && value.length > 3) {
+    if (typeof value === "string" && value.length > 2) {
       this.filterInput();
       console.log(this.state.companies);
     }
@@ -143,39 +150,49 @@ class Market extends React.Component {
     });
     if (this.state.stockName !== "" && (this.state.quantity > 0)) {
       let symbol = "";
-      if (localStorage.getItem(this.state.stockName) === null) {
-        this.setState({errorStock: "Stock name not found"});
-        this.setState({errorAlert: ""});
+      if (localStorage.getItem(this.state.stockName.trim())) {
+        symbol = localStorage.getItem(this.state.stockName.trim());
       }
       else {
-        symbol = localStorage.getItem(this.state.stockName);
-        const quoteData = await this.getPrice(symbol);
-        console.log(quoteData.data, new Date());
-        const price = this.handleNumber(quoteData.data.latestPrice);
-        if ((this.state.quantity * price) > this.state.result.balance) {
-          this.setState({errorAlert: "You cannot afford that much"});
-        }
-        else {
-          let tempPack = { price: price }
-          tempPack.message = (<div>
-              <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
-                  <div className="single-modal-message">This will cost <span className="modal-price">${price}</span> per share for a total of <span className="modal-price">${this.handleNumber(this.state.quantity * price)}</span>.</div>
-                  <div className="single-modal-message">Press OK to continue</div>
-                  </div>);
-          tempPack.symbol = symbol;
-          this.setState({errorAlert: ""})
-          this.setState({errorStock: ""})
-          this.setState({
-            datapack: tempPack,
-            isShowingModal: true,
-            mode: "submit"
-          });
-        }
+        symbol = this.state.stockName.trim();
       }
+      await API.allSymbols(`/stock/${symbol}/quote`)
+        .then(res => {
+          console.log(symbol, "good");
+          console.log(res.data, new Date());
+          const price = this.handleNumber(res.data.latestPrice);
+          const companyName = res.data.companyName;
+          console.log(price, companyName, new Date());
+          if ((this.state.quantity * price) > this.state.result.balance) {
+            this.setState({ errorAlert: "You cannot afford that much" });
+          }
+          else {
+            let tempPack = { price: price }
+            tempPack.message = (<div>
+              <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
+              <div className="single-modal-message">This will cost <span className="modal-price">${price}</span> per share for a total of <span className="modal-price">${this.handleNumber(this.state.quantity * price)}</span>.</div>
+              <div className="single-modal-message">Press OK to continue</div>
+            </div>);
+            tempPack.symbol = symbol;
+            this.setState({
+              errorAlert: "",
+              errorStock: "",
+              stockName: companyName,
+              datapack: tempPack,
+              isShowingModal: true,
+              mode: "submit"
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          this.setState({ errorStock: "Stock name not found" });
+          this.setState({ errorAlert: "" });
+        });
     }
     else {
-      this.setState({errorAlert: "Please fill out required fields with proper input!"});
-      this.setState({errorStock: ""});
+      this.setState({ errorAlert: "Please fill out required fields with proper input!" });
+      this.setState({ errorStock: "" });
     }
   };
   handleFormSubmit2 = async (datapack, event) => {
@@ -268,17 +285,17 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      this.setState({errorAlertSide: "Please enter a number greater than 0"});
+      this.setState({ errorAlertSide: "Please enter a number greater than 0" });
     }
     else if (userQuant > datapack.quantity) {
-      this.setState({errorAlertSide: "You don't have that much of this stock"});
-    
+      this.setState({ errorAlertSide: "You don't have that much of this stock" });
+
     } else {
       tempPack.message = (<div>
-      <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
-      <div className="single-modal-message">This will add <span className="modal-new-price">${newPrice}</span> per share to your account for a total of <span className="modal-new-price">${this.handleNumber(userQuant * newPrice)} </span>
-                and a net change of <span className="modal-new-price">${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}</span>.</div>
-                <div className="single-modal-message">Press OK to continue</div></div>);
+        <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
+        <div className="single-modal-message">This will add <span className="modal-new-price">${newPrice}</span> per share to your account for a total of <span className="modal-new-price">${this.handleNumber(userQuant * newPrice)} </span>
+          and a net change of <span className="modal-new-price">${this.handleNumber((userQuant * newPrice) - (userQuant * datapack.price))}</span>.</div>
+        <div className="single-modal-message">Press OK to continue</div></div>);
       tempPack.userQuant = userQuant;
       tempPack.newPrice = newPrice;
       this.setState({
@@ -286,7 +303,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "sell"
       });
-      this.setState({errorAlertSide: ""});
+      this.setState({ errorAlertSide: "" });
     }
   };
   testHandleSell2 = async (datapack, event) => {
@@ -320,17 +337,17 @@ class Market extends React.Component {
     const userQuant = parseInt(userResp, 10);
     console.log(userQuant)
     if (userQuant === null || isNaN(userQuant) || userQuant === undefined || userQuant === 0) {
-      this.setState({errorAlertSide: "Please enter a number greater than 0"});
+      this.setState({ errorAlertSide: "Please enter a number greater than 0" });
     }
     else if (userQuant * price > this.state.result.balance) {
-      this.setState({errorAlertSide: `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}`})
+      this.setState({ errorAlertSide: `The quantity of stock you purchased ${userQuant} has a total price of $${this.handleNumber(userQuant * price)} which is greater than your Current Balance: ${this.state.result.balance}` })
     }
     else {
       tempPack.message = (<div>
         <div className="single-modal-message">Current Balance: <span className="modal-balance">${this.state.result.balance}</span></div>
         <div className="single-modal-message">This will cost <span className="modal-price">${price}</span> per share for a total of <span className="modal-total">${this.handleNumber(userQuant * price)}.</span></div>
         <div className="single-modal-message">Press OK to continue</div>
-        </div>);
+      </div>);
       tempPack.userQuant = userQuant;
       tempPack.price = price;
       this.setState({
@@ -338,7 +355,7 @@ class Market extends React.Component {
         isShowingModal: true,
         mode: "add"
       });
-      this.setState({errorAlertSide: ""});
+      this.setState({ errorAlertSide: "" });
     }
   };
   testHandleAdd2 = async (datapack, event) => {
@@ -490,7 +507,7 @@ class Market extends React.Component {
               <div>
                 <ul>
                   {this.state.companies.map(company => (
-                    <div className="company" onClick={() => this.setState({ stockName: company })}>{company}</div>
+                    <div className="company" onClick={() => this.setState({ stockName: company.name })}>{company.name} {company.symbol}</div>
                   ))}
                 </ul>
               </div>
