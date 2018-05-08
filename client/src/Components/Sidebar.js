@@ -121,7 +121,8 @@ class Sidebar extends React.Component {
                                     placeholder={"Amount"}
                                     maxLength={8}
                                 />
-                            </div>
+                            </div><div className="error-message">{this.props.errorAlertSide}</div>
+                            
                             <h4>Price purchased: {this.props.datapack.price}</h4>
                             {this.state.barstate === "Edit" ?
                                 (<div>
