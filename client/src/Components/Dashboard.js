@@ -3,7 +3,10 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 import API from "../utils/API";
 import '../Views/app.scss';
 import { portApi, stockApi, userApi } from "../utils/serverAPI";
-import { Brush, BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { Brush, BarChart, Bar, ReferenceLine, PieChart, Pie, Cell, Sector, AreaChart, Area, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { auto, ResponsiveBar } from '@nivo/bar';
+import { ResponsivePie } from '@nivo/pie';
+import TwoLevelPieChart from "./TwoLevelPieChart";
 
 class Dashboard extends React.Component {
     state = {
@@ -29,7 +32,7 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         Promise.all([this.searchPortfolios(this.state.userId), this.getFirstUserStock(this.state.userId), this.getUsersStocks("/stock/aapl/chart/1d"), this.plotData()]).then(values => {
-            if(values[1] === false) {
+            if (values[1] === false) {
                 this.setState({
                     data: values[2],
                     userPortfolioData: values[0],
@@ -44,6 +47,7 @@ class Dashboard extends React.Component {
                 });
                 this.getPieChartData();
             } else {
+                console.log("THE DATA", values[1]);
                 this.setState({
                     data: values[1],
                     userPortfolioData: values[0],
@@ -57,7 +61,7 @@ class Dashboard extends React.Component {
                     // testData: values.allStockPrices
                 });
                 this.getPieChartData();
-            
+
             }
         });
 
@@ -99,14 +103,14 @@ class Dashboard extends React.Component {
 
     getFirstUserStock = id => {
         var stock = this.searchPortfolios(id).then(data => {
-            if(data.length === 0) {
+            if (data.length === 0) {
                 return false;
             } else {
                 return API.chartData(data[0].symbol)
-                .then(res => {
-                    return this.getData(res.data)
-                })
-                .catch(err => console.log(err));
+                    .then(res => {
+                        return this.getData(res.data)
+                    })
+                    .catch(err => console.log(err));
             }
         })
         return stock;
@@ -163,7 +167,7 @@ class Dashboard extends React.Component {
 
             if (stockData[i].high === -1) {
                 dataArray.push({
-                    name: stockData[i].label, 
+                    name: stockData[i].label,
                     Price: latestNumber
                 })
             } else {
@@ -227,6 +231,7 @@ class Dashboard extends React.Component {
         );
     }
 
+
     render() {
         return (
             <div>
@@ -245,15 +250,17 @@ class Dashboard extends React.Component {
                                     <div className="panel-heading">
                                         {this.state.activeStock}
                                     </div>
-                                    <LineChart width={600} height={300} data={this.state.data}
-                                        margin={{ top: 10, right: 30, left: 20, bottom: 40 }}>
-                                        <XAxis dataKey="name" stroke="#e7f1f1" />
-                                        <YAxis type="number" stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Line type="monotone" isAnimationActive={true} dataKey="Price" stroke="#6e80bf" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 5 }} />
-                                    </LineChart>
+                                    <ResponsiveContainer height={"100%"} width={"100%"} minHeight={"400px"}>
+                                        <LineChart width={600} height={300} data={this.state.data}
+                                            margin={{ top: 10, right: 30, left: 20, bottom: 40 }}>
+                                            <XAxis dataKey="name" stroke="#e7f1f1" />
+                                            <YAxis type="number" stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Line type="monotone" isAnimationActive={true} dataKey="Price" stroke="#6e80bf" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 5 }} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
                                 </div>
 
                                 : this.state.whichChart === "area" ?
@@ -261,37 +268,41 @@ class Dashboard extends React.Component {
                                         <div className="panel-heading">
                                             {this.state.activeStock}
                                         </div>
-                                        <AreaChart width={600} height={300} data={this.state.data}
-                                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                            <CartesianGrid strokeDasharray="2 3" />
-                                            <XAxis dataKey="name" stroke="#e7f1f1" />
-                                            <YAxis stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
-                                            <defs>
-                                                <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
-                                                    <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
-                                                </linearGradient>
-                                            </defs>
-                                            <Tooltip />
-                                            <Area type='monotone' dataKey='Price' stroke='#6e80bf' strokeWidth={2} dot={{ r: 0 }} activeDot={{ r: 5 }} fill="url(#test)" />
-                                        </AreaChart>
+                                        <ResponsiveContainer height={"100%"} width={"100%"} minHeight={"400px"}>
+                                            <AreaChart width={600} height={300} data={this.state.data}
+                                                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                                <CartesianGrid strokeDasharray="2 3" />
+                                                <XAxis dataKey="name" stroke="#e7f1f1" />
+                                                <YAxis stroke="#e7f1f1" domain={['dataMin - 2', 'dataMax + 2']} />
+                                                <defs>
+                                                    <linearGradient id="test" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#6e80bf" stopOpacity={1} />
+                                                        <stop offset="95%" stopColor="#4cc2f0" stopOpacity={.5} />
+                                                    </linearGradient>
+                                                </defs>
+                                                <Tooltip />
+                                                <Area type='monotone' dataKey='Price' stroke='#6e80bf' strokeWidth={2} dot={{ r: 0 }} activeDot={{ r: 5 }} fill="url(#test)" />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
                                     </div>
                                     : this.state.whichChart === "bar" ?
                                         <div>
                                             <div className="panel-heading">
                                                 {this.state.activeStock}
                                             </div>
-                                            <BarChart width={600} height={300} data={this.state.data}
-                                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="name" />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
-                                                <ReferenceLine y={0} stroke='#000' />
-                                                <Brush dataKey='name' height={30} stroke="#6e80bf" />
-                                                <Bar dataKey="Price" fill="#8884d8" />
-                                            </BarChart>
+                                            <ResponsiveContainer height={"100%"} width={"100%"} minHeight={"400px"}>
+                                                <BarChart width={600} height={300} data={this.state.data}
+                                                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                                    <CartesianGrid strokeDasharray="3 3" />
+                                                    <XAxis dataKey="name" stroke="#e7f1f1" />
+                                                    <YAxis stroke="#e7f1f1" />
+                                                    <Tooltip />
+                                                    <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
+                                                    <ReferenceLine y={0} stroke='#000' />
+                                                    <Brush dataKey='name' height={30} stroke="#6e80bf" />
+                                                    <Bar dataKey="Price" fill="#8884d8" />
+                                                </BarChart>
+                                            </ResponsiveContainer>
                                         </div>
                                         : <div>test</div>
                             }
@@ -311,26 +322,77 @@ class Dashboard extends React.Component {
                         <div className="col-md-5 col-md-offset-1 bar-chart">
                             {/* <div onClick={() => this.getPieChartData()}>Click Me</div> */}
                             <div className="panel-heading">
-                            Overall Stock Percentage
+                                Overall Stock Percentage
                     </div>
+                            {/* <ResponsiveContainer  width={"100%"} minHeight={"400px"}>
+                    <ResponsivePie
+                            data={this.state.eachStockPrice}
+                            margin={{
+                                "top": 40,
+                                "right": 80,
+                                "bottom": 80,
+                                "left": 80
+                            }}
+                            innerRadius={0.5}
+                            padAngle={0.7}
+                            cornerRadius={3}
+                            colors={this.state.colors}
+                            colorBy="name"
+                            cornerRadius={5}
+                            borderColor="inherit:darker(0.6)"
+                            radialLabel="name"
+                            radialLabelsSkipAngle={10}
+                            radialLabelsTextXOffset={6}
+                            radialLabelsTextColor="#ffffff"
+                            radialLabelsLinkStrokeWidth={3}
+                            radialLabelsLinkOffset={-2}
+                            radialLabelsLinkDiagonalLength={20}
+                            radialLabelsLinkHorizontalLength={24}
+                            radialLabelsLinkStrokeWidth={1}
+                            radialLabelsLinkColor="inherit"
+                            slicesLabelsSkipAngle={12}
+                            slicesLabelsTextColor="#fff"
+                            slicesLabel="name"
+                            animate={true}
+                            motionStiffness={90}
+                            motionDamping={15}
+                            legends={[
+                                {
+                                    "anchor": "bottom",
+                                    "direction": "row",
+                                    "translateY": 56,
+                                    "itemWidth": 100,
+                                    "itemHeight": 14,
+                                    "symbolSize": 14,
+                                    "symbolShape": "circle",
+                                    "label": "name"
+                                }
+                            ]}
+                        />
+                        </ResponsiveContainer> */}
+                            <ResponsiveContainer height={"100%"} width={"100%"} minHeight={"400px"}>
+                                <TwoLevelPieChart />
+                            </ResponsiveContainer>
 
-                            <PieChart width={400} height={400} onMouseEnter={this.onPieEnter}>
-                                <Pie
+                            {/* <ResponsiveContainer height={"100%"} width={"100%"} minHeight={"400px"}>
+                                <PieChart width={400} height={400} onMouseEnter={this.onPieEnter()}>
+                                    <Pie
 
-                                    data={this.state.eachStockPrice}
-                                    dataKey="value"
-                                    cx={200}
-                                    cy={200}
-                                    labelLine={true}
-                                    label={true}
-                                    outerRadius={120}
-                                    fill="#8884d8"
-                                >
-                                    {
-                                        this.state.eachStockPrice.map((entry, index) => <Cell fill={this.state.colors[index % this.state.colors.length]} />)
-                                    }
-                                </Pie>
-                            </PieChart>
+                                        data={this.state.eachStockPrice}
+                                        dataKey="value"
+                                        cx={250}
+                                        cy={200}
+                                        labelLine={true}
+                                        label={true}
+                                        outerRadius={120}
+                                        fill="#8884d8"
+                                    >
+                                        {
+                                            this.state.eachStockPrice.map((entry, index) => <Cell fill={this.state.colors[index % this.state.colors.length]} />)
+                                        }
+                                    </Pie>
+                                </PieChart>
+                            </ResponsiveContainer> */}
                         </div>
                     </div>
                 }
