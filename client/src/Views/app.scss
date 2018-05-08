@@ -3,6 +3,7 @@ $lighter-background: #3e434d;
 $tab-background: #363c44;
 $light-blue: rgb(43, 123, 158);
 $lighter-blue: rgb(51, 152, 212);
+$light-gray: rgb(185, 185, 185);
 $cool-green: #67c186;
 $font-color: #ffffff;
 $hover-font-color: #67c186;
@@ -12,6 +13,17 @@ $gradient-gray: linear-gradient(to bottom right,#454e58, #65737f);
 $gradient-blue: linear-gradient(to right,rgba(110, 128, 191, 0.6), rgba(76, 194, 240, .6));
 $gradient-red: linear-gradient(to right, #f07089, #f5918d);
 $shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+
+
+html, body { 
+  height: 100% 
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
 .app {
   background-color: azure;
@@ -72,6 +84,12 @@ a:focus {
   border-radius: 6px;
 }
 
+.logo-icon {
+  width: 45px;
+  margin-right: 10px;
+  position: relative;
+  top: -5px;
+}
 
 
 .top-menu {
@@ -622,6 +640,7 @@ a:focus {
   font-size: 15px;
   border-radius: $round-corners;
   box-shadow: $shadow;
+  height: 600px;
 }
 
 // Market Page
@@ -993,6 +1012,68 @@ border: 3pt solid $lighter-background;
 .modal-btns-container {
   position: relative;
   text-align: right;
+}
+
+
+// Footer CSS
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+.phantom {
+  display: block;
+  padding: 20px;
+  height: 60px;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer-container {
+  font-family: $new-font;
+  background-color: $dark-background;
+  color: white;
+  text-transform: uppercase;
+  font-size: 20px;
+  height: 150px;
+}
+
+.footer-component {
+  display: inline-block;
+  position: relative;
+}
+
+.footer-title {
+  display: block;
+  font-size: 14px;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.site-links {
+  display: block;
+  font-size: 12px;
+  color: $light-gray;
+}
+
+.contact {
+  font-size: 14px;
+  border: 2pt solid rgba(76, 194, 240, .6);
+  border-radius: $round-corners;
+  padding: 10px;
+  width: 40%;
+  text-align: center
+}
+
+.envelope-icon {
+  margin-right: 10px;
 }
 
 // Down Arrow Animation

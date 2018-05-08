@@ -42,7 +42,7 @@ const LoginForm = ({
       <div className="button-line">
         <input className="sign-up-button" type="submit" value="Log in" primary />
       </div>
-      <div className="accounts">Don't have an account? <Link to={'/signup'}>Create one</Link>.</div>
+      {/* <div className="accounts">Don't have an account? <Link to={'/signup'}>Create one</Link>.</div> */}
     </form>
     </div>
   </div>
