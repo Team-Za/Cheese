@@ -1076,6 +1076,23 @@ border: 3pt solid $lighter-background;
   margin-right: 10px;
 }
 
+.disclaimer {
+  position: relative;
+  font-size: 10px;
+  right: 0;
+  bottom: 0;
+  color: $light-gray;
+}
+
+.iex {
+  position: relative;
+  text-align: right;
+}
+
+.iex-link:hover {
+  color: white;
+}
+
 // Down Arrow Animation
 .bounce-down {
 	-moz-animation: bounce-down 3s infinite;
