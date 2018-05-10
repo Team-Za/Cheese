@@ -24,6 +24,10 @@ class Footer extends React.Component {
                             </div>
                             <div className="col-md-4 footer-component">
                                 <a href="mailto:StockUp@example.com"><div className="contact"><i className="far fa-envelope envelope-icon"></i>Contact Us</div></a>
+
+                                <div className="iex">
+                                <span className="disclaimer"> Powered by <a className="iex-link" href="https://iextrading.com/api-exhibit-a">IEX Trading</a></span>
+                                </div>
                             </div>
                         </div>
 
