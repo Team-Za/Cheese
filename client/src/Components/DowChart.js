@@ -14,22 +14,29 @@ class DowChart extends React.Component {
         loading: true,
         formChange: "login",
         activeLogin: "active-tab",
-        activeSignup: ""
+        activeSignup: "",
+        previousDow: ""
     };
 
     componentDidMount() {
-        this.getChartData("/stock/dia/chart/1d");
+        Promise.all ([this.getChartData("/stock/dia/chart/1d"), this.getPreviousDow("DIA")]).then(values => {
+            console.log("YEEE", values)
+            this.setState({
+                result: values[0],
+                previousDow: values[1],
+                loading: false
+            })
+        })
     }
 
     getChartData = query => {
-        API.getDow(query)
+        var data = API.getDow(query)
             .then(res => {
                 console.log("Dow Data", res.data[res.data.length - 1]);
-                this.setState({
-                    result: res.data, loading: false
-                })
+                return res.data;
             })
             .catch(err => console.log(err));
+            return data;
     };
 
     checkDowPrice = price => {
@@ -66,6 +73,29 @@ class DowChart extends React.Component {
         }
     }
 
+    getPreviousDow = symbol => {
+        var data = API.previousDay(symbol)
+        .then(res => {
+            console.log("YELLO", res.data.close);
+            return res.data.close;
+        })
+        .catch(err => console.log(err));
+        return data;
+    }
+
+    dowComparison = dowChange => {
+        var newDow = this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh);
+        console.log("New",newDow);
+        console.log("Old",dowChange)
+        if(dowChange < newDow) {
+            return <i className="fas fa-arrow-up bounce-up"></i>
+        } else if(dowChange > newDow) {
+            return <i className="fas fa-arrow-down bounce-down"></i>
+        } else {
+            <div></div>
+        }
+    }
+
     render() {
         console.log("hello", this.state.result[this.state.result.length - 1]);
         return (
@@ -76,33 +106,34 @@ class DowChart extends React.Component {
                             Dow loading...
                         </div> :
                         <div className="dow col-md-12">
-                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)} <i className="fas fa-arrow-down bounce-down"></i><br />
+                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)}{this.dowComparison(this.state.previousDow)}
                             <span className="lp-symbol">(DJI)</span>
                         </div>}
 
                     <Sp500 />
                 </div>
 
+
                 <div className="sign-up">
                     {!Auth.isUserAuthenticated() ?
                         <Fragment>
                             <div className="form-bar col-md-12">
-                                <div className={`tab-login-btn ${this.state.activeLogin}`} onClick={() => {this.changeForm("login"); this.changeActiveClasses("login")}}>Log in</div>
+                                <div className={`tab-login-btn ${this.state.activeLogin}`} onClick={() => { this.changeForm("login"); this.changeActiveClasses("login") }}>Log in</div>
 
-                                <div className={`tab-signup-btn ${this.state.activeSignup}`} onClick={() => {this.changeForm("signup"); this.changeActiveClasses("signup")}}>Sign up</div>
+                                <div className={`tab-signup-btn ${this.state.activeSignup}`} onClick={() => { this.changeForm("signup"); this.changeActiveClasses("signup") }}>Sign up</div>
                             </div>
                             {this.state.formChange === "login" ?
                                 <LoginPage />
 
-                            : this.state.formChange === "signup" ?
-                                <SignUpPage />
-                            : <div> No Form</div>
+                                : this.state.formChange === "signup" ?
+                                    <SignUpPage />
+                                    : <div> No Form</div>
                             }
                         </Fragment>
-                    : <div className="comparison-container col-md-12">
-                        <PortfolioComparison/>
-                    </div> 
-                }
+                        : <div className="comparison-container col-md-12">
+                            <PortfolioComparison />
+                        </div>
+                    }
                 </div>
             </div>
         );
