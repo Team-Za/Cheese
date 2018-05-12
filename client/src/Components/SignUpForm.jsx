@@ -50,7 +50,7 @@ const SignUpForm = ({
       <div className="button-line">
         <input className="sign-up-button" type="submit" value="Sign Up" primary />
       </div>
-      <div className="accounts">Already have an account? <Link to={'/login'}>Log in</Link></div>
+      {/* <div className="accounts">Already have an account? <Link to={'/login'}>Log in</Link></div> */}
     </form>
     </div>
     </div>

@@ -30,5 +30,9 @@ export default {
 
   changeDate: function(stockSymbol, date) {
     return axios.get(BASEURL + "/stock/" + stockSymbol + "/chart/" + date);
+  },
+
+  previousDay: function(stockSymbol) {
+    return axios.get(BASEURL + "/stock/" + stockSymbol + "/previous")
   }
 };
