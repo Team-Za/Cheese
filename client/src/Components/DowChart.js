@@ -20,12 +20,22 @@ class DowChart extends React.Component {
 
     componentDidMount() {
         Promise.all ([this.getChartData("/stock/dia/chart/1d"), this.getPreviousDow("DIA")]).then(values => {
-            console.log("YEEE", values)
-            this.setState({
-                result: values[0],
-                previousDow: values[1],
-                loading: false
-            })
+            console.log("CMON", values)
+            console.log("The Value",values[0]);
+            if (values[0] === "" || values[0] === "undefined" || values[0].length < 1) {
+                console.log("Come here!")
+                this.setState({
+                    result: false,
+                    previousDow: values[1],
+                    loading: false
+                })
+            } else {
+                this.setState({
+                    result: values[0],
+                    previousDow: values[1],
+                    loading: false
+                })
+            }
         })
     }
 
@@ -105,10 +115,20 @@ class DowChart extends React.Component {
                         <div className="dow col-md-12">
                             Dow loading...
                         </div> :
-                        <div className="dow col-md-12">
-                            Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)}{this.dowComparison(this.state.previousDow)}
+                        <Fragment>
+                        {this.state.result === false ?
+                            <div className="dow col-md-12">
+                            Dow N/A
                             <span className="lp-symbol">(DJI)</span>
-                        </div>}
+                        </div>
+                        :
+                        <div className="dow col-md-12">
+                        Dow {this.checkDowPrice(this.state.result[this.state.result.length - 1].marketHigh)}{this.dowComparison(this.state.previousDow)}
+                        <span className="lp-symbol">(DJI)</span>
+                            </div>
+                        }
+                        </Fragment>
+                        }
 
                     <Sp500 />
                 </div>
