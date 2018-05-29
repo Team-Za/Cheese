@@ -1,3 +1,1200 @@
+$dark-background: #2e323a;
+$lighter-background: #3e434d;
+$tab-background: #363c44;
+$light-blue: rgb(43, 123, 158);
+$lighter-blue: rgb(51, 152, 212);
+$light-gray: rgb(185, 185, 185);
+$cool-green: #67c186;
+$font-color: #ffffff;
+$hover-font-color: #67c186;
+$new-font: 'Concert One', cursive;
+$round-corners: 6px;
+$gradient-gray: linear-gradient(to bottom right,#454e58, #65737f);
+$gradient-blue: linear-gradient(to right,rgba(110, 128, 191, 0.6), rgba(76, 194, 240, .6));
+$gradient-red: linear-gradient(to right, #f07089, #f5918d);
+$shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+
+
+html, body { 
+  height: 100% 
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .app {
   background-color: azure;
+}
+
+.row {
+  height: inherit
+}
+
+body {
+  background-color: $lighter-background;
+}
+
+.row {
+  padding: 15px;
+}
+
+input:focus {
+  outline: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  position: relative;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  font-size: 20px;
+  color: $font-color;
+  transition: .3s;
+  margin-right: 20px;
+  padding: 15px 25px 15px 0px;
+  border-radius: 6px;
+}
+
+.logo-icon {
+  width: 45px;
+  margin-right: 10px;
+  position: relative;
+  top: -5px;
+}
+
+
+.top-menu {
+  position: relative;
+  display: inline-block;
+  text-align: right;
+}
+
+.top-menu-item {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 20px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.top-menu-item:hover {
+  background: $gradient-blue;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#log-in {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 20px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: $gradient-blue;
+}
+
+#log-in:hover {
+  opacity: .8;
+}
+
+.pages-nav {
+  color: rgb(231, 241, 241);
+  position: relative;
+  font-family: 'Concert One', cursive;
+  text-transform: uppercase;
+  background-color: $dark-background;
+  margin-bottom: 4%;
+}
+
+
+// Landing Page 
+.landing-nav {
+  color: rgb(231, 241, 241);
+  position: relative;
+  font-family: 'Concert One', cursive;
+  text-transform: uppercase;
+}
+
+.dow {
+  font-family: 'Concert One', cursive;
+  font-size: 30px;
+  background: $gradient-blue;
+  color: #e7f1f1;
+  padding: 8% 10% 8% 10%;
+  border-radius: 6px;
+  box-shadow: $shadow;
+}
+
+.sp500 {
+  font-family: 'Concert One', cursive;
+  font-size: 30px;
+  background: $gradient-red;
+  color: #e7f1f1;
+  padding: 8% 10% 8% 10%;
+  border-radius: 6px;
+  margin-top: 40px;
+  box-shadow: $shadow;
+}
+
+.comparison-container {
+  background-color: #2e323a;
+    padding: 20px;
+    color: #ffffff;
+    font-family: "Concert One", cursive;
+    font-size: 15px;
+    border-radius: 6px;
+    -webkit-box-shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+    box-shadow: 6px 6px 15px 1px rgba(20, 20, 20, 0.4);
+}
+
+.welcome {
+  font-size: 25px;
+  border-bottom: 0.2pt solid rgba(255, 255, 255, 0.2);
+}
+
+.daily-portfolio {
+  margin-top: 30px;
+  font-size: 20px;
+  width: 40%;
+  position: relative;
+  display: inline-block;
+}
+
+.daily-portfolio-amount {
+  margin-top: 30px;
+  font-size: 20px;
+  width: 59%;
+  position: relative;
+  display: inline-block;
+  text-align: right;
+}
+
+.difference {
+  color: rgb(185, 185, 185);
+  text-align: right;
+}
+
+.landing-page-body {
+  margin-top: 30px;
+  position: relative;
+  width: inherit;
+  display: flex;
+}
+
+.form-container {
+  font-family: 'Concert One', cursive !important;
+  background-color: $dark-background;
+  border-radius: 0 0 6px 6px;
+  box-shadow: $shadow;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.form-body {
+  padding: 5% 10%;
+}
+
+.field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+}
+
+.button-line {
+  text-align: right;
+  font-family: 'Concert One', cursive !important;
+  border-radius: $round-corners;
+}
+
+.sign-up-inputs {
+  border-radius: 3px;
+  width: 90%;
+  border: none;
+  color: $cool-green;
+}
+
+.sign-up-button {
+  border-radius: 3px;
+  padding: 1.5% 10% 1.5% 10%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+}
+
+.sign-up-button:hover {
+  transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.form-bar {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  text-transform: uppercase;
+  font-family: $new-font;
+  z-index: 10;
+}
+
+.tab-login-btn {
+  position: relative;
+  display: inline-block;
+  width: 40%;
+  padding: 3% 0;
+  background-color: $tab-background;
+  border-top-left-radius: 6px;
+  cursor: pointer;
+}
+
+.tab-signup-btn {
+  position: relative;
+  display: inline-block;
+  width: 60%;
+  padding: 3% 0;
+  background-color: $tab-background;
+  border-top-right-radius: 6px;
+  cursor: pointer;
+}
+
+
+.log-in {
+  position: relative;
+  display: inline-block;
+  width: 40%;
+  padding: 3% 0;
+  background-color: $dark-background;
+  border-top-left-radius: 6px;
+}
+
+.sign-up {
+  position: relative;
+  display: inline-block;
+  width: 60%;
+  border-top-right-radius: 6px;
+  margin-left: auto;
+}
+
+.active-tab {
+  background-color: $dark-background;
+}
+
+.icons {
+  color: black;
+  margin-right: 10px;
+}
+
+.accounts {
+  color: white;
+  margin-top: 15px;
+  text-align: right;
+}
+
+.success-message {
+  color: $cool-green;
+  font-size: 15px;
+}
+
+.error-message {
+  color: rgb(255, 37, 37);
+}
+
+// Dashboard Page
+.loading {
+  background-color: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  font-size: 15px;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+  text-align: center;
+}
+
+.user-stocks {
+  background: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+  margin-top: 2%;
+}
+
+.panel-heading {
+  font-size: 20px;
+  text-align: left;
+}
+
+.panel-header {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-family: $new-font;
+  position: relative;
+  display: inline-block;
+}
+.balance-container {
+  text-align: right;
+  width: 100%;
+  font-size: 18px;
+}
+
+.edit-button {
+  border-radius: 3px;
+  padding: 1% 1% 1% 1%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.edit-button:hover {
+  transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.sell-btn {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.buy-btn {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.edit-price-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+  left: 0;
+}
+
+
+.active-btn-buy {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-sell {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-edit-price {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
+.top-btns {
+  position: relative;
+  width: 100%;
+  text-align: right;
+}
+
+.add-stocks {
+  background: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+}
+
+.current-balance {
+  color: $cool-green;
+}
+
+.edit-balance {
+  position: relative;
+  display: block;
+  text-align: right;
+}
+
+.stock-info {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 18%
+}
+
+.stock-info-quantity {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 10%
+}
+
+.stock-panel-child {
+  border-top: .2pt solid rgba(255, 255, 255, .2);
+  padding: 15px 10px 15px 10px;
+  // margin: 10px 0px 10px 0px;
+  // transform: scale(.95);
+  transition: .3s;
+}
+
+.stock-panel-child:hover {
+  background: $gradient-blue;
+  // transform: scale(1);
+  cursor: pointer;
+  box-shadow: $shadow;
+}
+
+.stock-panel-child:active {
+  background: $gradient-blue;
+  // transform: scale(1);
+  cursor: pointer;
+  box-shadow: $shadow;
+}
+
+.stock-panel-child-headers {
+  border-top: .2pt solid rgba(255, 255, 255, .2);
+  padding: 15px 10px 15px 10px;
+  // margin: 10px 0px 10px 0px;
+  // transform: scale(.95);
+  transition: .3s;
+}
+
+.stock-info-header {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 18%;
+}
+
+.stock-image {
+  width: 40px;
+}
+
+// User Chart
+.user-chart {
+  background-color: $dark-background;
+  padding: 0px 20px 20px 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  font-size: 15px;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+  text-align: center;
+}
+
+.switch-chart {
+  position: relative;
+  display: inline-block;
+}
+
+.chart-tabs {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  top: -3px;
+}
+
+.chart-tabs:hover {
+  background-color: $lighter-background;
+  cursor: pointer;
+}
+
+.switch-date {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.date-tabs {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  bottom: -21px;
+}
+
+.date-tabs:hover {
+  background-color: $lighter-background;
+  cursor: pointer;
+}
+
+// Pop up box chart 
+.recharts-tooltip-wrapper {
+  color: rgb(76, 194, 240);
+}
+
+// Bar Chart
+.bar-chart {
+  background-color: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  font-size: 15px;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+  height: 600px;
+}
+
+// Market Page
+.company {
+  cursor: pointer;
+  font-family: $new-font;
+  background-color: $lighter-background;
+  border-radius: $round-corners;
+  padding: 10px;
+  color: white;
+  margin-top: 15px;
+  width: 100%
+}
+
+.add-stocks {
+  background: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+}
+
+.submit-btn {
+  text-align: right;
+  font-family: $new-font;
+}
+
+.sidebar-submit-button {
+  border-radius: 3px;
+  padding: 1% 1% 1% 1%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.sidebar-submit-button:hover {
+  transform: scale(1.1);
+  box-shadow: $shadow;
+}
+
+.submit-btn-container {
+  text-align: right
+}
+
+.portfolio {
+  background: $dark-background;
+  padding: 20px;
+  color: $font-color;
+  font-family: $new-font;
+  text-transform: uppercase;
+  border-radius: $round-corners;
+  box-shadow: $shadow;
+}
+
+.legend {
+  color: white;
+  border-bottom: 0.2pt solid rgba(255, 255, 255, 0.2);
+  font-family: $new-font;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.sidebar-field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+  width: 35%;
+}
+
+.sidebar-inputs {
+  border-radius: 3px;
+  width: 100%;
+  border: none;
+  color: $cool-green;
+}
+
+.stock {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  // border-radius: $round-corners;
+  margin: 10px 0px;
+  border-top: 0.2pt solid rgba(255, 255, 255, 0.2);
+}
+
+.stock-amount-holder {
+  position: relative;
+  display: block;
+}
+
+.each-stock {
+  display: inline-flex;
+  position: relative;
+}
+
+.each-stock-info {
+  position: relative;
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-size: 15px;
+  width: 18%;
+}
+
+.sidebar-field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+  width: 35%;
+}
+
+.sidebar-inputs {
+  border-radius: 3px;
+  width: 100%;
+  border: none;
+  color: $cool-green;
+}
+
+.thumbnail {
+  width: 50px;
+}
+
+.stock-name {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.stock-symbol {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.stock-quantity {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.stock-price {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.sell-btn {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.buy-btn {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $lighter-background;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-buy {
+  border-radius: 0px 3px 3px 0px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.active-btn-sell {
+  border-radius: 3px 0px 0px 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+}
+
+.top-btns {
+  position: relative;
+  width: 100%;
+  text-align: right;
+}
+
+.minus-btn {
+  cursor: pointer;
+  transition: .3s;
+}
+
+.plus-btn {
+  cursor: pointer;
+  transition: .3s;
+}
+
+.add-btn {
+  color: $cool-green;
+  text-align: center;
+}
+
+.plus-btn:hover {
+  transform: scale(1.2);
+}
+
+.minus-btn:hover {
+  transform: scale(1.2);
+}
+
+// Toggle Component
+.toggle-field-line {
+  font-family: 'Concert One', cursive !important;
+  padding: 10px;
+  padding-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: $round-corners;
+  background-color: white;
+  width: 35%;
+  margin-left: auto;
+}
+
+.toggle-edit-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-top: 10px; 
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
+.toggle-cancel-btn {
+  border-radius: 3px;
+  padding: 1% 2% 1% 2%;
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 12px;
+}
+
+// Modal CSS
+.narcissus_17w311v {
+border: 3pt solid $lighter-background;
+}
+
+.modal-header {
+  font-family: $new-font;
+  background-color: white;
+  text-transform: uppercase;
+  color: $lighter-background;
+  font-size: 30px;
+  border-bottom: 2px solid $lighter-background !important;
+  padding-left: 0px !important;
+}
+
+.modal-message {
+  font-family: $new-font;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.single-modal-message {
+  position: relative;
+  display: block;
+  margin: 10px 0px;
+}
+
+.modal-price {
+  color: rgb(226, 5, 5);
+}
+
+.modal-total {
+  color: rgb(226, 5, 5);
+}
+
+.modal-balance {
+  color: $cool-green;
+}
+
+.modal-new-price {
+  color: $cool-green;
+}
+
+.modal-confirm-btn {
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px ;
+  position: relative;
+  margin-left: auto;
+  background: $cool-green;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+  font-family: $new-font;
+}
+
+.modal-confirm-btn:hover {
+  opacity: .6;
+}
+
+.modal-cancel-btn {
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px ;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  margin-top: 10px; 
+  background: rgb(226, 5, 5);;
+  border: none;
+  color: white;
+  transition: .3s;
+  font-size: 14px;
+  font-family: $new-font;
+}
+
+.modal-cancel-btn:hover {
+  opacity: .6;
+}
+
+.modal-confirm-btn-container {
+  position: relative;
+  display: inline-block;
+}
+
+.modal-cancel-btn-container {
+  position: relative;
+  display: inline-block;
+}
+
+.modal-btns-container {
+  position: relative;
+  text-align: right;
+}
+
+
+// Footer CSS
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+.phantom {
+  display: block;
+  padding: 20px;
+  height: 60px;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer-container {
+  font-family: $new-font;
+  background-color: $dark-background;
+  color: white;
+  text-transform: uppercase;
+  font-size: 20px;
+  height: 150px;
+}
+
+.footer-component {
+  display: inline-block;
+  position: relative;
+}
+
+.footer-title {
+  display: block;
+  font-size: 14px;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.site-links {
+  display: block;
+  font-size: 12px;
+  color: $light-gray;
+}
+
+.contact {
+  font-size: 14px;
+  border: 2pt solid rgba(76, 194, 240, .6);
+  border-radius: $round-corners;
+  padding: 10px;
+  width: 40%;
+  text-align: center
+}
+
+.envelope-icon {
+  margin-right: 10px;
+}
+
+.disclaimer {
+  position: relative;
+  font-size: 10px;
+  right: 0;
+  bottom: 0;
+  color: $light-gray;
+}
+
+.iex {
+  position: relative;
+  text-align: right;
+}
+
+.iex-link:hover {
+  color: white;
+}
+
+// Down Arrow Animation
+.bounce-down {
+	-moz-animation: bounce-down 3s infinite;
+	-webkit-animation: bounce-down 3s infinite;
+  animation: bounce-down 3s infinite;
+  color: rgb(226, 5, 5);
+  display: inline-flex;
+  margin: 0 5px;
+}
+
+@-moz-keyframes bounce-down {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+@-webkit-keyframes bounce-down{
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+@keyframes bounce-down {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+  }
+}
+
+// Up Arrow Animation
+.bounce-up {
+	-moz-animation: bounce-up 3s infinite;
+	-webkit-animation: bounce-up 3s infinite;
+  animation: bounce-up 3s infinite;
+  color: $cool-green;
+  display: inline-flex;
+  margin: 0 5px;
+}
+
+@-moz-keyframes bounce-up {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+@-webkit-keyframes bounce-up{
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+@keyframes bounce-up {
+  0%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
 }
